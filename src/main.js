@@ -3,6 +3,16 @@ import confetti from 'canvas-confetti';
 import { INITIAL_PROFILE, INITIAL_EXPERIMENTS, INITIAL_MODULES, INITIAL_TOOLS } from './experimentsData.js';
 import { executePythonCode, initPyodideKernel, subscribeKernelStatus } from './pythonRunner.js';
 import { storeModulePdf, getModulePdf, deleteModulePdf, formatFileSize, generateSampleSyllabusPdfDataUrl } from './pdfStorage.js';
+import {
+  initNeuralCanvas,
+  init3DCardTilt,
+  updateMasteryHUD,
+  recordModuleCompletion,
+  triggerMasteryCelebration,
+  triggerLaserScanAnimation,
+  initFloatingCyberDock,
+  playSound
+} from './interactiveEffects.js';
 
 // ==========================================
 // STATE MANAGEMENT & LOCAL STORAGE
@@ -507,6 +517,7 @@ function switchMainTab(tabName) {
 // VIEW SWITCHING
 // ==========================================
 function switchView(viewName, expId = null, subTaskLetter = null) {
+  playSound('click');
   activeView = viewName;
   const gridView = document.getElementById('experimentsGridView');
   const modulesView = document.getElementById('modulesGridView');
@@ -709,6 +720,7 @@ function renderExperimentsGrid() {
   });
 
   lucide.createIcons();
+  init3DCardTilt();
 }
 
 // ==========================================
@@ -1105,6 +1117,7 @@ subscribeKernelStatus((status) => {
 initPyodideKernel().catch(() => {});
 
 async function executeVirtualKernel() {
+  triggerLaserScanAnimation();
   const btn = document.getElementById('executeCodeBtn');
   const terminal = document.getElementById('workspaceTerminalOutput');
   const statusTag = document.getElementById('executionStatusTag');
@@ -1168,6 +1181,8 @@ async function executeVirtualKernel() {
       }
 
       statusTag.innerHTML = `<span class="green-dot"></span> Executed (${result.executionTime}s)`;
+      recordModuleCompletion(`${currentExpId}-${currentSubTaskLetter}`);
+      playSound('success');
       confetti({
         particleCount: 50,
         spread: 60,
@@ -2434,9 +2449,26 @@ function resetToDefaults() {
 // ==========================================
 document.addEventListener('DOMContentLoaded', () => {
   initThemeMode();
+  initNeuralCanvas();
+  updateMasteryHUD();
+  initFloatingCyberDock({
+    onOpenScratchpad: () => {
+      switchView('grid');
+      switchMainTab('tools');
+      setTimeout(() => {
+        const scratchBtn = document.querySelector('[data-tool="scratchpad"]');
+        if (scratchBtn) scratchBtn.click();
+      }, 50);
+    }
+  });
   renderProfile();
   renderExperimentsGrid();
   renderModules();
+  init3DCardTilt();
+
+  document.getElementById('celebrateMasteryBtn')?.addEventListener('click', () => {
+    triggerMasteryCelebration();
+  });
 
   // Search input listeners
   const searchInput = document.getElementById('experimentSearchInput');

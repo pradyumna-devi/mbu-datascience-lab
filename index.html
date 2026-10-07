@@ -26,6 +26,9 @@
     </script>
   </head>
   <body>
+    <!-- Interactive Background Neural Particle Canvas -->
+    <canvas id="neuralCanvas" class="neural-bg-canvas"></canvas>
+
     <!-- Radial Ambient Glowing Orbs -->
     <div class="ambient-glow glow-cyan"></div>
     <div class="ambient-glow glow-indigo"></div>
@@ -237,6 +240,50 @@
             <div class="active-query-indicator" id="activeQueryNotice" style="display: none;">
               Showing results for: <span id="activeQueryText"></span>
               <button id="resetQueryFilterBtn">&times; Clear</button>
+            </div>
+          </div>
+
+          <!-- Interactive Laboratory Mastery & Live Telemetry HUD -->
+          <div class="lab-mastery-banner" id="labMasteryBanner">
+            <div class="mastery-banner-glass">
+              <div class="mastery-left-group">
+                <div class="mastery-ring-wrap" title="Curriculum Mastery Progress">
+                  <svg class="mastery-circular-chart" viewBox="0 0 36 36">
+                    <path class="circle-bg" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                    <path class="circle-progress" id="masteryCircleProgress" stroke-dasharray="0, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                  </svg>
+                  <div class="mastery-percentage" id="masteryPercentageDisplay">0%</div>
+                </div>
+
+                <div class="mastery-text-block">
+                  <div class="mastery-badge-row">
+                    <span class="badge-mastery-level" id="masteryLevelBadge"><i data-lucide="award"></i> Level 1 &bull; Lab Initiate</span>
+                    <span class="badge-streak" id="masteryStreakBadge"><i data-lucide="zap"></i> Active Session</span>
+                  </div>
+                  <h3 class="mastery-title">Curriculum Practical Mastery Progress</h3>
+                  <div class="mastery-progress-bar-wrap">
+                    <div class="mastery-progress-bar-fill" id="masteryProgressBarFill" style="width: 0%;"></div>
+                  </div>
+                  <span class="mastery-subtext" id="masterySubtextDisplay">0 of 19 Practical Modules Mastered &bull; Execute tasks in the workspace to earn mastery XP</span>
+                </div>
+              </div>
+
+              <div class="mastery-right-actions">
+                <div class="mastery-stats-chips">
+                  <div class="hud-stat-chip">
+                    <span class="hud-stat-label">Total Code Run</span>
+                    <span class="hud-stat-val" id="hudExecutionsCount">0 Runs</span>
+                  </div>
+                  <div class="hud-stat-chip">
+                    <span class="hud-stat-label">Kernel Latency</span>
+                    <span class="hud-stat-val text-green" id="hudKernelLatency">&lt; 15 ms</span>
+                  </div>
+                </div>
+                <button class="btn-celebrate-mastery" id="celebrateMasteryBtn" title="Celebrate Academic Progress">
+                  <i data-lucide="sparkles"></i>
+                  <span>Celebrate XP</span>
+                </button>
+              </div>
             </div>
           </div>
 
@@ -1531,6 +1578,33 @@ Ready to execute scripts. Choose a template or write Python code on the left and
         </div>
       </div>
     </div>
+
+    <!-- Floating Cyber-Navigation HUD Dock -->
+    <aside class="floating-cyber-dock" id="floatingCyberDock" aria-label="Quick Actions Dock">
+      <div class="dock-inner-glass">
+        <button class="dock-action-btn active" id="dockToggleParticlesBtn" title="Toggle Neural Particle Background FX">
+          <i data-lucide="sparkles"></i>
+          <span class="dock-tooltip">Particles FX: ON</span>
+        </button>
+        <button class="dock-action-btn active" id="dockAudioFxBtn" title="Toggle Interactive Audio Cues">
+          <i data-lucide="volume-2" id="dockAudioIcon"></i>
+          <span class="dock-tooltip" id="dockAudioTooltip">Sound FX: ON</span>
+        </button>
+        <button class="dock-action-btn" id="dockScratchpadBtn" title="Open Interactive Python REPL Scratchpad">
+          <i data-lucide="terminal"></i>
+          <span class="dock-tooltip">REPL Scratchpad</span>
+        </button>
+        <button class="dock-action-btn" id="dockConfettiBtn" title="Celebration Fireworks FX">
+          <i data-lucide="party-popper"></i>
+          <span class="dock-tooltip">Celebrate!</span>
+        </button>
+        <div class="dock-divider"></div>
+        <button class="dock-action-btn btn-scroll-top" id="dockScrollTopBtn" title="Scroll to Top">
+          <i data-lucide="arrow-up"></i>
+          <span class="dock-tooltip">Back to Top</span>
+        </button>
+      </div>
+    </aside>
 
     <!-- Toast Notification Container -->
     <div class="toast-container" id="toastContainer"></div>

@@ -6124,3 +6124,461 @@ html, body, .app-header, .portal-main-tabs-nav, .action-bar-strip,
 [data-theme="light"] .footer-inner {
   color: #334155;
 }
+
+/* ==========================================================
+   NEURAL CONSTELLATION CANVAS BACKGROUND
+   ========================================================== */
+.neural-bg-canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.85;
+  transition: opacity 0.4s ease;
+}
+
+[data-theme="light"] .neural-bg-canvas {
+  opacity: 0.55;
+}
+
+/* ==========================================================
+   3D CARD SPECULAR GLARE OVERLAY
+   ========================================================== */
+.card-specular-glare {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  opacity: 0;
+  mix-blend-mode: screen;
+  transition: opacity 0.3s ease;
+  z-index: 4;
+}
+
+.experiment-card,
+.profile-card,
+.overview-hero-card {
+  transform-style: preserve-3d;
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s ease;
+  will-change: transform;
+}
+
+/* ==========================================================
+   STUDENT LABORATORY MASTERY PROGRESS BANNER
+   ========================================================== */
+.lab-mastery-banner {
+  margin-bottom: 24px;
+  position: relative;
+  z-index: 2;
+}
+
+.mastery-banner-glass {
+  background: linear-gradient(135deg, rgba(15, 23, 42, 0.75), rgba(30, 41, 59, 0.55));
+  border: 1px solid rgba(56, 189, 248, 0.2);
+  border-radius: 16px;
+  padding: 16px 24px;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  flex-wrap: wrap;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.mastery-banner-glass::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -50%;
+  width: 200%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #38bdf8, #818cf8, transparent);
+  animation: borderGlowSweep 6s infinite linear;
+}
+
+@keyframes borderGlowSweep {
+  0% { transform: translateX(-30%); }
+  100% { transform: translateX(30%); }
+}
+
+.mastery-left-group {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  flex: 1;
+  min-width: 320px;
+}
+
+.mastery-ring-wrap {
+  position: relative;
+  width: 60px;
+  height: 60px;
+  flex-shrink: 0;
+}
+
+.mastery-circular-chart {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.circle-bg {
+  fill: none;
+  stroke: rgba(255, 255, 255, 0.08);
+  stroke-width: 3.2;
+}
+
+.circle-progress {
+  fill: none;
+  stroke: #38bdf8;
+  stroke-width: 3.4;
+  stroke-linecap: round;
+  transition: stroke-dasharray 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  filter: drop-shadow(0 0 6px rgba(56, 189, 248, 0.6));
+}
+
+.mastery-percentage {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-code);
+  font-size: 13px;
+  font-weight: 800;
+  color: #ffffff;
+}
+
+.mastery-text-block {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.mastery-badge-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.badge-mastery-level {
+  font-family: var(--font-code);
+  font-size: 11px;
+  font-weight: 700;
+  color: #38bdf8;
+  background: rgba(56, 189, 248, 0.12);
+  border: 1px solid rgba(56, 189, 248, 0.3);
+  padding: 2px 8px;
+  border-radius: 6px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.badge-streak {
+  font-family: var(--font-heading);
+  font-size: 11px;
+  font-weight: 600;
+  color: #f59e0b;
+  background: rgba(245, 158, 11, 0.12);
+  border: 1px solid rgba(245, 158, 11, 0.25);
+  padding: 2px 8px;
+  border-radius: 6px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.mastery-title {
+  font-family: var(--font-heading);
+  font-size: 15px;
+  font-weight: 800;
+  color: #f8fafc;
+  margin: 0;
+}
+
+.mastery-progress-bar-wrap {
+  width: 100%;
+  max-width: 520px;
+  height: 6px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 10px;
+  overflow: hidden;
+  margin: 4px 0 2px;
+}
+
+.mastery-progress-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #38bdf8, #6366f1, #a855f7);
+  border-radius: 10px;
+  transition: width 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 0 10px rgba(56, 189, 248, 0.5);
+}
+
+.mastery-subtext {
+  font-size: 11.5px;
+  color: var(--text-dim);
+}
+
+.mastery-right-actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.mastery-stats-chips {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.hud-stat-chip {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  padding: 6px 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+
+.hud-stat-label {
+  font-size: 9.5px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-dim);
+}
+
+.hud-stat-val {
+  font-family: var(--font-code);
+  font-size: 12px;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.btn-celebrate-mastery {
+  background: linear-gradient(135deg, #0284c7, #8b5cf6);
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 10px;
+  padding: 10px 18px;
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: 12.5px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 4px 16px rgba(2, 132, 199, 0.35);
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-celebrate-mastery:hover {
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 8px 24px rgba(56, 189, 248, 0.5);
+  background: linear-gradient(135deg, #0ea5e9, #a855f7);
+}
+
+/* ==========================================================
+   FLOATING CYBER-NAVIGATION HUD DOCK
+   ========================================================== */
+.floating-cyber-dock {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%) translateY(0);
+  z-index: 999;
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.dock-inner-glass {
+  background: rgba(15, 23, 42, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 20px;
+  padding: 6px 12px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5), 0 0 20px rgba(56, 189, 248, 0.15);
+}
+
+.dock-action-btn {
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  width: 38px;
+  height: 38px;
+  border-radius: 12px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.dock-action-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--accent-cyan);
+  transform: translateY(-3px) scale(1.1);
+}
+
+.dock-action-btn.active {
+  color: var(--accent-cyan);
+  background: rgba(56, 189, 248, 0.15);
+  border: 1px solid rgba(56, 189, 248, 0.3);
+}
+
+.dock-tooltip {
+  position: absolute;
+  bottom: 48px;
+  left: 50%;
+  transform: translateX(-50%) scale(0.9);
+  background: rgba(10, 15, 29, 0.95);
+  color: #ffffff;
+  border: 1px solid rgba(56, 189, 248, 0.3);
+  font-family: var(--font-heading);
+  font-size: 11px;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 6px;
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4);
+}
+
+.dock-action-btn:hover .dock-tooltip {
+  opacity: 1;
+  transform: translateX(-50%) scale(1);
+}
+
+.dock-divider {
+  width: 1px;
+  height: 20px;
+  background: rgba(255, 255, 255, 0.12);
+  margin: 0 2px;
+}
+
+/* ==========================================================
+   LASER SCAN & TERMINAL PULSE ANIMATIONS
+   ========================================================== */
+.editor-laser-scan-line {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #38bdf8, #a855f7, transparent);
+  box-shadow: 0 0 14px #38bdf8, 0 0 28px #a855f7;
+  opacity: 0;
+  pointer-events: none;
+  z-index: 10;
+}
+
+.editor-laser-scan-line.scanning {
+  animation: laserScanDown 0.8s ease-out forwards;
+}
+
+@keyframes laserScanDown {
+  0% {
+    top: 0;
+    opacity: 1;
+  }
+  80% {
+    opacity: 0.9;
+  }
+  100% {
+    top: 100%;
+    opacity: 0;
+  }
+}
+
+.kernel-executing-pulse {
+  animation: terminalBorderGlow 0.6s ease-in-out;
+}
+
+@keyframes terminalBorderGlow {
+  0% { box-shadow: 0 0 0 0 rgba(56, 189, 248, 0.6); }
+  50% { box-shadow: 0 0 25px 4px rgba(56, 189, 248, 0.4); }
+  100% { box-shadow: 0 0 0 0 rgba(56, 189, 248, 0); }
+}
+
+/* ==========================================================
+   LIGHT MODE OVERRIDES FOR INTERACTIVE HUD & DOCK
+   ========================================================== */
+[data-theme="light"] .mastery-banner-glass {
+  background: rgba(255, 255, 255, 0.95);
+  border: 1.5px solid #cbd5e1;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+}
+
+[data-theme="light"] .mastery-title {
+  color: #0a0f1d;
+}
+
+[data-theme="light"] .mastery-percentage {
+  color: #0a0f1d;
+}
+
+[data-theme="light"] .circle-bg {
+  stroke: #e2e8f0;
+}
+
+[data-theme="light"] .circle-progress {
+  stroke: #0284c7;
+  filter: drop-shadow(0 0 4px rgba(2, 132, 199, 0.4));
+}
+
+[data-theme="light"] .badge-mastery-level {
+  background: #e0f2fe;
+  color: #0369a1;
+  border-color: #7dd3fc;
+}
+
+[data-theme="light"] .hud-stat-chip {
+  background: #f8fafc;
+  border: 1.5px solid #e2e8f0;
+}
+
+[data-theme="light"] .hud-stat-val {
+  color: #0a0f1d;
+}
+
+[data-theme="light"] .dock-inner-glass {
+  background: rgba(255, 255, 255, 0.95);
+  border: 1.5px solid #cbd5e1;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.1);
+}
+
+[data-theme="light"] .dock-action-btn {
+  color: #334155;
+}
+
+[data-theme="light"] .dock-action-btn:hover {
+  background: #f1f5f9;
+  color: #0284c7;
+}
+
+[data-theme="light"] .dock-action-btn.active {
+  background: #e0f2fe;
+  color: #0369a1;
+  border: 1px solid #7dd3fc;
+}
+
