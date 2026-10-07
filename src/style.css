@@ -148,6 +148,22 @@ body {
   box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
   transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
   flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.brand-logo-frame:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(56, 189, 248, 0.25);
+}
+
+.mbu-official-header-logo {
+  height: 38px;
+  width: auto;
+  max-width: 130px;
+  object-fit: contain;
+  display: block;
 }
 
 .ds-logo-frame {
