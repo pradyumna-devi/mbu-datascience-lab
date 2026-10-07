@@ -2588,21 +2588,15 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Category chips & Data Science Core Pillars Domain Cards filter logic
+  // Category chips filter logic
   const categoryChips = document.querySelectorAll('.category-chip');
-  const domainCards = document.querySelectorAll('.ds-domain-card');
 
-  function applyCategorySelection(selectedCategory, scrollDown = false) {
+  function applyCategorySelection(selectedCategory) {
     currentCategoryFilter = selectedCategory;
 
     // Update chips active states
     categoryChips.forEach(c => {
       c.classList.toggle('active', c.dataset.category.toLowerCase() === selectedCategory.toLowerCase());
-    });
-
-    // Update domain cards active states
-    domainCards.forEach(dc => {
-      dc.classList.toggle('active', dc.dataset.domainFilter?.toLowerCase() === selectedCategory.toLowerCase());
     });
 
     if (activeMainTab !== 'experiments') {
@@ -2614,35 +2608,12 @@ document.addEventListener('DOMContentLoaded', () => {
     } else {
       renderExperimentsGrid();
     }
-
-    if (scrollDown) {
-      const gridEl = document.getElementById('experimentsGrid');
-      if (gridEl) {
-        gridEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }
-    }
   }
 
   categoryChips.forEach(chip => {
     chip.addEventListener('click', () => {
       playSound('click');
-      applyCategorySelection(chip.dataset.category, false);
-    });
-  });
-
-  domainCards.forEach(card => {
-    card.addEventListener('click', () => {
-      playSound('click');
-      const targetCategory = card.dataset.domainFilter;
-      if (targetCategory) {
-        if (currentCategoryFilter.toLowerCase() === targetCategory.toLowerCase()) {
-          applyCategorySelection('ALL', false);
-          showToast('Showing all experiments', 'info');
-        } else {
-          applyCategorySelection(targetCategory, true);
-          showToast(`Filtered: ${targetCategory}`, 'info');
-        }
-      }
+      applyCategorySelection(chip.dataset.category);
     });
   });
 
