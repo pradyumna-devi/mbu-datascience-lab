@@ -11,6 +11,7 @@ import {
   triggerMasteryCelebration,
   triggerLaserScanAnimation,
   initFloatingCyberDock,
+  initCursorSpotlight,
   playSound
 } from './interactiveEffects.js';
 import {
@@ -44,23 +45,51 @@ let editorFontSize = 12.5;
 let currentActiveTool = 'scratchpad';
 let currentTheme = 'dark';
 
+// -------------------------------------------------------------------------
+// LUXURY THEME STUDIO ENGINE (5 CURATED PALETTES)
+// -------------------------------------------------------------------------
+const THEMES_LIST = ['dark', 'synthwave', 'matrix', 'nordic', 'light'];
+const THEME_INFO = {
+  dark: { name: 'Cyber Obsidian', icon: '🌌', toast: 'Switched to 🌌 Cyber Obsidian Theme' },
+  obsidian: { name: 'Cyber Obsidian', icon: '🌌', toast: 'Switched to 🌌 Cyber Obsidian Theme' },
+  synthwave: { name: 'Synthwave Neon', icon: '🪐', toast: 'Switched to 🪐 Synthwave Neon Theme' },
+  matrix: { name: 'Emerald Matrix AI', icon: '🌿', toast: 'Switched to 🌿 Emerald Matrix AI Theme' },
+  nordic: { name: 'Nordic Frost', icon: '🧊', toast: 'Switched to 🧊 Nordic Frost Theme' },
+  light: { name: 'Oxford Academic', icon: '🏛️', toast: 'Switched to 🏛️ Oxford Academic Light Theme' }
+};
+
 function applyThemeMode(theme, showToastNotification = true) {
+  if (!THEME_INFO[theme]) theme = 'dark';
   currentTheme = theme;
   document.documentElement.setAttribute('data-theme', theme);
   localStorage.setItem(STORAGE_KEYS.THEME, theme);
 
-  const darkBtn = document.getElementById('themeDarkBtn');
-  const lightBtn = document.getElementById('themeLightBtn');
+  // Update active state on all 5 theme buttons
+  const buttons = {
+    dark: document.getElementById('themeDarkBtn'),
+    synthwave: document.getElementById('themeSynthBtn'),
+    matrix: document.getElementById('themeMatrixBtn'),
+    nordic: document.getElementById('themeNordicBtn'),
+    light: document.getElementById('themeLightBtn')
+  };
 
-  if (darkBtn && lightBtn) {
-    darkBtn.classList.toggle('active', theme === 'dark');
-    lightBtn.classList.toggle('active', theme === 'light');
-    darkBtn.setAttribute('aria-checked', theme === 'dark' ? 'true' : 'false');
-    lightBtn.setAttribute('aria-checked', theme === 'light' ? 'true' : 'false');
+  Object.entries(buttons).forEach(([key, btn]) => {
+    if (btn) {
+      const isActive = (theme === key) || (theme === 'obsidian' && key === 'dark');
+      btn.classList.toggle('active', isActive);
+      btn.setAttribute('aria-checked', isActive ? 'true' : 'false');
+    }
+  });
+
+  // Update active theme badge in Live Telemetry Ribbon
+  const themeDisplay = document.getElementById('telemetryActiveThemeDisplay');
+  if (themeDisplay) {
+    themeDisplay.textContent = THEME_INFO[theme]?.name || 'Cyber Obsidian';
   }
 
   if (showToastNotification) {
-    showToast(`Switched to ${theme === 'dark' ? 'Dark' : 'Light'} Mode`, 'info');
+    playSound('theme_chime');
+    showToast(THEME_INFO[theme]?.toast || `Switched to ${theme} Theme`, 'info');
   }
 
   // Update workspace charts contrast if active
@@ -83,17 +112,24 @@ function applyThemeMode(theme, showToastNotification = true) {
   lucide.createIcons();
 }
 
+function cycleNextTheme() {
+  const currentIndex = THEMES_LIST.indexOf(currentTheme === 'obsidian' ? 'dark' : currentTheme);
+  const nextIndex = (currentIndex + 1) % THEMES_LIST.length;
+  applyThemeMode(THEMES_LIST[nextIndex]);
+}
+
 function initThemeMode() {
   const saved = localStorage.getItem(STORAGE_KEYS.THEME) || 'dark';
   applyThemeMode(saved, false);
 
-  document.getElementById('themeDarkBtn')?.addEventListener('click', () => {
-    applyThemeMode('dark');
-  });
+  document.getElementById('themeDarkBtn')?.addEventListener('click', () => applyThemeMode('dark'));
+  document.getElementById('themeSynthBtn')?.addEventListener('click', () => applyThemeMode('synthwave'));
+  document.getElementById('themeMatrixBtn')?.addEventListener('click', () => applyThemeMode('matrix'));
+  document.getElementById('themeNordicBtn')?.addEventListener('click', () => applyThemeMode('nordic'));
+  document.getElementById('themeLightBtn')?.addEventListener('click', () => applyThemeMode('light'));
 
-  document.getElementById('themeLightBtn')?.addEventListener('click', () => {
-    applyThemeMode('light');
-  });
+  // Dock cycle theme button
+  document.getElementById('dockThemeCycleBtn')?.addEventListener('click', cycleNextTheme);
 }
 
 function loadExperiments() {
@@ -2486,6 +2522,7 @@ document.addEventListener('DOMContentLoaded', () => {
   renderExperimentsGrid();
   renderModules();
   init3DCardTilt();
+  initCursorSpotlight();
 
   document.getElementById('celebrateMasteryBtn')?.addEventListener('click', () => {
     triggerMasteryCelebration();

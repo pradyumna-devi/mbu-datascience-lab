@@ -86,10 +86,31 @@ export function playSound(type = 'click') {
         o.start(now + idx * 0.09);
         o.stop(now + idx * 0.09 + 0.3);
       });
+    } else if (type === 'theme_chime') {
+      // Harmonic celestial chord for theme change
+      [440, 554.37, 659.25, 880].forEach((freq, idx) => {
+        const o = ctx.createOscillator();
+        const g = ctx.createGain();
+        o.type = 'sine';
+        o.frequency.setValueAtTime(freq, now + idx * 0.05);
+        g.gain.setValueAtTime(0.045, now + idx * 0.05);
+        g.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.05 + 0.32);
+        o.connect(g);
+        g.connect(ctx.destination);
+        o.start(now + idx * 0.05);
+        o.stop(now + idx * 0.05 + 0.35);
+      });
     }
   } catch (err) {
     // Ignore audio permission or context restrictions
   }
+}
+
+export function initCursorSpotlight() {
+  window.addEventListener('mousemove', (e) => {
+    document.documentElement.style.setProperty('--mouse-x', `${e.clientX}px`);
+    document.documentElement.style.setProperty('--mouse-y', `${e.clientY}px`);
+  }, { passive: true });
 }
 
 export function toggleAudioFx() {
@@ -154,6 +175,50 @@ export function initNeuralCanvas() {
     }
   });
 
+function getThemeCanvasColors(theme) {
+  if (theme === 'synthwave') {
+    return {
+      particle1: 'rgba(236, 72, 153,',
+      particle2: 'rgba(168, 85, 247,',
+      line: '236, 72, 153',
+      spark: '244, 63, 94',
+      mouseLine: '168, 85, 247'
+    };
+  } else if (theme === 'matrix') {
+    return {
+      particle1: 'rgba(16, 185, 129,',
+      particle2: 'rgba(45, 212, 191,',
+      line: '16, 185, 129',
+      spark: '34, 197, 94',
+      mouseLine: '45, 212, 191'
+    };
+  } else if (theme === 'nordic') {
+    return {
+      particle1: 'rgba(56, 189, 248,',
+      particle2: 'rgba(96, 165, 250,',
+      line: '56, 189, 248',
+      spark: '125, 211, 252',
+      mouseLine: '96, 165, 250'
+    };
+  } else if (theme === 'light') {
+    return {
+      particle1: 'rgba(2, 132, 199,',
+      particle2: 'rgba(37, 99, 235,',
+      line: '2, 132, 199',
+      spark: '14, 165, 233',
+      mouseLine: '79, 70, 229'
+    };
+  } else {
+    return {
+      particle1: 'rgba(56, 189, 248,',
+      particle2: 'rgba(99, 102, 241,',
+      line: '56, 189, 248',
+      spark: '56, 189, 248',
+      mouseLine: '99, 102, 241'
+    };
+  }
+}
+
   class Particle {
     constructor() {
       this.x = Math.random() * width;
@@ -161,7 +226,7 @@ export function initNeuralCanvas() {
       this.vx = (Math.random() - 0.5) * 0.75;
       this.vy = (Math.random() - 0.5) * 0.75;
       this.size = Math.random() * 2.2 + 1;
-      this.baseColor = Math.random() > 0.4 ? 'rgba(56, 189, 248,' : 'rgba(99, 102, 241,';
+      this.colorChoice = Math.random() > 0.4 ? 1 : 2;
     }
 
     update() {
@@ -184,12 +249,10 @@ export function initNeuralCanvas() {
       }
     }
 
-    draw(isLight) {
+    draw(themeColors) {
       ctx.beginPath();
       ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-      ctx.fillStyle = isLight
-        ? `rgba(2, 132, 199, 0.45)`
-        : `${this.baseColor} 0.75)`;
+      ctx.fillStyle = `${this.colorChoice === 1 ? themeColors.particle1 : themeColors.particle2} 0.75)`;
       ctx.fill();
     }
   }
@@ -206,7 +269,9 @@ export function initNeuralCanvas() {
     }
 
     ctx.clearRect(0, 0, width, height);
-    const isLight = document.documentElement.getAttribute('data-theme') === 'light';
+    const currentTheme = document.documentElement.getAttribute('data-theme') || 'dark';
+    const themeColors = getThemeCanvasColors(currentTheme);
+    const isLight = currentTheme === 'light';
 
     // Update and draw particles
     for (let i = particles.length - 1; i >= 0; i--) {
@@ -217,14 +282,14 @@ export function initNeuralCanvas() {
         p.life -= 0.025;
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.size * p.life, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(56, 189, 248, ${p.life})`;
+        ctx.fillStyle = `rgba(${themeColors.spark}, ${p.life})`;
         ctx.fill();
         if (p.life <= 0) particles.splice(i, 1);
         continue;
       }
 
       p.update();
-      p.draw(isLight);
+      p.draw(themeColors);
 
       // Connect nearby particles
       for (let j = i + 1; j < particles.length; j++) {
@@ -237,9 +302,7 @@ export function initNeuralCanvas() {
           ctx.beginPath();
           ctx.moveTo(p.x, p.y);
           ctx.lineTo(p2.x, p2.y);
-          ctx.strokeStyle = isLight
-            ? `rgba(2, 132, 199, ${alpha})`
-            : `rgba(56, 189, 248, ${alpha})`;
+          ctx.strokeStyle = `rgba(${themeColors.line}, ${alpha})`;
           ctx.lineWidth = 0.85;
           ctx.stroke();
         }
@@ -253,10 +316,8 @@ export function initNeuralCanvas() {
           ctx.beginPath();
           ctx.moveTo(p.x, p.y);
           ctx.lineTo(mouse.x, mouse.y);
-          ctx.strokeStyle = isLight
-            ? `rgba(79, 70, 229, ${alpha})`
-            : `rgba(99, 102, 241, ${alpha})`;
-          ctx.lineWidth = 1.1;
+          ctx.strokeStyle = `rgba(${themeColors.mouseLine}, ${alpha})`;
+          ctx.lineWidth = 1;
           ctx.stroke();
         }
       }

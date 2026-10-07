@@ -117,12 +117,21 @@
                   </div>
                 </div>
 
-                <!-- Appearance Theme Switcher (Dark & Light Mode Icons) -->
-                <div class="theme-mode-switch" id="themeModeSwitch" role="group" aria-label="Theme Mode Selection" title="Toggle Appearance: Dark or Light Mode">
-                  <button type="button" class="theme-toggle-btn active" id="themeDarkBtn" data-theme-val="dark" title="Dark Mode (Cyber-Obsidian)">
+                <!-- Appearance Theme Studio Switcher (5 Curated Luxury Palettes) -->
+                <div class="theme-mode-switch theme-studio-bar" id="themeModeSwitch" role="group" aria-label="Theme Palette Selection" title="Select Visual Aesthetic Theme">
+                  <button type="button" class="theme-toggle-btn active" id="themeDarkBtn" data-theme-val="dark" title="Cyber Obsidian (Deep Cosmic Dark)">
                     <i data-lucide="moon"></i>
                   </button>
-                  <button type="button" class="theme-toggle-btn" id="themeLightBtn" data-theme-val="light" title="Light Mode (Porcelain Executive)">
+                  <button type="button" class="theme-toggle-btn" id="themeSynthBtn" data-theme-val="synthwave" title="Synthwave Neon (Cyberpunk Violet &amp; Pink)">
+                    <i data-lucide="sparkles"></i>
+                  </button>
+                  <button type="button" class="theme-toggle-btn" id="themeMatrixBtn" data-theme-val="matrix" title="Emerald Matrix (Bio-AI Terminal)">
+                    <i data-lucide="terminal"></i>
+                  </button>
+                  <button type="button" class="theme-toggle-btn" id="themeNordicBtn" data-theme-val="nordic" title="Nordic Frost (Glacial Cobalt)">
+                    <i data-lucide="compass"></i>
+                  </button>
+                  <button type="button" class="theme-toggle-btn" id="themeLightBtn" data-theme-val="light" title="Oxford Academic (Executive Light)">
                     <i data-lucide="sun"></i>
                   </button>
                 </div>
@@ -145,6 +154,48 @@
 
         </div>
       </header>
+
+      <!-- Real-Time University Laboratory Telemetry Ribbon -->
+      <section class="live-telemetry-ribbon" id="liveTelemetryRibbon" aria-label="Laboratory Real-Time Telemetry">
+        <div class="telemetry-inner layout-centered">
+          <div class="telemetry-badge-pulse">
+            <span class="telemetry-live-dot"></span>
+            <span class="telemetry-live-label">MBU LIVE LAB HUD</span>
+          </div>
+          <div class="telemetry-items-marquee">
+            <div class="telemetry-chip">
+              <i data-lucide="cpu" class="chip-icon text-cyan"></i>
+              <span class="chip-name">Kernel:</span>
+              <strong class="chip-val">CPython 3.12 WASM AST</strong>
+            </div>
+            <div class="telemetry-chip">
+              <i data-lucide="check-check" class="chip-icon text-emerald"></i>
+              <span class="chip-name">Lab Tasks:</span>
+              <strong class="chip-val">19 Verified Scripts</strong>
+            </div>
+            <div class="telemetry-chip">
+              <i data-lucide="award" class="chip-icon text-amber"></i>
+              <span class="chip-name">Accreditation:</span>
+              <strong class="chip-val">NAAC 'A+' Grade • Computing</strong>
+            </div>
+            <div class="telemetry-chip">
+              <i data-lucide="sparkles" class="chip-icon text-purple"></i>
+              <span class="chip-name">Visual Physics:</span>
+              <strong class="chip-val">60 FPS Constellation Mesh</strong>
+            </div>
+            <div class="telemetry-chip">
+              <i data-lucide="file-check" class="chip-icon text-indigo"></i>
+              <span class="chip-name">Observation Sheet:</span>
+              <strong class="chip-val">20-Mark Rubric PDF Ready</strong>
+            </div>
+            <div class="telemetry-chip">
+              <i data-lucide="palette" class="chip-icon text-rose"></i>
+              <span class="chip-name">Theme:</span>
+              <strong class="chip-val" id="telemetryActiveThemeDisplay">Cyber Obsidian</strong>
+            </div>
+          </div>
+        </div>
+      </section>
 
       <!-- Primary Homepage Navigation Switcher: Modules | Lab Experiments | Tools -->
       <nav class="portal-main-tabs-nav" id="portalMainTabsNav" aria-label="Portal Mode Navigation">
@@ -1718,6 +1769,10 @@ Ready to execute scripts. Choose a template or write Python code on the left and
         <button class="dock-action-btn" id="dockShortcutsBtn" title="Keyboard Shortcuts Cheat Sheet (?)">
           <i data-lucide="command"></i>
           <span class="dock-tooltip">Shortcuts (?)</span>
+        </button>
+        <button class="dock-action-btn" id="dockThemeCycleBtn" title="Cycle Visual Theme (Obsidian, Synthwave, Matrix, Nordic, Light)">
+          <i data-lucide="palette"></i>
+          <span class="dock-tooltip">Cycle Theme</span>
         </button>
         <button class="dock-action-btn" id="dockConfettiBtn" title="Celebration Fireworks FX">
           <i data-lucide="party-popper"></i>

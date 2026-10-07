@@ -4482,6 +4482,388 @@ html, body, .app-header, .portal-main-tabs-nav, .action-bar-strip,
 }
 
 /* ==========================================================
+   THEME STUDIO PALETTES (SYNTHWAVE, MATRIX, NORDIC)
+   ========================================================== */
+
+/* 1. SYNTHWAVE NEON (Cyberpunk Violet & Pink) */
+[data-theme="synthwave"] {
+  --bg-dark: #0a0518;
+  --bg-surface-1: #130a2e;
+  --bg-surface-2: #1e0f45;
+  --bg-surface-3: #2a165e;
+  --bg-glass: rgba(19, 10, 46, 0.85);
+  --bg-glass-card: rgba(28, 14, 66, 0.75);
+  --border-glass: rgba(236, 72, 153, 0.28);
+  --border-subtle: rgba(244, 114, 182, 0.16);
+
+  --accent-cyan: #06b6d4;
+  --accent-cyan-glow: rgba(6, 182, 212, 0.35);
+  --accent-indigo: #8b5cf6;
+  --accent-purple: #c084fc;
+  --accent-emerald: #34d399;
+  --accent-amber: #f59e0b;
+  --accent-rose: #f43f5e;
+
+  --text-main: #fdf2f8;
+  --text-muted: #f472b6;
+  --text-dim: #c084fc;
+
+  --shadow-glow: 0 0 32px rgba(236, 72, 153, 0.3);
+  --spotlight-color: rgba(236, 72, 153, 0.12);
+}
+
+[data-theme="synthwave"] body {
+  background-color: #0a0518;
+}
+
+[data-theme="synthwave"] .glow-cyan {
+  background: radial-gradient(circle, #f43f5e, transparent 70%);
+}
+
+[data-theme="synthwave"] .glow-indigo {
+  background: radial-gradient(circle, #8b5cf6, transparent 70%);
+}
+
+[data-theme="synthwave"] .glow-purple {
+  background: radial-gradient(circle, #06b6d4, transparent 70%);
+}
+
+/* 2. EMERALD MATRIX AI (Bio-Computational Terminal) */
+[data-theme="matrix"] {
+  --bg-dark: #020c08;
+  --bg-surface-1: #061912;
+  --bg-surface-2: #0b271d;
+  --bg-surface-3: #11382b;
+  --bg-glass: rgba(6, 25, 18, 0.85);
+  --bg-glass-card: rgba(11, 39, 29, 0.75);
+  --border-glass: rgba(16, 185, 129, 0.32);
+  --border-subtle: rgba(52, 211, 153, 0.16);
+
+  --accent-cyan: #10b981;
+  --accent-cyan-glow: rgba(16, 185, 129, 0.35);
+  --accent-indigo: #14b8a6;
+  --accent-purple: #2dd4bf;
+  --accent-emerald: #10b981;
+  --accent-amber: #facc15;
+  --accent-rose: #fb7185;
+
+  --text-main: #ecfdf5;
+  --text-muted: #6ee7b7;
+  --text-dim: #a7f3d0;
+
+  --shadow-glow: 0 0 32px rgba(16, 185, 129, 0.3);
+  --spotlight-color: rgba(16, 185, 129, 0.12);
+}
+
+[data-theme="matrix"] body {
+  background-color: #020c08;
+}
+
+[data-theme="matrix"] .glow-cyan {
+  background: radial-gradient(circle, #10b981, transparent 70%);
+}
+
+[data-theme="matrix"] .glow-indigo {
+  background: radial-gradient(circle, #0d9488, transparent 70%);
+}
+
+[data-theme="matrix"] .glow-purple {
+  background: radial-gradient(circle, #84cc16, transparent 70%);
+}
+
+/* 3. NORDIC FROST (Arctic Slate & Glacial Cobalt) */
+[data-theme="nordic"] {
+  --bg-dark: #080f1b;
+  --bg-surface-1: #0f1c30;
+  --bg-surface-2: #162844;
+  --bg-surface-3: #1e3559;
+  --bg-glass: rgba(15, 28, 48, 0.85);
+  --bg-glass-card: rgba(22, 40, 68, 0.75);
+  --border-glass: rgba(56, 189, 248, 0.28);
+  --border-subtle: rgba(148, 163, 184, 0.15);
+
+  --accent-cyan: #38bdf8;
+  --accent-cyan-glow: rgba(56, 189, 248, 0.35);
+  --accent-indigo: #60a5fa;
+  --accent-purple: #818cf8;
+  --accent-emerald: #34d399;
+  --accent-amber: #fbbf24;
+  --accent-rose: #f87171;
+
+  --text-main: #f0f9ff;
+  --text-muted: #bae6fd;
+  --text-dim: #7dd3fc;
+
+  --shadow-glow: 0 0 32px rgba(56, 189, 248, 0.3);
+  --spotlight-color: rgba(56, 189, 248, 0.1);
+}
+
+[data-theme="nordic"] body {
+  background-color: #080f1b;
+}
+
+[data-theme="nordic"] .glow-cyan {
+  background: radial-gradient(circle, #0284c7, transparent 70%);
+}
+
+[data-theme="nordic"] .glow-indigo {
+  background: radial-gradient(circle, #38bdf8, transparent 70%);
+}
+
+[data-theme="nordic"] .glow-purple {
+  background: radial-gradient(circle, #60a5fa, transparent 70%);
+}
+
+/* Theme Studio Switcher Component */
+.theme-studio-bar {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  padding: 3px 4px;
+  background: rgba(15, 23, 42, 0.7);
+  border: 1px solid var(--border-subtle);
+  border-radius: 20px;
+  backdrop-filter: blur(12px);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.25);
+}
+
+.theme-studio-bar .theme-toggle-btn {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  position: relative;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.theme-studio-bar .theme-toggle-btn i {
+  width: 15px;
+  height: 15px;
+  transition: transform 0.2s ease;
+}
+
+.theme-studio-bar .theme-toggle-btn:hover {
+  color: var(--text-main);
+  background: rgba(255, 255, 255, 0.08);
+  transform: translateY(-1px);
+}
+
+.theme-studio-bar .theme-toggle-btn:hover i {
+  transform: scale(1.15);
+}
+
+.theme-studio-bar .theme-toggle-btn.active {
+  background: var(--accent-cyan);
+  color: #040812;
+  box-shadow: 0 0 14px var(--accent-cyan-glow);
+  transform: scale(1.08);
+  border-color: rgba(255, 255, 255, 0.4);
+}
+
+[data-theme="synthwave"] .theme-studio-bar .theme-toggle-btn.active {
+  background: #ec4899;
+  color: #ffffff;
+  box-shadow: 0 0 14px rgba(236, 72, 153, 0.6);
+}
+
+[data-theme="matrix"] .theme-studio-bar .theme-toggle-btn.active {
+  background: #10b981;
+  color: #020c08;
+  box-shadow: 0 0 14px rgba(16, 185, 129, 0.6);
+}
+
+[data-theme="nordic"] .theme-studio-bar .theme-toggle-btn.active {
+  background: #38bdf8;
+  color: #080f1b;
+  box-shadow: 0 0 14px rgba(56, 189, 248, 0.6);
+}
+
+/* ==========================================================
+   REAL-TIME UNIVERSITY LABORATORY TELEMETRY RIBBON
+   ========================================================== */
+.live-telemetry-ribbon {
+  background: linear-gradient(90deg, rgba(14, 21, 38, 0.95), rgba(8, 12, 22, 0.95));
+  border-bottom: 1px solid var(--border-subtle);
+  padding: 8px 0;
+  overflow: hidden;
+  position: relative;
+  z-index: 90;
+  backdrop-filter: blur(12px);
+}
+
+[data-theme="synthwave"] .live-telemetry-ribbon {
+  background: linear-gradient(90deg, rgba(24, 12, 48, 0.95), rgba(14, 7, 28, 0.95));
+}
+
+[data-theme="matrix"] .live-telemetry-ribbon {
+  background: linear-gradient(90deg, rgba(8, 28, 20, 0.95), rgba(4, 16, 11, 0.95));
+}
+
+[data-theme="nordic"] .live-telemetry-ribbon {
+  background: linear-gradient(90deg, rgba(18, 32, 54, 0.95), rgba(10, 18, 30, 0.95));
+}
+
+[data-theme="light"] .live-telemetry-ribbon {
+  background: linear-gradient(90deg, #f1f5f9, #ffffff);
+  border-bottom: 1px solid #cbd5e1;
+}
+
+.telemetry-inner {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 0 24px;
+}
+
+.telemetry-badge-pulse {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  background: rgba(56, 189, 248, 0.12);
+  border: 1px solid rgba(56, 189, 248, 0.28);
+  padding: 3px 10px;
+  border-radius: 12px;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.6px;
+  color: var(--accent-cyan);
+  flex-shrink: 0;
+}
+
+[data-theme="synthwave"] .telemetry-badge-pulse {
+  background: rgba(236, 72, 153, 0.15);
+  border-color: rgba(236, 72, 153, 0.35);
+  color: #f472b6;
+}
+
+[data-theme="matrix"] .telemetry-badge-pulse {
+  background: rgba(16, 185, 129, 0.15);
+  border-color: rgba(16, 185, 129, 0.35);
+  color: #34d399;
+}
+
+[data-theme="light"] .telemetry-badge-pulse {
+  background: rgba(2, 132, 199, 0.1);
+  border-color: rgba(2, 132, 199, 0.25);
+  color: #0284c7;
+}
+
+.telemetry-live-dot {
+  width: 7px;
+  height: 7px;
+  background: #10b981;
+  border-radius: 50%;
+  box-shadow: 0 0 8px #10b981;
+  animation: telemetryPulse 1.8s infinite;
+}
+
+@keyframes telemetryPulse {
+  0% { transform: scale(0.9); opacity: 0.8; box-shadow: 0 0 4px #10b981; }
+  50% { transform: scale(1.2); opacity: 1; box-shadow: 0 0 12px #10b981; }
+  100% { transform: scale(0.9); opacity: 0.8; box-shadow: 0 0 4px #10b981; }
+}
+
+.telemetry-items-marquee {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  overflow-x: auto;
+  white-space: nowrap;
+  scrollbar-width: none;
+  flex: 1;
+}
+
+.telemetry-items-marquee::-webkit-scrollbar {
+  display: none;
+}
+
+.telemetry-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  color: var(--text-muted);
+  flex-shrink: 0;
+}
+
+.telemetry-chip .chip-icon {
+  width: 14px;
+  height: 14px;
+}
+
+.telemetry-chip .chip-name {
+  color: var(--text-dim);
+}
+
+.telemetry-chip .chip-val {
+  color: var(--text-main);
+  font-weight: 700;
+}
+
+[data-theme="light"] .telemetry-chip .chip-name {
+  color: #64748b;
+}
+
+[data-theme="light"] .telemetry-chip .chip-val {
+  color: #0f172a;
+}
+
+/* ==========================================================
+   SPECULAR CURSOR SPOTLIGHT ON GLASS CARDS
+   ========================================================== */
+.experiment-card,
+.module-card,
+.card-panel,
+.profile-card {
+  position: relative;
+  overflow: hidden;
+}
+
+.experiment-card::before,
+.module-card::before,
+.card-panel::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(
+    380px circle at var(--mouse-x, -500px) var(--mouse-y, -500px),
+    var(--spotlight-color, rgba(56, 189, 248, 0.08)),
+    transparent 70%
+  );
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: 1;
+}
+
+.experiment-card:hover::before,
+.module-card:hover::before,
+.card-panel:hover::before {
+  opacity: 1;
+}
+
+/* Smooth Global Transition on Theme Switch */
+body,
+.app-header,
+.card-panel,
+.experiment-card,
+.module-card,
+.live-telemetry-ribbon,
+.terminal-screen,
+.profile-card {
+  transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* ==========================================================
    LIGHT MODE DESIGN SYSTEM OVERRIDES ([data-theme="light"])
    WCAG AAA Ultra-High Contrast & Crystal-Clear Readability
    ========================================================== */
