@@ -7,10 +7,365 @@ export const INITIAL_PROFILE = {
   section: "Section - 2",
   faculty: "Bosu Babu Sambana",
   designation: "Assistant Professor",
-  avatarUrl: "/student-profile.jpg"
+  avatarUrl: "/student-profile.jpg",
+  githubUrl: "https://github.com/pradyumna-devi",
+  linkedinUrl: "https://linkedin.com/in/pradyumna-devi",
+  portfolioUrl: "https://pradyumna-devi.dev",
+  email: "devi.pradyumna@mbu.asia",
+  kaggleUrl: "https://kaggle.com/pradyumnadevi",
+  leetcodeUrl: "https://leetcode.com/pradyumna_devi",
+  bio: "Department of Data Science scholar at Mohan Babu University. Passionate about Time Series Econometrics, Deep Learning, Statistical Machine Learning, and Big Data Engineering.",
+  resumeUrl: "#",
+  resumeName: "M_Pradyumna_Devi_Resume.pdf"
 };
 
 export const INITIAL_EXPERIMENTS = [
+  {
+    id: "exp-1",
+    number: "1",
+    title: "Introduction to Data Science & Tabular Computing",
+    category: "Introduction to Data Science",
+    previewDuration: "08:30",
+    videoThumbnail: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=600&q=80",
+    previewVideoUrl: "https://www.youtube.com/embed/ua-CiDNNj30",
+    description: "Explore core data science foundations: vector operations with NumPy, creating and manipulating Pandas Series & DataFrames, and computing descriptive statistics.",
+    tags: ["NumPy", "Pandas", "Python", "Data Science", "Statistics"],
+    githubUrl: "https://github.com/pradyumna-devi/mbu-datascience-lab/tree/main/experiments/exp-1-introduction_to_data_science_t",
+    subTasks: [
+      {
+        letter: "A",
+        codeId: "1A",
+        githubUrl: "https://github.com/pradyumna-devi/mbu-datascience-lab/blob/main/experiments/exp-1-introduction_to_data_science_t/task_1a_numpy_vector_arrays_mathematical_co.py",
+        title: "NumPy Vector Arrays & Mathematical Computations",
+        duration: "06:00 min",
+        videoUrl: "https://www.youtube.com/embed/ua-CiDNNj30",
+        aim: "To create N-dimensional NumPy arrays and demonstrate vectorized mathematical operations, broadcasting, and slice indexing.",
+        syntax: `np.array(object)
+np.mean(arr), np.std(arr)
+arr[arr > condition]`,
+        concept: "Aim: To create N-dimensional NumPy arrays and demonstrate vectorized mathematical operations, broadcasting, and slice indexing.\n\nKey Concepts:\n• NumPy provides high-performance multidimensional arrays (ndarray)\n• Vectorized operations perform element-wise arithmetic without explicit loops\n• Slicing and statistical aggregations form the core computational layer of Data Science",
+        code: `import numpy as np
+
+# 1. Array creation & shape inspection
+data = np.array([12, 18, 25, 30, 42, 55, 63, 78, 85, 92])
+print("Original Array:")
+print(data)
+
+# 2. Vectorized operations & broadcasting
+squared = data ** 2
+standardized = (data - np.mean(data)) / np.std(data)
+
+print("\\nVectorized Mean:", np.mean(data))
+print("Standard Deviation:", round(float(np.std(data)), 2))
+print("Standardized Z-Scores:")
+print(np.round(standardized, 2))
+
+# 3. Boolean masking & filtering
+high_values = data[data > 50]
+print("\\nFiltered Elements > 50:")
+print(high_values)`,
+        output: `Original Array:
+[12 18 25 30 42 55 63 78 85 92]
+
+Vectorized Mean: 50.0
+Standard Deviation: 27.24
+Standardized Z-Scores:
+[-1.39 -1.17 -0.92 -0.73 -0.29  0.18  0.48  1.03  1.28  1.54]
+
+Filtered Elements > 50:
+[55 63 78 85 92]
+
+Explanation:
+• np.array() creates a homogeneous N-dimensional array in memory.
+• (data - mean) / std computes z-score normalization across all elements concurrently.
+• data[data > 50] applies vectorized boolean masking to filter subset records.
+
+Result:
+The program successfully demonstrated NumPy array creation, statistical vectorization, and conditional indexing.`,
+        chartType: "bar",
+        chartData: {
+          labels: ["Item 1", "Item 2", "Item 3", "Item 4", "Item 5", "Item 6", "Item 7", "Item 8", "Item 9", "Item 10"],
+          datasets: [
+            {
+              label: "Original Values",
+              data: [12, 18, 25, 30, 42, 55, 63, 78, 85, 92],
+              backgroundColor: "rgba(56, 189, 248, 0.75)",
+              borderColor: "#38bdf8",
+              borderWidth: 1
+            }
+          ]
+        },
+        outputImage: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=800&q=80"
+      },
+      {
+        letter: "B",
+        codeId: "1B",
+        githubUrl: "https://github.com/pradyumna-devi/mbu-datascience-lab/blob/main/experiments/exp-1-introduction_to_data_science_t/task_1b_pandas_dataframe_construction_explo.py",
+        title: "Pandas DataFrame Construction & Exploratory Data Inspection",
+        duration: "07:30 min",
+        videoUrl: "https://www.youtube.com/embed/ua-CiDNNj30",
+        aim: "To create a Pandas DataFrame from dictionary structures, inspect data types, compute summary statistics, and add derived columns.",
+        syntax: `pd.DataFrame(data)
+df.describe()
+df['New_Column'] = expression`,
+        concept: "Aim: To create a Pandas DataFrame from dictionary structures, inspect data types, compute summary statistics, and add derived columns.\n\nKey Concepts:\n• Pandas DataFrame is a 2D labeled tabular data structure\n• df.describe() calculates count, mean, std, min, percentiles, and max\n• Column addition allows building computed metrics",
+        code: `import pandas as pd
+
+# Create dictionary dataset
+dataset = {
+    'Student_ID': ['MBU-001', 'MBU-002', 'MBU-003', 'MBU-004', 'MBU-005'],
+    'Name': ['Aarav', 'Bhavna', 'Chaitanya', 'Divya', 'Eshwar'],
+    'Lab_Score': [88, 94, 76, 92, 85],
+    'Viva_Score': [82, 90, 70, 88, 80],
+    'Attendance_Pct': [95.0, 98.5, 82.0, 91.0, 87.5]
+}
+
+df = pd.DataFrame(dataset)
+print("Student Laboratory DataFrame:")
+print(df)
+
+# Summary statistics
+print("\\nDescriptive Summary Statistics:")
+print(df[['Lab_Score', 'Viva_Score', 'Attendance_Pct']].describe())
+
+# Compute derived metric
+df['Total_Average'] = (df['Lab_Score'] + df['Viva_Score']) / 2
+print("\\nDataFrame with Computed Total Average:")
+print(df[['Name', 'Lab_Score', 'Viva_Score', 'Total_Average']])`,
+        output: `Student Laboratory DataFrame:
+  Student_ID       Name  Lab_Score  Viva_Score  Attendance_Pct
+0    MBU-001      Aarav         88          82            95.0
+1    MBU-002     Bhavna         94          90            98.5
+2    MBU-003  Chaitanya         76          70            82.0
+3    MBU-004      Divya         92          88            91.0
+4    MBU-005     Eshwar         85          80            87.5
+
+Descriptive Summary Statistics:
+       Lab_Score  Viva_Score  Attendance_Pct
+count        5.0    5.000000        5.000000
+mean        87.0   82.000000       90.800000
+std          6.9    7.842194        6.544081
+min         76.0   70.000000       82.000000
+25%         85.0   80.000000       87.500000
+50%         88.0   82.000000       91.000000
+75%         92.0   88.000000       95.000000
+max         94.0   90.000000       98.500000
+
+DataFrame with Computed Total Average:
+        Name  Lab_Score  Viva_Score  Total_Average
+0      Aarav         88          82           85.0
+1     Bhavna         94          90           92.0
+2  Chaitanya         76          70           73.0
+3      Divya         92          88           90.0
+4     Eshwar         85          80           82.5
+
+Explanation:
+• pd.DataFrame() encapsulates tabular data with columns and integer indices.
+• df.describe() summarizes the numerical properties across the cohort.
+• Total_Average derives a composite academic assessment score.
+
+Result:
+The Pandas DataFrame was successfully constructed, analyzed, and enhanced with derived features.`,
+        chartType: "bar",
+        chartData: {
+          labels: ["Aarav", "Bhavna", "Chaitanya", "Divya", "Eshwar"],
+          datasets: [
+            {
+              label: "Lab Score",
+              data: [88, 94, 76, 92, 85],
+              backgroundColor: "rgba(56, 189, 248, 0.75)",
+              borderColor: "#38bdf8",
+              borderWidth: 1
+            },
+            {
+              label: "Viva Score",
+              data: [82, 90, 70, 88, 80],
+              backgroundColor: "rgba(168, 85, 247, 0.75)",
+              borderColor: "#c084fc",
+              borderWidth: 1
+            }
+          ]
+        },
+        outputImage: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=800&q=80"
+      }
+    ]
+  },
+  {
+    id: "exp-2",
+    number: "2",
+    title: "Data Extraction & Web Data Acquisition",
+    category: "Data Extraction",
+    previewDuration: "09:00",
+    videoThumbnail: "https://images.unsplash.com/photo-1504639725590-34d0984388bd?auto=format&fit=crop&w=600&q=80",
+    previewVideoUrl: "https://www.youtube.com/embed/ng2o98k983k",
+    description: "Extract structured records from relational SQLite database tables, consume RESTful JSON endpoints, and parse HTML DOM structures.",
+    tags: ["Data Extraction", "SQL", "SQLite", "JSON", "REST APIs", "Python"],
+    githubUrl: "https://github.com/pradyumna-devi/mbu-datascience-lab/tree/main/experiments/exp-2-data_extraction_web_data_acqui",
+    subTasks: [
+      {
+        letter: "A",
+        codeId: "2A",
+        githubUrl: "https://github.com/pradyumna-devi/mbu-datascience-lab/blob/main/experiments/exp-2-data_extraction_web_data_acqui/task_2a_structured_data_extraction_from_sql.py",
+        title: "Structured Data Extraction from SQLite Database with SQL Queries",
+        duration: "07:00 min",
+        videoUrl: "https://www.youtube.com/embed/ng2o98k983k",
+        aim: "To create an in-memory SQLite database, insert tabular records, and execute structured SQL SELECT queries with filtering and aggregations into Pandas.",
+        syntax: `sqlite3.connect(':memory:')
+pd.read_sql_query(query, conn)`,
+        concept: "Aim: To create an in-memory SQLite database, insert tabular records, and execute structured SQL SELECT queries with filtering and aggregations into Pandas.\n\nKey Concepts:\n• SQLite provides standard relational database management in Python\n• pd.read_sql_query() maps SQL query result sets directly into DataFrames\n• GROUP BY and aggregate functions summarize records at the database level",
+        code: `import sqlite3
+import pandas as pd
+
+# Connect to in-memory SQLite database
+conn = sqlite3.connect(':memory:')
+cursor = conn.cursor()
+
+# Create sample research publications table
+cursor.execute('''
+    CREATE TABLE research_publications (
+        pub_id INTEGER PRIMARY KEY,
+        domain TEXT,
+        citations INTEGER,
+        impact_factor REAL,
+        year INTEGER
+    )
+''')
+
+sample_data = [
+    (1, 'Machine Learning', 142, 4.8, 2024),
+    (2, 'Data Extraction', 89, 3.5, 2024),
+    (3, 'Computer Vision', 215, 6.2, 2025),
+    (4, 'Data Extraction', 64, 3.1, 2025),
+    (5, 'Machine Learning', 198, 5.4, 2025),
+    (6, 'Natural Language Processing', 175, 5.1, 2026)
+]
+cursor.executemany('INSERT INTO research_publications VALUES (?, ?, ?, ?, ?)', sample_data)
+conn.commit()
+
+# Extract data using SQL query
+sql_query = """
+    SELECT domain, COUNT(*) as paper_count, AVG(citations) as avg_citations, MAX(impact_factor) as max_if
+    FROM research_publications
+    GROUP BY domain
+    ORDER BY avg_citations DESC;
+"""
+
+df_extracted = pd.read_sql_query(sql_query, conn)
+print("Extracted Aggregated Records via SQL Query:")
+print(df_extracted)
+conn.close()`,
+        output: `Extracted Aggregated Records via SQL Query:
+                        domain  paper_count  avg_citations  max_if
+0              Computer Vision            1          215.0     6.2
+1  Natural Language Processing            1          175.0     5.1
+2             Machine Learning            2          170.0     5.4
+3              Data Extraction            2           76.5     3.5
+
+Explanation:
+• sqlite3 creates a relational database in memory.
+• SQL GROUP BY groups records by research domain.
+• pd.read_sql_query directly loads the result into an analytical Pandas DataFrame.
+
+Result:
+Tabular records were successfully extracted from an SQLite relational database via SQL queries.`,
+        chartType: "bar",
+        chartData: {
+          labels: ["Computer Vision", "NLP", "Machine Learning", "Data Extraction"],
+          datasets: [
+            {
+              label: "Average Citations",
+              data: [215.0, 175.0, 170.0, 76.5],
+              backgroundColor: [
+                "rgba(56, 189, 248, 0.75)",
+                "rgba(168, 85, 247, 0.75)",
+                "rgba(52, 211, 153, 0.75)",
+                "rgba(251, 191, 36, 0.75)"
+              ],
+              borderColor: ["#38bdf8", "#c084fc", "#34d399", "#fbbf24"],
+              borderWidth: 1
+            }
+          ]
+        },
+        outputImage: "https://images.unsplash.com/photo-1504639725590-34d0984388bd?auto=format&fit=crop&w=800&q=80"
+      },
+      {
+        letter: "B",
+        codeId: "2B",
+        githubUrl: "https://github.com/pradyumna-devi/mbu-datascience-lab/blob/main/experiments/exp-2-data_extraction_web_data_acqui/task_2b_restful_json_api_data_consumption_n.py",
+        title: "RESTful JSON API Data Consumption & Normalization",
+        duration: "08:00 min",
+        videoUrl: "https://www.youtube.com/embed/ng2o98k983k",
+        aim: "To parse hierarchical JSON records from a simulated REST API endpoint and normalize nested key structures into a flat tabular DataFrame.",
+        syntax: `json.loads(text)
+pd.json_normalize(data)`,
+        concept: "Aim: To parse hierarchical JSON records from a simulated REST API endpoint and normalize nested key structures into a flat tabular DataFrame.\n\nKey Concepts:\n• Web APIs serialize data into JSON dictionaries and lists\n• pd.json_normalize() recursively extracts nested sub-keys\n• Extracted data columns can be conditionally inspected and analyzed",
+        code: `import json
+import pandas as pd
+
+# Simulated API payload response from RESTful endpoint
+api_response_payload = """
+[
+    {"sensor_id": "SN-101", "location": "Lab-Alpha", "telemetry": {"temperature": 23.4, "humidity": 45.2, "status": "active"}},
+    {"sensor_id": "SN-102", "location": "Lab-Beta", "telemetry": {"temperature": 27.8, "humidity": 51.0, "status": "warning"}},
+    {"sensor_id": "SN-103", "location": "Lab-Gamma", "telemetry": {"temperature": 22.1, "humidity": 42.8, "status": "active"}},
+    {"sensor_id": "SN-104", "location": "Server-Room", "telemetry": {"temperature": 19.5, "humidity": 38.4, "status": "optimal"}}
+]
+"""
+
+# Parse JSON string
+parsed_json = json.loads(api_response_payload)
+
+# Normalize nested JSON structure into Pandas DataFrame
+df_sensors = pd.json_normalize(parsed_json)
+print("Normalized API Response Data:")
+print(df_sensors)
+
+# Query extracted telemetry
+high_temp = df_sensors[df_sensors['telemetry.temperature'] > 22.0]
+print("\\nSensors with Temperature > 22°C:")
+print(high_temp[['sensor_id', 'location', 'telemetry.temperature', 'telemetry.status']])`,
+        output: `Normalized API Response Data:
+  sensor_id     location  telemetry.temperature  telemetry.humidity telemetry.status
+0    SN-101    Lab-Alpha                   23.4                45.2           active
+1    SN-102     Lab-Beta                   27.8                51.0          warning
+2    SN-103    Lab-Gamma                   22.1                42.8           active
+3    SN-104  Server-Room                   19.5                38.4          optimal
+
+Sensors with Temperature > 22°C:
+  sensor_id   location  telemetry.temperature telemetry.status
+0    SN-101  Lab-Alpha                   23.4           active
+1    SN-102   Lab-Beta                   27.8          warning
+2    SN-103  Lab-Gamma                   22.1           active
+
+Explanation:
+• json.loads parses the REST payload string into Python objects.
+• pd.json_normalize flattens nested telemetry sub-dictionaries into distinct columns.
+• Boolean indexing filters sensors exceeding operational temperature thresholds.
+
+Result:
+RESTful JSON data was successfully consumed, flattened, and analyzed.`,
+        chartType: "bar",
+        chartData: {
+          labels: ["Lab-Alpha", "Lab-Beta", "Lab-Gamma", "Server-Room"],
+          datasets: [
+            {
+              label: "Sensor Temperature (°C)",
+              data: [23.4, 27.8, 22.1, 19.5],
+              backgroundColor: [
+                "rgba(56, 189, 248, 0.75)",
+                "rgba(239, 68, 68, 0.75)",
+                "rgba(56, 189, 248, 0.75)",
+                "rgba(52, 211, 153, 0.75)"
+              ],
+              borderColor: ["#38bdf8", "#ef4444", "#38bdf8", "#34d399"],
+              borderWidth: 1
+            }
+          ]
+        },
+        outputImage: "https://images.unsplash.com/photo-1504639725590-34d0984388bd?auto=format&fit=crop&w=800&q=80"
+      }
+    ]
+  },
   {
     id: "exp-4",
     number: "4",
@@ -21,10 +376,12 @@ export const INITIAL_EXPERIMENTS = [
     previewVideoUrl: "/datawrangling-preview-10s.mp4",
     description: "Reshape complex tabular data using hierarchical multi-indexing, stack, unstack, and merge with combine-first value imputation.",
     tags: ["Data Wrangling", "MultiIndex", "Stack / Unstack", "Merge", "Pandas"],
+    githubUrl: "https://github.com/pradyumna-devi/mbu-datascience-lab/tree/main/experiments/exp-4-data_wrangling_hierarchical_in",
     subTasks: [
       {
         letter: "A",
         codeId: "4A",
+        githubUrl: "https://github.com/pradyumna-devi/mbu-datascience-lab/blob/main/experiments/exp-4-data_wrangling_hierarchical_in/task_4a_perform_hierarchical_indexing_and_s.py",
         title: "Perform hierarchical indexing and select data subsets using partial indexing",
         duration: "06:00 min",
         videoUrl: "/datawrangling-preview-10s.mp4",
@@ -134,6 +491,7 @@ The program successfully demonstrates hierarchical indexing and partial indexing
       {
         letter: "B",
         codeId: "4B",
+        githubUrl: "https://github.com/pradyumna-devi/mbu-datascience-lab/blob/main/experiments/exp-4-data_wrangling_hierarchical_in/task_4b_rearrange_tabular_data_with_hierarc.py",
         title: "Rearrange tabular data with hierarchical indexing using unstack and stack method",
         duration: "06:30 min",
         videoUrl: "/datawrangling-preview-10s.mp4",
@@ -242,6 +600,7 @@ The unstack() method converts row-level hierarchical indexes into columns, while
       {
         letter: "C",
         codeId: "4C",
+        githubUrl: "https://github.com/pradyumna-devi/mbu-datascience-lab/blob/main/experiments/exp-4-data_wrangling_hierarchical_in/task_4c_merge_dataframes_using_index_as_key.py",
         title: "Merge DataFrames using index as key and combine data using combine_first()",
         duration: "07:00 min",
         videoUrl: "/datawrangling-preview-10s.mp4",
@@ -370,13 +729,15 @@ The program demonstrates both index-based merging and combining overlapping Data
     category: "Data Visualization",
     previewDuration: "00:10",
     videoThumbnail: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=600&q=80",
-    previewVideoUrl: "/dataviz-preview-10s.mp4",
+    previewVideoUrl: "https://www.youtube.com/embed/Bw_yIdyeNhY",
     description: "Perform comprehensive data visualization using Matplotlib and Seaborn across line, bar, histogram, scatter, and boxplots.",
     tags: ["Matplotlib", "Seaborn", "Data Visualization", "Subplots", "EDA"],
+    githubUrl: "https://github.com/pradyumna-devi/mbu-datascience-lab/tree/main/experiments/exp-5-data_visualization_with_matplo",
     subTasks: [
       {
         letter: "A",
         codeId: "5A",
+        githubUrl: "https://github.com/pradyumna-devi/mbu-datascience-lab/blob/main/experiments/exp-5-data_visualization_with_matplo/task_5a_create_a_line_plot_with_title_axis_.py",
         title: "Create a Line Plot with Title, Axis Labels, Ticks, Tick Labels, Annotations and Save to a File",
         duration: "06:30 min",
         videoUrl: "https://www.youtube.com/embed/Bw_yIdyeNhY",
@@ -561,6 +922,7 @@ Thus, a line plot with titles, axis labels, ticks, tick labels, annotations, and
       {
         letter: "B",
         codeId: "5B",
+        githubUrl: "https://github.com/pradyumna-devi/mbu-datascience-lab/blob/main/experiments/exp-5-data_visualization_with_matplo/task_5b_create_bar_plots_using_series_and_d.py",
         title: "Create Bar Plots using Series and DataFrame index (Grouped & Stacked)",
         duration: "07:15 min",
         videoUrl: "https://www.youtube.com/embed/3Rok5fgOWrw",
@@ -699,6 +1061,7 @@ Thus, grouped bar plots and stacked bar plots were successfully created from a P
       {
         letter: "C",
         codeId: "5C",
+        githubUrl: "https://github.com/pradyumna-devi/mbu-datascience-lab/blob/main/experiments/exp-5-data_visualization_with_matplo/task_5c_create_histogram_to_display_value_f.py",
         title: "Create Histogram to display value frequency and Density Plot to generate continuous distribution",
         duration: "06:45 min",
         videoUrl: "https://www.youtube.com/embed/t_W6eC8-17w",
@@ -832,6 +1195,7 @@ Thus, a histogram and density plot were successfully created to visualize the fr
       {
         letter: "D",
         codeId: "5D",
+        githubUrl: "https://github.com/pradyumna-devi/mbu-datascience-lab/blob/main/experiments/exp-5-data_visualization_with_matplo/task_5d_create_scatter_plot_and_examine_the.py",
         title: "Create Scatter Plot and Examine the Relationship Between Two One-Dimensional Data Series",
         duration: "06:00 min",
         videoUrl: "/dataviz-preview-10s.mp4",
@@ -956,6 +1320,7 @@ Thus, the scatter plot was successfully created and the relationship between the
       {
         letter: "E",
         codeId: "5E",
+        githubUrl: "https://github.com/pradyumna-devi/mbu-datascience-lab/blob/main/experiments/exp-5-data_visualization_with_matplo/task_5e_create_box_plots_to_visualize_data_.py",
         title: "Create Box Plots to Visualize Data with Many Categorical Variables",
         duration: "07:00 min",
         videoUrl: "/dataviz-preview-10s.mp4",
@@ -1085,13 +1450,15 @@ Thus, the Box Plot was successfully created to visualize and compare the distrib
     category: "Time Series",
     previewDuration: "00:10",
     videoThumbnail: "https://images.unsplash.com/photo-1642543492481-44e81e3914a7?auto=format&fit=crop&w=600&q=80",
-    previewVideoUrl: "/timeseries-preview-10s.mp4",
+    previewVideoUrl: "https://www.youtube.com/embed/Y_V728X_lOE",
     description: "Analyze chronological data patterns, decompose seasonal variations, evaluate stationarity, and forecast future values using models.",
     tags: ["ARIMA", "SARIMAX", "LSTM", "Dickey-Fuller", "Holt-Winters"],
+    githubUrl: "https://github.com/pradyumna-devi/mbu-datascience-lab/tree/main/experiments/exp-6-time_series_analysis",
     subTasks: [
       {
         letter: "A",
         codeId: "6A",
+        githubUrl: "https://github.com/pradyumna-devi/mbu-datascience-lab/blob/main/experiments/exp-6-time_series_analysis/task_6a_create_time_series_using_datetime_o.py",
         title: "Create time series using datetime object in pandas indexed by timestamps",
         duration: "05:00 min",
         videoUrl: "https://www.youtube.com/embed/Y_V728X_lOE",
@@ -1160,6 +1527,7 @@ The index of the Series consists of timestamps, while the corresponding values r
       {
         letter: "B",
         codeId: "6B",
+        githubUrl: "https://github.com/pradyumna-devi/mbu-datascience-lab/blob/main/experiments/exp-6-time_series_analysis/task_6b_use_pandas_date_range_to_generate_a.py",
         title: "Use pandas.date_range to generate a DatetimeIndex with an indicated length",
         duration: "05:00 min",
         videoUrl: "https://www.youtube.com/embed/nOUZG_jBxLk",
@@ -1232,6 +1600,7 @@ The resulting object is a DatetimeIndex.`,
       {
         letter: "C",
         codeId: "6C",
+        githubUrl: "https://github.com/pradyumna-devi/mbu-datascience-lab/blob/main/experiments/exp-6-time_series_analysis/task_6c_generate_date_ranges_with_time_zone.py",
         title: "Generate date ranges with time zones, localize, convert using tz_convert(), and combine series",
         duration: "06:00 min",
         videoUrl: "https://www.youtube.com/embed/ayhlXvAIjzk",
@@ -1413,6 +1782,7 @@ dtype: int64`,
       {
         letter: "D",
         codeId: "6D",
+        githubUrl: "https://github.com/pradyumna-devi/mbu-datascience-lab/blob/main/experiments/exp-6-time_series_analysis/task_6d_perform_period_arithmetic_such_as_a.py",
         title: "Perform period arithmetic such as adding and subtracting integers from periods and construct range of periods using period_range function",
         duration: "05:00 min",
         videoUrl: "https://www.youtube.com/embed/7L2sOOTQgaw",
@@ -1516,6 +1886,7 @@ PeriodIndex(['2026-01', '2026-02', '2026-03',
       {
         letter: "E",
         codeId: "6E",
+        githubUrl: "https://github.com/pradyumna-devi/mbu-datascience-lab/blob/main/experiments/exp-6-time_series_analysis/task_6e_convert_periods_and_periodindex_obj.py",
         title: "Convert Periods and PeriodIndex objects to another frequency with asfreq method",
         duration: "05:00 min",
         videoUrl: "https://www.youtube.com/embed/4YjKOJPhlRs",
@@ -1645,6 +2016,7 @@ PeriodIndex(['2026-01-31', '2026-02-28', '2026-03-31'],
       {
         letter: "F",
         codeId: "6F",
+        githubUrl: "https://github.com/pradyumna-devi/mbu-datascience-lab/blob/main/experiments/exp-6-time_series_analysis/task_6f_convert_series_and_dataframe_object.py",
         title: "Convert Series and DataFrame objects indexed by timestamps to periods with the to_period method",
         duration: "05:00 min",
         videoUrl: "https://www.youtube.com/embed/cEHH0luMP8k",
@@ -1778,6 +2150,7 @@ Freq: M`,
       {
         letter: "G",
         codeId: "6G",
+        githubUrl: "https://github.com/pradyumna-devi/mbu-datascience-lab/blob/main/experiments/exp-6-time_series_analysis/task_6g_perform_resampling_downsampling_and.py",
         title: "Perform resampling, downsampling and upsampling for the time series",
         duration: "06:00 min",
         videoUrl: "https://www.youtube.com/embed/qS1iSepWLlE",
@@ -1935,3 +2308,99 @@ Freq: 30min, dtype: int64`,
     ]
   }
 ];
+
+export const INITIAL_MODULES = [
+  {
+    id: "mod-1",
+    code: "DS-MOD-101",
+    title: "Module 1: Introduction to Data Science",
+    category: "Introduction to Data Science",
+    hours: "14 Theory + 28 Lab Hours",
+    credits: "4 Credits",
+    gradient: "linear-gradient(135deg, rgba(14, 165, 233, 0.2), rgba(37, 99, 235, 0.1))",
+    borderColor: "rgba(14, 165, 233, 0.4)",
+    badgeColor: "#38bdf8",
+    icon: "layers",
+    description: "Fundamental principles of Data Science, lifecycle phases, interactive computing environments in Python, high-performance numerical computing with NumPy, and structured tabular manipulation using Pandas.",
+    topics: [
+      "Data Science lifecycle, multidisciplinary foundations & problem formulation",
+      "Python data science ecosystem & interactive development environments",
+      "NumPy N-dimensional array architectures, vectorization & numerical broadcasting",
+      "Pandas Series and DataFrame structures, indexing, slicing & attribute inspection",
+      "Descriptive statistics: measures of central tendency, dispersion & exploratory distributions",
+      "Data governance, ethical analytics, reproducibility & privacy standards"
+    ],
+    syllabusUnits: [
+      "Unit I: Foundations & The Data Science Lifecycle",
+      "Unit II: Computational Ecosystem & Numerical Computing with NumPy",
+      "Unit III: Tabular Data Structures with Pandas & Exploratory Diagnostics"
+    ],
+    relevantExpId: "exp-1",
+    relevantExpTitle: "Experiment 1: Introduction to Data Science & Tabular Computing"
+  },
+  {
+    id: "mod-2",
+    code: "DS-MOD-102",
+    title: "Module 2: Data Extraction",
+    category: "Data Extraction",
+    hours: "14 Theory + 28 Lab Hours",
+    credits: "4 Credits",
+    gradient: "linear-gradient(135deg, rgba(168, 85, 247, 0.2), rgba(99, 102, 241, 0.1))",
+    borderColor: "rgba(168, 85, 247, 0.4)",
+    badgeColor: "#c084fc",
+    icon: "database",
+    description: "Protocols and engineering pipelines for acquiring, extracting, and ingesting data across heterogeneous sources: relational databases via SQL, RESTful web APIs with authentication, HTML web scraping with BeautifulSoup, and semi-structured file parsing.",
+    topics: [
+      "Data acquisition pipelines: primary, secondary & third-party streaming sources",
+      "Relational database extraction: SQL queries, SQLite connections & DataFrame loading",
+      "RESTful API consumption: HTTP methods, response headers & JSON data normalization",
+      "API authentication: API keys, Bearer tokens, rate limiting & pagination handling",
+      "Web scraping protocols: BeautifulSoup, HTML DOM tree navigation & tag filtering",
+      "Parsing semi-structured data: JSON, XML, CSV, TSV & unstructured text streams",
+      "Ethical data extraction, robots.txt compliance, error handling & network resiliency"
+    ],
+    syllabusUnits: [
+      "Unit I: Relational Database Connectivity & SQL Query Extraction",
+      "Unit II: RESTful Web APIs, JSON/XML Endpoints & Authentication Protocols",
+      "Unit III: Web Scraping, HTML DOM Parsing & Semi-Structured Data Pipelines"
+    ],
+    relevantExpId: "exp-2",
+    relevantExpTitle: "Experiment 2: Data Extraction, REST APIs & Web Scraping"
+  }
+];
+
+export const INITIAL_TOOLS = [
+  {
+    id: "tool-scratchpad",
+    name: "Python Virtual REPL & Scratchpad",
+    badge: "Interactive Kernel",
+    icon: "terminal",
+    description: "Run and test arbitrary Python and Pandas code snippets directly in your browser with real-time simulated execution output.",
+    category: "Execution"
+  },
+  {
+    id: "tool-dataset-inspector",
+    name: "Dataset Inspector & CSV Analyzer",
+    badge: "Data Telemetry",
+    icon: "file-spreadsheet",
+    description: "Inspect popular data science benchmark datasets (Iris, Titanic, Stock Series) or upload your custom CSV file to compute instant summary statistics.",
+    category: "Inspection"
+  },
+  {
+    id: "tool-metric-calc",
+    name: "ML & Statistics Metric Calculator",
+    badge: "Diagnostic Tool",
+    icon: "calculator",
+    description: "Calculate Confusion Matrix parameters (Accuracy, Precision, Recall, F1), Dickey-Fuller stationarity p-values, and Regression MSE/R².",
+    category: "Analytics"
+  },
+  {
+    id: "tool-cheatsheet",
+    name: "Data Science Cheat Sheets & Quick Reference",
+    badge: "Reference Hub",
+    icon: "book-open",
+    description: "Instant lookups for Pandas indexing, NumPy vector math, Matplotlib plotting commands, and Time Series modeling syntax.",
+    category: "Reference"
+  }
+];
+
