@@ -646,6 +646,15 @@ Ready to execute scripts. Choose a template or write Python code on the left and
                     <span>Python 3.11 Kernel Editor (Interactive)</span>
                   </div>
                   <div class="panel-actions">
+                    <button class="btn-tool text-amber" id="generateLabRecordBtn" title="Generate & Print Official MBU Lab Record Sheet (Ctrl+P)">
+                      <i data-lucide="file-check"></i> Lab Record
+                    </button>
+                    <button class="btn-tool text-indigo" id="downloadNotebookBtn" title="Export Jupyter Notebook (.ipynb) for Colab / JupyterLab">
+                      <i data-lucide="book-down"></i> .ipynb
+                    </button>
+                    <button class="btn-tool text-cyan" id="aiExplainCodeBtn" title="AI Pedagogical Code & Algorithm Explainer">
+                      <i data-lucide="sparkles"></i> AI Explainer
+                    </button>
                     <a class="btn-tool" id="workspaceGithubBtn" href="https://github.com/pradyumna-devi/mbu-datascience-lab" target="_blank" rel="noopener noreferrer" title="View this Python script on GitHub">
                       <i data-lucide="github"></i> GitHub
                     </a>
@@ -759,6 +768,9 @@ Ready to execute scripts. Choose a template or write Python code on the left and
                     <button class="toggle-view-btn" id="showStaticPlotBtn" title="Publication Plot">
                       Publication Plot
                     </button>
+                    <button class="toggle-view-btn" id="showVivaVoceBtn" title="Interactive Viva Voce Examination Questions">
+                      🎓 Viva Voce
+                    </button>
                   </div>
                 </div>
 
@@ -795,6 +807,22 @@ Ready to execute scripts. Choose a template or write Python code on the left and
                 <div class="plot-display-image-area" id="staticPlotContainer" style="display: none;">
                   <img id="staticPlotImg" src="" alt="Experiment Graphic Output" />
                   <div class="image-caption">Scientific Telemetry Diagnostics (High Resolution Matplotlib)</div>
+                </div>
+
+                <!-- Display 4: Interactive Academic Viva Voce Container -->
+                <div class="plot-display-viva-area" id="vivaVoceContainer" style="display: none;">
+                  <div class="viva-panel-inner">
+                    <div class="viva-header-bar">
+                      <div class="viva-title-box">
+                        <span class="viva-tag-chip"><i data-lucide="graduation-cap"></i> MBU Oral Exam Prep</span>
+                        <h4 class="viva-heading" id="vivaTaskTitleDisplay">Viva Voce &amp; Academic Conceptual Questions</h4>
+                      </div>
+                      <span class="viva-count-badge" id="vivaQuestionCountBadge">3 Questions</span>
+                    </div>
+                    <div class="viva-questions-list" id="vivaQuestionsList">
+                      <!-- Rendered dynamically -->
+                    </div>
+                  </div>
                 </div>
 
               </div>
@@ -1579,6 +1607,99 @@ Ready to execute scripts. Choose a template or write Python code on the left and
       </div>
     </div>
 
+    <!-- Modal: Official MBU Laboratory Observation Record Sheet & Printable PDF -->
+    <div class="modal-overlay" id="labRecordModal" style="display: none;">
+      <div class="modal-card modal-xl lab-record-card">
+        <div class="modal-header lab-record-modal-header">
+          <div class="modal-title-wrap">
+            <div class="modal-icon-badge bg-gradient-amber">
+              <i data-lucide="file-check"></i>
+            </div>
+            <div>
+              <h3>MBU Digital Laboratory Observation Record</h3>
+              <p class="modal-subtitle">Official Academic Practical Assessment &bull; Print or Save as PDF</p>
+            </div>
+          </div>
+          <div class="header-right-tools">
+            <button class="btn-tool" id="downloadRecordHtmlBtn" title="Download Record as HTML">
+              <i data-lucide="download"></i> Save HTML
+            </button>
+            <button class="btn-primary" id="printRecordSheetBtn" title="Print or Save as PDF (Ctrl + P)">
+              <i data-lucide="printer"></i> Print / Save PDF
+            </button>
+            <button class="modal-close-btn" id="closeLabRecordModalBtn">&times;</button>
+          </div>
+        </div>
+
+        <div class="lab-record-preview-body" id="labRecordPreviewContent">
+          <!-- Official MBU Lab Record Sheet HTML injected here -->
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal: AI Pedagogical Code Explainer -->
+    <div class="modal-overlay" id="aiExplainerModal" style="display: none;">
+      <div class="modal-card modal-lg ai-explainer-card">
+        <div class="modal-header">
+          <div class="modal-title-wrap">
+            <div class="modal-icon-badge bg-gradient-cyan">
+              <i data-lucide="sparkles"></i>
+            </div>
+            <div>
+              <h3 id="aiModalTitle">AI Pedagogical Code &amp; Algorithm Breakdown</h3>
+              <p class="modal-subtitle" id="aiModalSubtitle">Deep AST Inspection &bull; Algorithmic Phases &bull; Complexity Analysis</p>
+            </div>
+          </div>
+          <button class="modal-close-btn" id="closeAiExplainerModalBtn">&times;</button>
+        </div>
+
+        <div class="ai-explainer-body" id="aiExplainerBody">
+          <!-- AI Breakdown Content injected dynamically -->
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal: Keyboard Shortcuts & Quick Reference -->
+    <div class="modal-overlay" id="keyboardShortcutsModal" style="display: none;">
+      <div class="modal-card modal-md shortcuts-card">
+        <div class="modal-header">
+          <div class="modal-title-wrap">
+            <div class="modal-icon-badge bg-gradient-indigo">
+              <i data-lucide="command"></i>
+            </div>
+            <div>
+              <h3>Keyboard Shortcuts</h3>
+              <p class="modal-subtitle">Power User Keybindings &bull; MBU Data Science Lab</p>
+            </div>
+          </div>
+          <button class="modal-close-btn" id="closeShortcutsModalBtn">&times;</button>
+        </div>
+
+        <div class="shortcuts-body">
+          <div class="shortcut-row">
+            <div class="shortcut-keys"><kbd>Shift</kbd> + <kbd>Enter</kbd></div>
+            <div class="shortcut-desc">Run Python code in virtual WebAssembly kernel</div>
+          </div>
+          <div class="shortcut-row">
+            <div class="shortcut-keys"><kbd>Ctrl</kbd> + <kbd>P</kbd></div>
+            <div class="shortcut-desc">Generate official MBU Laboratory Record sheet &amp; print</div>
+          </div>
+          <div class="shortcut-row">
+            <div class="shortcut-keys"><kbd>Tab</kbd></div>
+            <div class="shortcut-desc">Indent 4 spaces in Python editor</div>
+          </div>
+          <div class="shortcut-row">
+            <div class="shortcut-keys"><kbd>?</kbd> or <kbd>Ctrl</kbd> + <kbd>/</kbd></div>
+            <div class="shortcut-desc">Toggle keyboard shortcuts cheat sheet</div>
+          </div>
+          <div class="shortcut-row">
+            <div class="shortcut-keys"><kbd>Esc</kbd></div>
+            <div class="shortcut-desc">Dismiss open modal or overlay</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- Floating Cyber-Navigation HUD Dock -->
     <aside class="floating-cyber-dock" id="floatingCyberDock" aria-label="Quick Actions Dock">
       <div class="dock-inner-glass">
@@ -1593,6 +1714,10 @@ Ready to execute scripts. Choose a template or write Python code on the left and
         <button class="dock-action-btn" id="dockScratchpadBtn" title="Open Interactive Python REPL Scratchpad">
           <i data-lucide="terminal"></i>
           <span class="dock-tooltip">REPL Scratchpad</span>
+        </button>
+        <button class="dock-action-btn" id="dockShortcutsBtn" title="Keyboard Shortcuts Cheat Sheet (?)">
+          <i data-lucide="command"></i>
+          <span class="dock-tooltip">Shortcuts (?)</span>
         </button>
         <button class="dock-action-btn" id="dockConfettiBtn" title="Celebration Fireworks FX">
           <i data-lucide="party-popper"></i>

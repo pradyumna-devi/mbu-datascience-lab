@@ -13,6 +13,11 @@ import {
   initFloatingCyberDock,
   playSound
 } from './interactiveEffects.js';
+import {
+  generateLabRecordHtml,
+  downloadJupyterNotebook,
+  generateAiExplanation
+} from './labRecordGenerator.js';
 
 // ==========================================
 // STATE MANAGEMENT & LOCAL STORAGE
@@ -22,7 +27,7 @@ const STORAGE_KEYS = {
   PROFILE: 'mbu_ds_profile_v2_links',
   MODULES: 'mbu_ds_modules_v3_two_modules',
   THEME: 'mbu_ds_theme_mode',
-  VERSION: 'mbu_ds_data_version_v7_github'
+  VERSION: 'mbu_ds_data_version_v8_viva_records'
 };
 
 let experiments = loadExperiments();
@@ -111,12 +116,13 @@ function loadExperiments() {
 
     // Force-sync official experiments and subtasks
     const currentVersion = localStorage.getItem(STORAGE_KEYS.VERSION);
-    if (currentVersion !== 'mbu_ds_data_version_v7_github') {
+    if (currentVersion !== 'mbu_ds_data_version_v8_viva_records') {
       INITIAL_EXPERIMENTS.forEach(initialExp => {
         const existingIdx = loaded.findIndex(e => e.id === initialExp.id);
         if (existingIdx !== -1) {
           loaded[existingIdx].githubUrl = initialExp.githubUrl;
           loaded[existingIdx].previewVideoUrl = initialExp.previewVideoUrl;
+          loaded[existingIdx].vivaQuestions = initialExp.vivaQuestions;
           if (Array.isArray(initialExp.subTasks) && Array.isArray(loaded[existingIdx].subTasks)) {
             initialExp.subTasks.forEach(initSt => {
               const stIdx = loaded[existingIdx].subTasks.findIndex(s => s.letter === initSt.letter);
@@ -134,7 +140,7 @@ function loadExperiments() {
           loaded.push(JSON.parse(JSON.stringify(initialExp)));
         }
       });
-      localStorage.setItem(STORAGE_KEYS.VERSION, 'mbu_ds_data_version_v7_github');
+      localStorage.setItem(STORAGE_KEYS.VERSION, 'mbu_ds_data_version_v8_viva_records');
       localStorage.setItem(STORAGE_KEYS.EXPERIMENTS, JSON.stringify(loaded));
     }
 
@@ -999,17 +1005,32 @@ function renderChartOrImage(subTask) {
   const staticImg = document.getElementById('staticPlotImg');
   const chartContainer = document.getElementById('interactiveChartContainer');
   const staticContainer = document.getElementById('staticPlotContainer');
-
   const videoContainer = document.getElementById('videoLectureContainer');
+  const vivaContainer = document.getElementById('vivaVoceContainer');
+
   const chartBtn = document.getElementById('showInteractiveChartBtn');
   const plotBtn = document.getElementById('showStaticPlotBtn');
   const videoBtn = document.getElementById('showVideoLectureBtn');
+  const vivaBtn = document.getElementById('showVivaVoceBtn');
 
   if (subTask.outputImage) {
     staticImg.src = subTask.outputImage;
   } else {
     staticImg.src = "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=800&q=80";
   }
+
+  // If Viva Voce mode is currently active, preserve and re-render questions
+  if (vivaBtn && vivaBtn.classList.contains('active')) {
+    if (chartContainer) chartContainer.style.display = 'none';
+    if (staticContainer) staticContainer.style.display = 'none';
+    if (videoContainer) videoContainer.style.display = 'none';
+    if (vivaContainer) vivaContainer.style.display = 'block';
+    renderVivaVoceQuestions();
+    return;
+  }
+
+  if (vivaContainer) vivaContainer.style.display = 'none';
+  if (vivaBtn) vivaBtn.classList.remove('active');
 
   // Check if subTask has a video lecture (YouTube or MP4)
   const exp = experiments.find(e => e.id === currentExpId);
@@ -2615,27 +2636,313 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('executeCodeBtn')?.addEventListener('click', executeVirtualKernel);
   document.getElementById('copyCodeBtn')?.addEventListener('click', copyCodeToClipboard);
 
+  // ==========================================
+  // VIVA VOCE & ACADEMIC PREPARATION ENGINE
+  // ==========================================
+  function renderVivaVoceQuestions() {
+    const exp = experiments.find(e => e.id === currentExpId);
+    if (!exp) return;
+    const subTask = (exp.subTasks || []).find(st => st.letter === currentSubTaskLetter) || exp.subTasks?.[0];
+    const listEl = document.getElementById('vivaQuestionsList');
+    const countBadge = document.getElementById('vivaQuestionCountBadge');
+    const titleDisplay = document.getElementById('vivaTaskTitleDisplay');
+
+    if (titleDisplay && subTask) {
+      titleDisplay.textContent = `${subTask.codeId || subTask.letter}: ${subTask.title} — Viva Voce`;
+    }
+
+    const questions = (exp.vivaQuestions && exp.vivaQuestions.length > 0) ? exp.vivaQuestions : [
+      {
+        q: `What is the computational objective of ${subTask?.title || 'this experiment'}?`,
+        a: `To implement, verify, and evaluate algorithms with optimal time-space complexity and statistical accuracy within the Python runtime.`,
+        concept: "Algorithm Verification"
+      },
+      {
+        q: "How does the virtual Python WebAssembly kernel execute this code?",
+        a: "Pyodide compiles the CPython 3.12 interpreter to WebAssembly (WASM), executing NumPy and Pandas operations directly within client-side memory pointers with zero server roundtrips.",
+        concept: "WebAssembly AST Execution"
+      },
+      {
+        q: "What edge cases should be considered in this data science workflow?",
+        a: "Handling NaN/null values in matrices, avoiding zero-division in normalized scales, and maintaining matrix dimensional compatibility during vector broadcasting.",
+        concept: "Edge Case Robustness"
+      }
+    ];
+
+    if (countBadge) {
+      countBadge.textContent = `${questions.length} Questions`;
+    }
+
+    if (!listEl) return;
+    listEl.innerHTML = '';
+
+    questions.forEach((item, idx) => {
+      const card = document.createElement('div');
+      card.className = 'viva-q-card';
+      card.innerHTML = `
+        <div class="viva-q-header">
+          <span class="viva-q-number">Q${idx + 1}</span>
+          <h5 class="viva-q-title">${item.q}</h5>
+          <button class="viva-reveal-btn" type="button" data-revealed="false">
+            <i data-lucide="eye"></i> <span>Reveal</span>
+          </button>
+        </div>
+        <div class="viva-q-answer" style="display: none;">
+          <div>${item.a}</div>
+          <div><span class="viva-q-concept-tag">${item.concept || 'Data Science Theory'}</span></div>
+        </div>
+      `;
+
+      const revealBtn = card.querySelector('.viva-reveal-btn');
+      const answerDiv = card.querySelector('.viva-q-answer');
+      const header = card.querySelector('.viva-q-header');
+
+      function toggleAnswer(e) {
+        e.stopPropagation();
+        const isVisible = answerDiv.style.display !== 'none';
+        if (isVisible) {
+          answerDiv.style.display = 'none';
+          revealBtn.innerHTML = `<i data-lucide="eye"></i> <span>Reveal</span>`;
+          revealBtn.dataset.revealed = "false";
+        } else {
+          answerDiv.style.display = 'block';
+          revealBtn.innerHTML = `<i data-lucide="eye-off"></i> <span>Hide</span>`;
+          revealBtn.dataset.revealed = "true";
+          playSound('laser');
+        }
+        lucide.createIcons();
+      }
+
+      header.addEventListener('click', toggleAnswer);
+      listEl.appendChild(card);
+    });
+
+    lucide.createIcons();
+  }
+
+  // ==========================================
+  // OFFICIAL MBU LAB OBSERVATION RECORD SHEET
+  // ==========================================
+  function openLabRecordModal() {
+    const exp = experiments.find(e => e.id === currentExpId);
+    if (!exp) {
+      showToast("Please open an experiment in the Workspace first.", "warning");
+      return;
+    }
+    const subTask = (exp.subTasks || []).find(st => st.letter === currentSubTaskLetter) || exp.subTasks?.[0];
+    const code = document.getElementById('workspaceCodeEditor')?.value || subTask?.code || '';
+    const output = document.getElementById('workspaceTerminalOutput')?.textContent || subTask?.output || '';
+
+    const html = generateLabRecordHtml(exp, subTask, code, output, profile);
+    const container = document.getElementById('labRecordPreviewContent');
+    if (container) {
+      container.innerHTML = html;
+    }
+
+    const modal = document.getElementById('labRecordModal');
+    if (modal) {
+      modal.style.display = 'flex';
+      playSound('modal_open');
+    }
+    lucide.createIcons();
+  }
+
+  function closeLabRecordModal() {
+    const modal = document.getElementById('labRecordModal');
+    if (modal) modal.style.display = 'none';
+  }
+
+  // ==========================================
+  // AI PEDAGOGICAL CODE EXPLAINER
+  // ==========================================
+  function openAiExplainerModal() {
+    const exp = experiments.find(e => e.id === currentExpId);
+    if (!exp) {
+      showToast("Please open an experiment in the Workspace first.", "warning");
+      return;
+    }
+    const subTask = (exp.subTasks || []).find(st => st.letter === currentSubTaskLetter) || exp.subTasks?.[0];
+    const code = document.getElementById('workspaceCodeEditor')?.value || subTask?.code || '';
+
+    const aiData = generateAiExplanation(subTask, code);
+    const body = document.getElementById('aiExplainerBody');
+    const titleDisplay = document.getElementById('aiModalTitle');
+    const subtitleDisplay = document.getElementById('aiModalSubtitle');
+
+    if (titleDisplay) {
+      titleDisplay.textContent = `AI Pedagogical Analysis: ${subTask.codeId || ''} ${aiData.moduleTitle}`;
+    }
+    if (subtitleDisplay) {
+      subtitleDisplay.textContent = `Algorithmic Breakdown & Architectural Evaluation • Mohan Babu University`;
+    }
+
+    if (body) {
+      body.innerHTML = `
+        <div class="ai-meta-banner">
+          <div>
+            <div class="ai-meta-title">Module: ${aiData.codeId ? aiData.codeId + ' - ' : ''}${aiData.moduleTitle}</div>
+            <div style="font-size: 11.5px; color: var(--text-muted); margin-top: 2px;">${aiData.aim || ''}</div>
+          </div>
+          <span class="ai-complexity-pill">${aiData.complexity}</span>
+        </div>
+
+        <div>
+          <div class="ai-section-title"><i data-lucide="layers"></i> Detected Mathematical &amp; Analytical Libraries (${aiData.libraries.length})</div>
+          <div class="ai-libs-grid">
+            ${aiData.libraries.map(lib => `
+              <div class="ai-lib-card">
+                <div class="ai-lib-name">${lib.name}</div>
+                <div class="ai-lib-role">${lib.role}</div>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+
+        <div>
+          <div class="ai-section-title"><i data-lucide="git-commit"></i> Algorithmic Execution Pipeline (${aiData.steps.length} Phases)</div>
+          <div class="ai-pipeline-timeline">
+            ${aiData.steps.map((st, idx) => `
+              <div class="ai-pipeline-step">
+                <div class="ai-step-indicator">${idx + 1}</div>
+                <div class="ai-step-details">
+                  <div class="ai-step-name">${st.step}</div>
+                  <div class="ai-step-desc">${st.desc}</div>
+                </div>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+
+        <div>
+          <div class="ai-section-title"><i data-lucide="briefcase"></i> Enterprise &amp; Industry Applications</div>
+          <div class="ai-industry-card">
+            <p class="ai-industry-desc">${aiData.industryApplication}</p>
+          </div>
+        </div>
+      `;
+    }
+
+    const modal = document.getElementById('aiExplainerModal');
+    if (modal) {
+      modal.style.display = 'flex';
+      playSound('modal_open');
+    }
+    lucide.createIcons();
+  }
+
+  function closeAiExplainerModal() {
+    const modal = document.getElementById('aiExplainerModal');
+    if (modal) modal.style.display = 'none';
+  }
+
+  // ==========================================
+  // KEYBOARD SHORTCUTS MODAL
+  // ==========================================
+  function openShortcutsModal() {
+    const modal = document.getElementById('keyboardShortcutsModal');
+    if (modal) {
+      modal.style.display = 'flex';
+      playSound('modal_open');
+      lucide.createIcons();
+    }
+  }
+
+  function closeShortcutsModal() {
+    const modal = document.getElementById('keyboardShortcutsModal');
+    if (modal) modal.style.display = 'none';
+  }
+
   // Workspace Plot & Diagnostic View Toggles
   const showChartBtn = document.getElementById('showInteractiveChartBtn');
   const showPlotBtn = document.getElementById('showStaticPlotBtn');
   const showVideoBtn = document.getElementById('showVideoLectureBtn');
+  const showVivaBtn = document.getElementById('showVivaVoceBtn');
   const chartContainer = document.getElementById('interactiveChartContainer');
   const staticContainer = document.getElementById('staticPlotContainer');
   const videoContainer = document.getElementById('videoLectureContainer');
+  const vivaContainer = document.getElementById('vivaVoceContainer');
 
   function setDiagnosticMode(mode) {
     if (showChartBtn) showChartBtn.classList.toggle('active', mode === 'chart');
     if (showPlotBtn) showPlotBtn.classList.toggle('active', mode === 'plot');
     if (showVideoBtn) showVideoBtn.classList.toggle('active', mode === 'video');
+    if (showVivaBtn) showVivaBtn.classList.toggle('active', mode === 'viva');
 
     if (chartContainer) chartContainer.style.display = (mode === 'chart') ? 'flex' : 'none';
     if (staticContainer) staticContainer.style.display = (mode === 'plot') ? 'block' : 'none';
     if (videoContainer) videoContainer.style.display = (mode === 'video') ? 'block' : 'none';
+    if (vivaContainer) vivaContainer.style.display = (mode === 'viva') ? 'block' : 'none';
+
+    if (mode === 'viva') {
+      renderVivaVoceQuestions();
+    }
   }
 
-  showChartBtn?.addEventListener('click', () => setDiagnosticMode('chart'));
-  showPlotBtn?.addEventListener('click', () => setDiagnosticMode('plot'));
-  showVideoBtn?.addEventListener('click', () => setDiagnosticMode('video'));
+  showChartBtn?.addEventListener('click', () => { playSound('tab_switch'); setDiagnosticMode('chart'); });
+  showPlotBtn?.addEventListener('click', () => { playSound('tab_switch'); setDiagnosticMode('plot'); });
+  showVideoBtn?.addEventListener('click', () => { playSound('tab_switch'); setDiagnosticMode('video'); });
+  showVivaBtn?.addEventListener('click', () => { playSound('tab_switch'); setDiagnosticMode('viva'); });
+
+  // Lab Record Modal Handlers
+  document.getElementById('generateLabRecordBtn')?.addEventListener('click', openLabRecordModal);
+  document.getElementById('closeLabRecordModalBtn')?.addEventListener('click', closeLabRecordModal);
+  document.getElementById('printRecordSheetBtn')?.addEventListener('click', () => {
+    playSound('action_click');
+    window.print();
+  });
+  document.getElementById('downloadRecordHtmlBtn')?.addEventListener('click', () => {
+    const content = document.getElementById('labRecordPreviewContent')?.innerHTML || '';
+    const fullHtml = `<!DOCTYPE html><html><head><meta charset="utf-8"><title>MBU Laboratory Observation Record</title><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap"></head><body>${content}</body></html>`;
+    const blob = new Blob([fullHtml], { type: 'text/html' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `MBU_Record_Exp_${currentExpId || 'Lab'}.html`;
+    a.click();
+    URL.revokeObjectURL(url);
+    showToast("Saved Lab Record sheet as HTML!");
+  });
+
+  // Jupyter Notebook & AI Explainer Handlers
+  document.getElementById('downloadNotebookBtn')?.addEventListener('click', () => {
+    const exp = experiments.find(e => e.id === currentExpId);
+    if (!exp) return;
+    const subTask = (exp.subTasks || []).find(st => st.letter === currentSubTaskLetter) || exp.subTasks?.[0];
+    const code = document.getElementById('workspaceCodeEditor')?.value || subTask?.code || '';
+    const output = document.getElementById('workspaceTerminalOutput')?.textContent || subTask?.output || '';
+    downloadJupyterNotebook(exp, subTask, code, output);
+    playSound('save');
+    showToast("Exported Jupyter Notebook (.ipynb)! Ready for Colab & JupyterLab.", "success");
+  });
+  document.getElementById('aiExplainCodeBtn')?.addEventListener('click', openAiExplainerModal);
+  document.getElementById('closeAiExplainerModalBtn')?.addEventListener('click', closeAiExplainerModal);
+
+  // Keyboard Shortcuts Modal Handlers
+  document.getElementById('dockShortcutsBtn')?.addEventListener('click', openShortcutsModal);
+  document.getElementById('closeShortcutsModalBtn')?.addEventListener('click', closeShortcutsModal);
+
+  // Global Keyboard Shortcuts
+  window.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      closeLabRecordModal();
+      closeAiExplainerModal();
+      closeShortcutsModal();
+      closeAddExperimentModal();
+      closeAddModuleModal();
+      closeProfileModal();
+      closePdfViewerModal();
+    }
+    if ((e.ctrlKey || e.metaKey) && (e.key === 'p' || e.key === 'P')) {
+      if (activeView === 'workspace') {
+        e.preventDefault();
+        openLabRecordModal();
+      }
+    }
+    if (e.key === '?' && !['INPUT', 'TEXTAREA'].includes(document.activeElement?.tagName)) {
+      e.preventDefault();
+      openShortcutsModal();
+    }
+  });
 
   // Modal triggers: Add Experiment
   document.getElementById('openAddExperimentModalBtn')?.addEventListener('click', () => openAddExperimentModal());

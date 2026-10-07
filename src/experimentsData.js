@@ -31,6 +31,23 @@ export const INITIAL_EXPERIMENTS = [
     description: "Explore core data science foundations: vector operations with NumPy, creating and manipulating Pandas Series & DataFrames, and computing descriptive statistics.",
     tags: ["NumPy", "Pandas", "Python", "Data Science", "Statistics"],
     githubUrl: "https://github.com/pradyumna-devi/mbu-datascience-lab/tree/main/experiments/exp-1-introduction_to_data_science_t",
+    vivaQuestions: [
+      {
+            "q": "What is array broadcasting in NumPy and what are the broadcasting rules?",
+            "a": "Broadcasting allows NumPy to perform arithmetic operations on arrays of different shapes without copying data. Rule 1: If arrays have different rank, prepend 1s to the smaller shape. Rule 2: Arrays with size 1 along a dimension stretch to match the other array's size along that dimension.",
+            "concept": "NumPy Vectorization & Memory Efficiency"
+      },
+      {
+            "q": "How do loc[] and iloc[] differ in Pandas indexing?",
+            "a": "loc[] is label-based indexing (uses index names and column labels), inclusive of start and end. iloc[] is integer position-based indexing (0-indexed integers), exclusive of the endpoint, similar to Python list slicing.",
+            "concept": "Pandas Indexing Mechanisms"
+      },
+      {
+            "q": "Why are vectorized NumPy operations faster than traditional Python loops?",
+            "a": "NumPy arrays are stored in contiguous memory blocks as homogeneous C data types. Vectorized operations run pre-compiled optimized C/Fortran SIMD CPU instructions without dynamic Python type checking and interpreter loop overhead.",
+            "concept": "High-Performance Computing"
+      }
+],
     subTasks: [
       {
         letter: "A",
@@ -201,6 +218,23 @@ The Pandas DataFrame was successfully constructed, analyzed, and enhanced with d
     description: "Extract structured records from relational SQLite database tables, consume RESTful JSON endpoints, and parse HTML DOM structures.",
     tags: ["Data Extraction", "SQL", "SQLite", "JSON", "REST APIs", "Python"],
     githubUrl: "https://github.com/pradyumna-devi/mbu-datascience-lab/tree/main/experiments/exp-2-data_extraction_web_data_acqui",
+    vivaQuestions: [
+      {
+            "q": "What is the purpose of pd.json_normalize() when handling REST API responses?",
+            "a": "REST APIs often return nested JSON trees. pd.json_normalize() recursively flattens semi-structured, nested dictionaries into distinct tabular DataFrame columns with dotted notation (e.g. telemetry.temperature).",
+            "concept": "Semi-Structured Data Flattening"
+      },
+      {
+            "q": "How does pd.read_sql_query() execute and return database records?",
+            "a": "It accepts an open SQLite or SQLAlchemy connection, submits the SQL query to the database engine, and directly streams the resulting cursor records into a Pandas DataFrame with preserved datatypes.",
+            "concept": "Relational Database ETL Pipelines"
+      },
+      {
+            "q": "What HTTP status codes indicate success vs client errors in web data acquisition?",
+            "a": "200 (OK), 201 (Created) indicate success. 400 (Bad Request), 401 (Unauthorized), 403 (Forbidden), 404 (Not Found), 429 (Too Many Requests / Rate Limited) indicate client errors requiring backoff or auth headers.",
+            "concept": "API Protocols & Network Resiliency"
+      }
+],
     subTasks: [
       {
         letter: "A",
@@ -377,6 +411,23 @@ RESTful JSON data was successfully consumed, flattened, and analyzed.`,
     description: "Reshape complex tabular data using hierarchical multi-indexing, stack, unstack, and merge with combine-first value imputation.",
     tags: ["Data Wrangling", "MultiIndex", "Stack / Unstack", "Merge", "Pandas"],
     githubUrl: "https://github.com/pradyumna-devi/mbu-datascience-lab/tree/main/experiments/exp-4-data_wrangling_hierarchical_in",
+    vivaQuestions: [
+      {
+            "q": "What is a MultiIndex in Pandas and when is it preferred?",
+            "a": "A MultiIndex (hierarchical index) allows representation of higher-dimensional data in standard 2D Series and DataFrames, enabling grouped slicing across multiple category tiers without pivoting.",
+            "concept": "Hierarchical Data Representation"
+      },
+      {
+            "q": "Explain the difference between stack() and unstack() in Pandas.",
+            "a": "unstack() pivots the innermost level of a row index into columns (wide format). stack() collapses columns into a hierarchical row index level (tall/tidy format).",
+            "concept": "Tabular Reshaping & Pivoting"
+      },
+      {
+            "q": "How does combine_first() resolve missing data across two DataFrames?",
+            "a": "df1.combine_first(df2) aligns two DataFrames on their index and fills NaN holes in df1 with corresponding non-null values from df2.",
+            "concept": "Data Imputation & Merging"
+      }
+],
     subTasks: [
       {
         letter: "A",
@@ -733,6 +784,23 @@ The program demonstrates both index-based merging and combining overlapping Data
     description: "Perform comprehensive data visualization using Matplotlib and Seaborn across line, bar, histogram, scatter, and boxplots.",
     tags: ["Matplotlib", "Seaborn", "Data Visualization", "Subplots", "EDA"],
     githubUrl: "https://github.com/pradyumna-devi/mbu-datascience-lab/tree/main/experiments/exp-5-data_visualization_with_matplo",
+    vivaQuestions: [
+      {
+            "q": "What are the components of a Box Plot and what do the whiskers represent?",
+            "a": "A Box Plot displays Minimum, Q1 (25th percentile), Median (50th percentile), Q3 (75th percentile), and Maximum. The box represents the Interquartile Range (IQR = Q3 - Q1), and whiskers extend to 1.5 * IQR. Points beyond whiskers are classified as outliers.",
+            "concept": "Exploratory Statistical Diagnostics"
+      },
+      {
+            "q": "When should you use a Density Plot (KDE) over a standard Histogram?",
+            "a": "Histograms depend heavily on arbitrary bin-width choices, causing discontinuous jagged steps. Kernel Density Estimation (KDE) computes a continuous, smooth probability density function independent of bin boundaries.",
+            "concept": "Kernel Density Estimation"
+      },
+      {
+            "q": "What does Pearson's correlation coefficient measure and what is its range?",
+            "a": "It measures the linear relationship between two continuous variables, ranging from -1.0 (perfect negative linear correlation) to +1.0 (perfect positive linear correlation), where 0 indicates no linear correlation.",
+            "concept": "Bivariate Statistical Correlation"
+      }
+],
     subTasks: [
       {
         letter: "A",
@@ -1454,6 +1522,23 @@ Thus, the Box Plot was successfully created to visualize and compare the distrib
     description: "Analyze chronological data patterns, decompose seasonal variations, evaluate stationarity, and forecast future values using models.",
     tags: ["ARIMA", "SARIMAX", "LSTM", "Dickey-Fuller", "Holt-Winters"],
     githubUrl: "https://github.com/pradyumna-devi/mbu-datascience-lab/tree/main/experiments/exp-6-time_series_analysis",
+    vivaQuestions: [
+      {
+            "q": "What defines a stationary time series and why is it crucial for ARIMA?",
+            "a": "A stationary time series has constant mean, constant variance, and autocovariance that depends only on lag rather than time. ARIMA models require stationarity so statistical estimates remain valid across future time horizons.",
+            "concept": "Econometric Time Series Modeling"
+      },
+      {
+            "q": "What is the difference between Downsampling and Upsampling in Time Series?",
+            "a": "Downsampling aggregates high-frequency data to a lower frequency (e.g., hourly to daily sum/mean). Upsampling increases frequency (e.g., monthly to daily), requiring interpolation or forward-fill (ffill).",
+            "concept": "Temporal Frequency Resampling"
+      },
+      {
+            "q": "How does tz_localize() differ from tz_convert()?",
+            "a": "tz_localize() attaches a time zone to a naive (unaware) timestamp without altering clock time. tz_convert() transforms an already localized timestamp to a different time zone, shifting clock time based on UTC offsets.",
+            "concept": "Global Timezone Normalization"
+      }
+],
     subTasks: [
       {
         letter: "A",
