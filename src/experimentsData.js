@@ -7,7 +7,7 @@ export const INITIAL_PROFILE = {
   section: "Section - 2",
   faculty: "Bosu Babu Sambana",
   designation: "Assistant Professor",
-  avatarUrl: "/student-profile.jpg",
+  avatarUrl: "./student-profile.jpg",
   githubUrl: "https://github.com/pradyumna-devi",
   linkedinUrl: "https://linkedin.com/in/mudimela-pradyumna-devi",
   portfolioUrl: "https://pradyumna-devi.dev",
@@ -25,386 +25,6 @@ export const INITIAL_PROFILE = {
 };
 
 export const INITIAL_EXPERIMENTS = [
-  {
-    id: "exp-1",
-    number: "1",
-    title: "Introduction to Data Science & Tabular Computing",
-    category: "Introduction to Data Science",
-    previewDuration: "08:30",
-    videoThumbnail: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=600&q=80",
-    previewVideoUrl: "https://www.youtube.com/embed/ua-CiDNNj30",
-    description: "Explore core data science foundations: vector operations with NumPy, creating and manipulating Pandas Series & DataFrames, and computing descriptive statistics.",
-    tags: ["NumPy", "Pandas", "Python", "Data Science", "Statistics"],
-    githubUrl: "https://github.com/pradyumna-devi/mbu-datascience-lab/tree/main/experiments/exp-1-introduction_to_data_science_t",
-    vivaQuestions: [
-      {
-            "q": "What is array broadcasting in NumPy and what are the broadcasting rules?",
-            "a": "Broadcasting allows NumPy to perform arithmetic operations on arrays of different shapes without copying data. Rule 1: If arrays have different rank, prepend 1s to the smaller shape. Rule 2: Arrays with size 1 along a dimension stretch to match the other array's size along that dimension.",
-            "concept": "NumPy Vectorization & Memory Efficiency"
-      },
-      {
-            "q": "How do loc[] and iloc[] differ in Pandas indexing?",
-            "a": "loc[] is label-based indexing (uses index names and column labels), inclusive of start and end. iloc[] is integer position-based indexing (0-indexed integers), exclusive of the endpoint, similar to Python list slicing.",
-            "concept": "Pandas Indexing Mechanisms"
-      },
-      {
-            "q": "Why are vectorized NumPy operations faster than traditional Python loops?",
-            "a": "NumPy arrays are stored in contiguous memory blocks as homogeneous C data types. Vectorized operations run pre-compiled optimized C/Fortran SIMD CPU instructions without dynamic Python type checking and interpreter loop overhead.",
-            "concept": "High-Performance Computing"
-      }
-],
-    subTasks: [
-      {
-        letter: "A",
-        codeId: "1A",
-        githubUrl: "https://github.com/pradyumna-devi/mbu-datascience-lab/blob/main/experiments/exp-1-introduction_to_data_science_t/task_1a_numpy_vector_arrays_mathematical_co.py",
-        title: "NumPy Vector Arrays & Mathematical Computations",
-        duration: "06:00 min",
-        videoUrl: "https://www.youtube.com/embed/ua-CiDNNj30",
-        aim: "To create N-dimensional NumPy arrays and demonstrate vectorized mathematical operations, broadcasting, and slice indexing.",
-        syntax: `np.array(object)
-np.mean(arr), np.std(arr)
-arr[arr > condition]`,
-        concept: "Aim: To create N-dimensional NumPy arrays and demonstrate vectorized mathematical operations, broadcasting, and slice indexing.\n\nKey Concepts:\n• NumPy provides high-performance multidimensional arrays (ndarray)\n• Vectorized operations perform element-wise arithmetic without explicit loops\n• Slicing and statistical aggregations form the core computational layer of Data Science",
-        code: `import numpy as np
-
-# 1. Array creation & shape inspection
-data = np.array([12, 18, 25, 30, 42, 55, 63, 78, 85, 92])
-print("Original Array:")
-print(data)
-
-# 2. Vectorized operations & broadcasting
-squared = data ** 2
-standardized = (data - np.mean(data)) / np.std(data)
-
-print("\\nVectorized Mean:", np.mean(data))
-print("Standard Deviation:", round(float(np.std(data)), 2))
-print("Standardized Z-Scores:")
-print(np.round(standardized, 2))
-
-# 3. Boolean masking & filtering
-high_values = data[data > 50]
-print("\\nFiltered Elements > 50:")
-print(high_values)`,
-        output: `Original Array:
-[12 18 25 30 42 55 63 78 85 92]
-
-Vectorized Mean: 50.0
-Standard Deviation: 27.24
-Standardized Z-Scores:
-[-1.39 -1.17 -0.92 -0.73 -0.29  0.18  0.48  1.03  1.28  1.54]
-
-Filtered Elements > 50:
-[55 63 78 85 92]
-
-Explanation:
-• np.array() creates a homogeneous N-dimensional array in memory.
-• (data - mean) / std computes z-score normalization across all elements concurrently.
-• data[data > 50] applies vectorized boolean masking to filter subset records.
-
-Result:
-The program successfully demonstrated NumPy array creation, statistical vectorization, and conditional indexing.`,
-        chartType: "bar",
-        chartData: {
-          labels: ["Item 1", "Item 2", "Item 3", "Item 4", "Item 5", "Item 6", "Item 7", "Item 8", "Item 9", "Item 10"],
-          datasets: [
-            {
-              label: "Original Values",
-              data: [12, 18, 25, 30, 42, 55, 63, 78, 85, 92],
-              backgroundColor: "rgba(56, 189, 248, 0.75)",
-              borderColor: "#38bdf8",
-              borderWidth: 1
-            }
-          ]
-        },
-        outputImage: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=800&q=80"
-      },
-      {
-        letter: "B",
-        codeId: "1B",
-        githubUrl: "https://github.com/pradyumna-devi/mbu-datascience-lab/blob/main/experiments/exp-1-introduction_to_data_science_t/task_1b_pandas_dataframe_construction_explo.py",
-        title: "Pandas DataFrame Construction & Exploratory Data Inspection",
-        duration: "07:30 min",
-        videoUrl: "https://www.youtube.com/embed/ua-CiDNNj30",
-        aim: "To create a Pandas DataFrame from dictionary structures, inspect data types, compute summary statistics, and add derived columns.",
-        syntax: `pd.DataFrame(data)
-df.describe()
-df['New_Column'] = expression`,
-        concept: "Aim: To create a Pandas DataFrame from dictionary structures, inspect data types, compute summary statistics, and add derived columns.\n\nKey Concepts:\n• Pandas DataFrame is a 2D labeled tabular data structure\n• df.describe() calculates count, mean, std, min, percentiles, and max\n• Column addition allows building computed metrics",
-        code: `import pandas as pd
-
-# Create dictionary dataset
-dataset = {
-    'Student_ID': ['MBU-001', 'MBU-002', 'MBU-003', 'MBU-004', 'MBU-005'],
-    'Name': ['Aarav', 'Bhavna', 'Chaitanya', 'Divya', 'Eshwar'],
-    'Lab_Score': [88, 94, 76, 92, 85],
-    'Viva_Score': [82, 90, 70, 88, 80],
-    'Attendance_Pct': [95.0, 98.5, 82.0, 91.0, 87.5]
-}
-
-df = pd.DataFrame(dataset)
-print("Student Laboratory DataFrame:")
-print(df)
-
-# Summary statistics
-print("\\nDescriptive Summary Statistics:")
-print(df[['Lab_Score', 'Viva_Score', 'Attendance_Pct']].describe())
-
-# Compute derived metric
-df['Total_Average'] = (df['Lab_Score'] + df['Viva_Score']) / 2
-print("\\nDataFrame with Computed Total Average:")
-print(df[['Name', 'Lab_Score', 'Viva_Score', 'Total_Average']])`,
-        output: `Student Laboratory DataFrame:
-  Student_ID       Name  Lab_Score  Viva_Score  Attendance_Pct
-0    MBU-001      Aarav         88          82            95.0
-1    MBU-002     Bhavna         94          90            98.5
-2    MBU-003  Chaitanya         76          70            82.0
-3    MBU-004      Divya         92          88            91.0
-4    MBU-005     Eshwar         85          80            87.5
-
-Descriptive Summary Statistics:
-       Lab_Score  Viva_Score  Attendance_Pct
-count        5.0    5.000000        5.000000
-mean        87.0   82.000000       90.800000
-std          6.9    7.842194        6.544081
-min         76.0   70.000000       82.000000
-25%         85.0   80.000000       87.500000
-50%         88.0   82.000000       91.000000
-75%         92.0   88.000000       95.000000
-max         94.0   90.000000       98.500000
-
-DataFrame with Computed Total Average:
-        Name  Lab_Score  Viva_Score  Total_Average
-0      Aarav         88          82           85.0
-1     Bhavna         94          90           92.0
-2  Chaitanya         76          70           73.0
-3      Divya         92          88           90.0
-4     Eshwar         85          80           82.5
-
-Explanation:
-• pd.DataFrame() encapsulates tabular data with columns and integer indices.
-• df.describe() summarizes the numerical properties across the cohort.
-• Total_Average derives a composite academic assessment score.
-
-Result:
-The Pandas DataFrame was successfully constructed, analyzed, and enhanced with derived features.`,
-        chartType: "bar",
-        chartData: {
-          labels: ["Aarav", "Bhavna", "Chaitanya", "Divya", "Eshwar"],
-          datasets: [
-            {
-              label: "Lab Score",
-              data: [88, 94, 76, 92, 85],
-              backgroundColor: "rgba(56, 189, 248, 0.75)",
-              borderColor: "#38bdf8",
-              borderWidth: 1
-            },
-            {
-              label: "Viva Score",
-              data: [82, 90, 70, 88, 80],
-              backgroundColor: "rgba(168, 85, 247, 0.75)",
-              borderColor: "#c084fc",
-              borderWidth: 1
-            }
-          ]
-        },
-        outputImage: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=800&q=80"
-      }
-    ]
-  },
-  {
-    id: "exp-2",
-    number: "2",
-    title: "Data Extraction & Web Data Acquisition",
-    category: "Data Extraction",
-    previewDuration: "09:00",
-    videoThumbnail: "https://images.unsplash.com/photo-1504639725590-34d0984388bd?auto=format&fit=crop&w=600&q=80",
-    previewVideoUrl: "https://www.youtube.com/embed/ng2o98k983k",
-    description: "Extract structured records from relational SQLite database tables, consume RESTful JSON endpoints, and parse HTML DOM structures.",
-    tags: ["Data Extraction", "SQL", "SQLite", "JSON", "REST APIs", "Python"],
-    githubUrl: "https://github.com/pradyumna-devi/mbu-datascience-lab/tree/main/experiments/exp-2-data_extraction_web_data_acqui",
-    vivaQuestions: [
-      {
-            "q": "What is the purpose of pd.json_normalize() when handling REST API responses?",
-            "a": "REST APIs often return nested JSON trees. pd.json_normalize() recursively flattens semi-structured, nested dictionaries into distinct tabular DataFrame columns with dotted notation (e.g. telemetry.temperature).",
-            "concept": "Semi-Structured Data Flattening"
-      },
-      {
-            "q": "How does pd.read_sql_query() execute and return database records?",
-            "a": "It accepts an open SQLite or SQLAlchemy connection, submits the SQL query to the database engine, and directly streams the resulting cursor records into a Pandas DataFrame with preserved datatypes.",
-            "concept": "Relational Database ETL Pipelines"
-      },
-      {
-            "q": "What HTTP status codes indicate success vs client errors in web data acquisition?",
-            "a": "200 (OK), 201 (Created) indicate success. 400 (Bad Request), 401 (Unauthorized), 403 (Forbidden), 404 (Not Found), 429 (Too Many Requests / Rate Limited) indicate client errors requiring backoff or auth headers.",
-            "concept": "API Protocols & Network Resiliency"
-      }
-],
-    subTasks: [
-      {
-        letter: "A",
-        codeId: "2A",
-        githubUrl: "https://github.com/pradyumna-devi/mbu-datascience-lab/blob/main/experiments/exp-2-data_extraction_web_data_acqui/task_2a_structured_data_extraction_from_sql.py",
-        title: "Structured Data Extraction from SQLite Database with SQL Queries",
-        duration: "07:00 min",
-        videoUrl: "https://www.youtube.com/embed/ng2o98k983k",
-        aim: "To create an in-memory SQLite database, insert tabular records, and execute structured SQL SELECT queries with filtering and aggregations into Pandas.",
-        syntax: `sqlite3.connect(':memory:')
-pd.read_sql_query(query, conn)`,
-        concept: "Aim: To create an in-memory SQLite database, insert tabular records, and execute structured SQL SELECT queries with filtering and aggregations into Pandas.\n\nKey Concepts:\n• SQLite provides standard relational database management in Python\n• pd.read_sql_query() maps SQL query result sets directly into DataFrames\n• GROUP BY and aggregate functions summarize records at the database level",
-        code: `import sqlite3
-import pandas as pd
-
-# Connect to in-memory SQLite database
-conn = sqlite3.connect(':memory:')
-cursor = conn.cursor()
-
-# Create sample research publications table
-cursor.execute('''
-    CREATE TABLE research_publications (
-        pub_id INTEGER PRIMARY KEY,
-        domain TEXT,
-        citations INTEGER,
-        impact_factor REAL,
-        year INTEGER
-    )
-''')
-
-sample_data = [
-    (1, 'Machine Learning', 142, 4.8, 2024),
-    (2, 'Data Extraction', 89, 3.5, 2024),
-    (3, 'Computer Vision', 215, 6.2, 2025),
-    (4, 'Data Extraction', 64, 3.1, 2025),
-    (5, 'Machine Learning', 198, 5.4, 2025),
-    (6, 'Natural Language Processing', 175, 5.1, 2026)
-]
-cursor.executemany('INSERT INTO research_publications VALUES (?, ?, ?, ?, ?)', sample_data)
-conn.commit()
-
-# Extract data using SQL query
-sql_query = """
-    SELECT domain, COUNT(*) as paper_count, AVG(citations) as avg_citations, MAX(impact_factor) as max_if
-    FROM research_publications
-    GROUP BY domain
-    ORDER BY avg_citations DESC;
-"""
-
-df_extracted = pd.read_sql_query(sql_query, conn)
-print("Extracted Aggregated Records via SQL Query:")
-print(df_extracted)
-conn.close()`,
-        output: `Extracted Aggregated Records via SQL Query:
-                        domain  paper_count  avg_citations  max_if
-0              Computer Vision            1          215.0     6.2
-1  Natural Language Processing            1          175.0     5.1
-2             Machine Learning            2          170.0     5.4
-3              Data Extraction            2           76.5     3.5
-
-Explanation:
-• sqlite3 creates a relational database in memory.
-• SQL GROUP BY groups records by research domain.
-• pd.read_sql_query directly loads the result into an analytical Pandas DataFrame.
-
-Result:
-Tabular records were successfully extracted from an SQLite relational database via SQL queries.`,
-        chartType: "bar",
-        chartData: {
-          labels: ["Computer Vision", "NLP", "Machine Learning", "Data Extraction"],
-          datasets: [
-            {
-              label: "Average Citations",
-              data: [215.0, 175.0, 170.0, 76.5],
-              backgroundColor: [
-                "rgba(56, 189, 248, 0.75)",
-                "rgba(168, 85, 247, 0.75)",
-                "rgba(52, 211, 153, 0.75)",
-                "rgba(251, 191, 36, 0.75)"
-              ],
-              borderColor: ["#38bdf8", "#c084fc", "#34d399", "#fbbf24"],
-              borderWidth: 1
-            }
-          ]
-        },
-        outputImage: "https://images.unsplash.com/photo-1504639725590-34d0984388bd?auto=format&fit=crop&w=800&q=80"
-      },
-      {
-        letter: "B",
-        codeId: "2B",
-        githubUrl: "https://github.com/pradyumna-devi/mbu-datascience-lab/blob/main/experiments/exp-2-data_extraction_web_data_acqui/task_2b_restful_json_api_data_consumption_n.py",
-        title: "RESTful JSON API Data Consumption & Normalization",
-        duration: "08:00 min",
-        videoUrl: "https://www.youtube.com/embed/ng2o98k983k",
-        aim: "To parse hierarchical JSON records from a simulated REST API endpoint and normalize nested key structures into a flat tabular DataFrame.",
-        syntax: `json.loads(text)
-pd.json_normalize(data)`,
-        concept: "Aim: To parse hierarchical JSON records from a simulated REST API endpoint and normalize nested key structures into a flat tabular DataFrame.\n\nKey Concepts:\n• Web APIs serialize data into JSON dictionaries and lists\n• pd.json_normalize() recursively extracts nested sub-keys\n• Extracted data columns can be conditionally inspected and analyzed",
-        code: `import json
-import pandas as pd
-
-# Simulated API payload response from RESTful endpoint
-api_response_payload = """
-[
-    {"sensor_id": "SN-101", "location": "Lab-Alpha", "telemetry": {"temperature": 23.4, "humidity": 45.2, "status": "active"}},
-    {"sensor_id": "SN-102", "location": "Lab-Beta", "telemetry": {"temperature": 27.8, "humidity": 51.0, "status": "warning"}},
-    {"sensor_id": "SN-103", "location": "Lab-Gamma", "telemetry": {"temperature": 22.1, "humidity": 42.8, "status": "active"}},
-    {"sensor_id": "SN-104", "location": "Server-Room", "telemetry": {"temperature": 19.5, "humidity": 38.4, "status": "optimal"}}
-]
-"""
-
-# Parse JSON string
-parsed_json = json.loads(api_response_payload)
-
-# Normalize nested JSON structure into Pandas DataFrame
-df_sensors = pd.json_normalize(parsed_json)
-print("Normalized API Response Data:")
-print(df_sensors)
-
-# Query extracted telemetry
-high_temp = df_sensors[df_sensors['telemetry.temperature'] > 22.0]
-print("\\nSensors with Temperature > 22°C:")
-print(high_temp[['sensor_id', 'location', 'telemetry.temperature', 'telemetry.status']])`,
-        output: `Normalized API Response Data:
-  sensor_id     location  telemetry.temperature  telemetry.humidity telemetry.status
-0    SN-101    Lab-Alpha                   23.4                45.2           active
-1    SN-102     Lab-Beta                   27.8                51.0          warning
-2    SN-103    Lab-Gamma                   22.1                42.8           active
-3    SN-104  Server-Room                   19.5                38.4          optimal
-
-Sensors with Temperature > 22°C:
-  sensor_id   location  telemetry.temperature telemetry.status
-0    SN-101  Lab-Alpha                   23.4           active
-1    SN-102   Lab-Beta                   27.8          warning
-2    SN-103  Lab-Gamma                   22.1           active
-
-Explanation:
-• json.loads parses the REST payload string into Python objects.
-• pd.json_normalize flattens nested telemetry sub-dictionaries into distinct columns.
-• Boolean indexing filters sensors exceeding operational temperature thresholds.
-
-Result:
-RESTful JSON data was successfully consumed, flattened, and analyzed.`,
-        chartType: "bar",
-        chartData: {
-          labels: ["Lab-Alpha", "Lab-Beta", "Lab-Gamma", "Server-Room"],
-          datasets: [
-            {
-              label: "Sensor Temperature (°C)",
-              data: [23.4, 27.8, 22.1, 19.5],
-              backgroundColor: [
-                "rgba(56, 189, 248, 0.75)",
-                "rgba(239, 68, 68, 0.75)",
-                "rgba(56, 189, 248, 0.75)",
-                "rgba(52, 211, 153, 0.75)"
-              ],
-              borderColor: ["#38bdf8", "#ef4444", "#38bdf8", "#34d399"],
-              borderWidth: 1
-            }
-          ]
-        },
-        outputImage: "https://images.unsplash.com/photo-1504639725590-34d0984388bd?auto=format&fit=crop&w=800&q=80"
-      }
-    ]
-  },
   {
     id: "exp-4",
     number: "4",
@@ -2425,8 +2045,8 @@ export const INITIAL_MODULES = [
       "Unit II: Computational Ecosystem & Numerical Computing with NumPy",
       "Unit III: Tabular Data Structures with Pandas & Exploratory Diagnostics"
     ],
-    relevantExpId: "exp-1",
-    relevantExpTitle: "Experiment 1: Introduction to Data Science & Tabular Computing",
+    relevantExpId: "exp-4",
+    relevantExpTitle: "Experiment 4: Data Wrangling & Hierarchical Indexing",
     flipCards: [
       {
         id: "fc-1-1",
@@ -2442,8 +2062,8 @@ export const INITIAL_MODULES = [
           "Multidisciplinary Triangle: The intersection of Software Engineering, Statistical Inference, and Domain Subject-Matter Insight.",
           "Evaluation Criteria: Ensuring statistical power, generalizability to out-of-distribution data, and avoiding target leakage."
         ],
-        labMapping: "Experiment 1: Introduction to Data Science & Tabular Computing",
-        relevantTask: "Overview & Task 1A",
+        labMapping: "Data Science Computing & Tabular Workflows",
+        relevantTask: "Core Principles",
         keySyntax: "import numpy as np\nimport pandas as pd\ndf.info()\ndf.describe()",
         conceptTag: "Data Science Foundations"
       },
@@ -2480,8 +2100,8 @@ export const INITIAL_MODULES = [
           "Broadcasting Semantics: Smaller arrays stretch along dimensions of size 1 to match larger operands without copying data in memory.",
           "Boolean Masking & Slicing: Extracting data subsets with vectorized condition filters: data[data > 50]."
         ],
-        labMapping: "Experiment 1 - Task 1A: NumPy Vector Arrays & Mathematical Computations",
-        relevantTask: "Task 1A",
+        labMapping: "NumPy Vector Arrays & Mathematical Computations",
+        relevantTask: "Numerical Computing",
         keySyntax: "data = np.array([12, 18, 25, 30, 42, 55, 63, 78, 85, 92])\nstandardized = (data - np.mean(data)) / np.std(data)\nhigh_vals = data[data > 50]",
         conceptTag: "NumPy Vectorization & SIMD"
       },
@@ -2499,8 +2119,8 @@ export const INITIAL_MODULES = [
           "iloc[] Indexing: Integer position-based indexing (0-indexed); endpoints are exclusive, matching Python slice convention.",
           "Structural Inspection: df.shape, df.dtypes, df.columns, df.head(5), df.tail(5) for rapid dataset schema validation."
         ],
-        labMapping: "Experiment 1 - Task 1B: Pandas DataFrame Construction & Exploratory Data Inspection",
-        relevantTask: "Task 1B",
+        labMapping: "Pandas DataFrame Construction & Exploratory Data Inspection",
+        relevantTask: "Data Exploration",
         keySyntax: "df = pd.DataFrame(data)\nhigh_scores = df.loc[df['Score'] >= 85, ['Name', 'Grade']]\nsubset = df.iloc[0:5, 1:4]",
         conceptTag: "Pandas Indexing & Slicing"
       },
@@ -2518,8 +2138,8 @@ export const INITIAL_MODULES = [
           "Z-Score Standardization: z = (x - mu) / sigma normalizes disparate features into zero-mean, unit-variance standardized distributions.",
           "Automated Telemetry: df.describe() computes count, mean, std, min, 25%, 50%, 75%, and max across all numerical columns."
         ],
-        labMapping: "Experiment 1 - Task 1B & Live Diagnostic Telemetry",
-        relevantTask: "Task 1B",
+        labMapping: "Descriptive Statistics & Live Diagnostic Telemetry",
+        relevantTask: "Statistical Diagnostics",
         keySyntax: "stats_summary = df.describe()\nmu = df['Score'].mean()\nsigma = df['Score'].std()\niqr = df['Score'].quantile(0.75) - df['Score'].quantile(0.25)",
         conceptTag: "Descriptive Statistics"
       },
@@ -2570,8 +2190,8 @@ export const INITIAL_MODULES = [
       "Unit II: RESTful Web APIs, JSON/XML Endpoints & Authentication Protocols",
       "Unit III: Web Scraping, HTML DOM Parsing & Semi-Structured Data Pipelines"
     ],
-    relevantExpId: "exp-2",
-    relevantExpTitle: "Experiment 2: Data Extraction, REST APIs & Web Scraping",
+    relevantExpId: "exp-4",
+    relevantExpTitle: "Experiment 4: Data Wrangling & Hierarchical Indexing",
     flipCards: [
       {
         id: "fc-2-1",
@@ -2586,8 +2206,8 @@ export const INITIAL_MODULES = [
           "Ingestion Architectures: Scheduled batch ETL (extract-transform-load) windows vs. event-driven streaming micro-batches.",
           "Ingestion Hygiene: Schema enforcement, encoding standardization (UTF-8), deduplication, and corruption quarantine."
         ],
-        labMapping: "Experiment 2: Data Extraction, REST APIs & Web Scraping",
-        relevantTask: "Overview",
+        labMapping: "Data Acquisition Pipelines & Ingestion Architecture",
+        relevantTask: "Data Engineering",
         keySyntax: "import sqlite3\nimport requests\nimport json\nimport pandas as pd",
         conceptTag: "Data Ingestion Architecture"
       },
@@ -2605,8 +2225,8 @@ export const INITIAL_MODULES = [
           "Security & Parameterization: Using parameterized queries with tuple arguments (?) to prevent SQL injection vulnerabilities.",
           "Pandas SQL Ingestion: pd.read_sql_query(query, conn) automatically handles cursor execution, column mapping, and DataFrame construction."
         ],
-        labMapping: "Experiment 2 - Task 2A: Structured Data Extraction from SQLite Database with SQL Queries",
-        relevantTask: "Task 2A",
+        labMapping: "Structured Data Extraction from SQLite Database with SQL Queries",
+        relevantTask: "SQL Extraction",
         keySyntax: "conn = sqlite3.connect(':memory:')\nquery = 'SELECT department, AVG(salary) FROM employees GROUP BY department'\ndf = pd.read_sql_query(query, conn)\nconn.close()",
         conceptTag: "SQL & Relational Extraction"
       },
@@ -2624,8 +2244,8 @@ export const INITIAL_MODULES = [
           "Hierarchical JSON Normalization: pd.json_normalize(records) flattens nested JSON objects and arrays into 2D columnar DataFrames.",
           "Schema Handling: Casting ISO-8601 date strings to datetime objects and managing sparse/null fields."
         ],
-        labMapping: "Experiment 2 - Task 2B: RESTful JSON API Data Consumption & Normalization",
-        relevantTask: "Task 2B",
+        labMapping: "RESTful JSON API Data Consumption & Normalization",
+        relevantTask: "API Pipelines",
         keySyntax: "res = requests.get('https://api.example.com/data', timeout=10)\npayload = res.json()\ndf = pd.json_normalize(payload['results'], sep='_')",
         conceptTag: "REST APIs & JSON Normalization"
       },
@@ -2643,8 +2263,8 @@ export const INITIAL_MODULES = [
           "Pagination Loops: Iterating through offset/limit parameters or cursor tokens to consume multi-page datasets without memory exhaustion.",
           "Connection Pooling: Using requests.Session() to reuse TCP connections across repetitive API calls."
         ],
-        labMapping: "Experiment 2 - Task 2B: API Authentication & Header Configuration",
-        relevantTask: "Task 2B",
+        labMapping: "API Authentication & Header Configuration",
+        relevantTask: "Security & Auth",
         keySyntax: "headers = {'Authorization': f'Bearer {api_key}', 'Accept': 'application/json'}\nparams = {'page': page_num, 'limit': 50}\nsession = requests.Session()",
         conceptTag: "API Security & Rate Limiting"
       },
@@ -2662,8 +2282,8 @@ export const INITIAL_MODULES = [
           "Content Cleaning: element.get_text(strip=True), element.get('href'), parsing HTML <table> structures into list-of-lists for DataFrame conversion.",
           "HTML Entities & Encoding: Handling special HTML character entities and multi-byte UTF-8 decodings."
         ],
-        labMapping: "Experiment 2: HTML Web Scraping & DOM Parsing",
-        relevantTask: "Overview",
+        labMapping: "HTML Web Scraping & DOM Parsing",
+        relevantTask: "DOM Parsing",
         keySyntax: "from bs4 import BeautifulSoup\nsoup = BeautifulSoup(html_content, 'html.parser')\ntable = soup.find('table', {'id': 'reportTable'})\nrows = [[td.text.strip() for td in tr.find_all('td')] for tr in table.find_all('tr')]",
         conceptTag: "HTML DOM Web Scraping"
       },
@@ -2700,8 +2320,8 @@ export const INITIAL_MODULES = [
           "Network Resiliency: Wrapping remote requests in try...except requests.exceptions.RequestException with timeout limits.",
           "Legal & Terms Compliance: Avoiding copyrighted data harvesting, respecting site terms of service, and ensuring analytical privacy."
         ],
-        labMapping: "Experiment 2: Ethical Web Data Acquisition & Fault Tolerance",
-        relevantTask: "Overview",
+        labMapping: "Ethical Web Data Acquisition & Fault Tolerance",
+        relevantTask: "Ethics & Compliance",
         keySyntax: "import urllib.robotparser as rp\nrobot = rp.RobotFileParser()\nrobot.set_url('https://target.com/robots.txt')\nrobot.read()\ncan_fetch = robot.can_fetch('*', 'https://target.com/data')",
         conceptTag: "Ethical Extraction & Compliance"
       }
@@ -2897,8 +2517,8 @@ export const INITIAL_MODULES = [
       "Unit II: Discrete Probability Models, Probability Mass Functions & Paradoxical Sampling",
       "Unit III: Cumulative Distribution Functions, Percentile Metrics & Distribution Modeling"
     ],
-    relevantExpId: "exp-1",
-    relevantExpTitle: "Experiment 1 & 5: Descriptive Statistics & Empirical Distribution Modeling",
+    relevantExpId: "exp-5",
+    relevantExpTitle: "Experiment 5: Advanced Exploratory Data Analysis & Statistical Visualizations",
     flipCards: [
       {
         id: "fc-4-1",
@@ -2914,8 +2534,8 @@ export const INITIAL_MODULES = [
           "Outlier Detection & Hygiene: Identifying values beyond 1.5 * IQR or 3 standard deviations; distinguishing genuine extreme events from recording errors.",
           "Summary Statistics: Condensing distribution profiles into central tendency (mean, median, mode) and shape measures (skewness, kurtosis)."
         ],
-        labMapping: "Experiment 1 - Task 1B & Experiment 5 - Task 5C: Empirical Distribution Modeling via Histograms",
-        relevantTask: "Task 1B & 5C",
+        labMapping: "Experiment 5 - Task 5C: Empirical Distribution Modeling via Histograms",
+        relevantTask: "Task 5C",
         keySyntax: "import numpy as np\nimport pandas as pd\nimport matplotlib.pyplot as plt\ncounts, bin_edges = np.histogram(data, bins='auto')\nq25, q75 = np.percentile(data, [25, 75])\niqr = q75 - q25\noutliers = data[(data < q25 - 1.5 * iqr) | (data > q75 + 1.5 * iqr)]",
         conceptTag: "Histograms & Outlier Detection"
       },
@@ -2933,8 +2553,8 @@ export const INITIAL_MODULES = [
           "Robust Spread Metrics: Interquartile Range (IQR = Q3 - Q1) and Median Absolute Deviation (MAD), unaffected by extreme distribution tails.",
           "Reporting Integrity: Stating point estimates alongside dispersion metrics (e.g., Mean ± Std or Median [IQR]) and sample size N to avoid misleading claims."
         ],
-        labMapping: "Experiment 1 - Task 1B: Descriptive Statistics & Diagnostic Telemetry",
-        relevantTask: "Task 1B",
+        labMapping: "Experiment 5 - Task 5C: Descriptive Statistics & Diagnostic Distribution Plots",
+        relevantTask: "Task 5C",
         keySyntax: "variance = np.var(data, ddof=1)\nstd_dev = np.std(data, ddof=1)\nmad = np.median(np.abs(data - np.median(data)))\nprint(f'Mean: {np.mean(data):.2f} ± {std_dev:.2f} (N={len(data)})')",
         conceptTag: "Variance & Dispersion Metrics"
       },
@@ -2971,8 +2591,8 @@ export const INITIAL_MODULES = [
           "Cohort Segmentation: Splitting populations into control and treatment cohorts (e.g., first-born infants vs. other infants, high-income vs. low-income).",
           "Grouped Stratification: df.groupby('cohort')['target'].agg(['mean', 'std', 'median', 'count']) for comparative group summaries."
         ],
-        labMapping: "Experiment 1 - Task 1B & Experiment 4: Hierarchical Slicing & Grouping",
-        relevantTask: "Task 1B & Task 4A",
+        labMapping: "Experiment 4 - Task 4B & Experiment 5: Hierarchical Slicing & Grouping",
+        relevantTask: "Task 4B & Task 5A",
         keySyntax: "cohort_mask = (df['Age'] >= 25) & (df['Status'] == 'Active')\ncohort_a = df.loc[cohort_mask, 'Score']\ncohort_b = df.loc[~cohort_mask, 'Score']\nprint(cohort_a.describe())",
         conceptTag: "DataFrame Cohort Indexing"
       },

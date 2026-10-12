@@ -58,11 +58,11 @@ import {
 // STATE MANAGEMENT & LOCAL STORAGE
 // ==========================================
 const STORAGE_KEYS = {
-  EXPERIMENTS: 'mbu_ds_experiments_v1',
+  EXPERIMENTS: 'mbu_ds_experiments_v3_clean',
   PROFILE: 'mbu_ds_profile_v5_personal_email',
   MODULES: 'mbu_ds_modules_v4_all_modules',
   THEME: 'mbu_ds_theme_mode',
-  VERSION: 'mbu_ds_data_version_v8_viva_records'
+  VERSION: 'mbu_ds_data_version_v10_experiments_4_5_6'
 };
 
 let experiments = loadExperiments();
@@ -168,11 +168,14 @@ function initThemeMode() {
 
 function loadExperiments() {
   try {
-    const raw = localStorage.getItem(STORAGE_KEYS.EXPERIMENTS);
+    let raw = localStorage.getItem(STORAGE_KEYS.EXPERIMENTS);
+    if (!raw) {
+      raw = localStorage.getItem('mbu_ds_experiments_v1');
+    }
     if (!raw) {
       const initial = JSON.parse(JSON.stringify(INITIAL_EXPERIMENTS));
       localStorage.setItem(STORAGE_KEYS.EXPERIMENTS, JSON.stringify(initial));
-      localStorage.setItem(STORAGE_KEYS.VERSION, 'mbu_ds_data_version_v6_modules');
+      localStorage.setItem(STORAGE_KEYS.VERSION, 'mbu_ds_data_version_v10_experiments_4_5_6');
       return initial;
     }
 
@@ -180,13 +183,16 @@ function loadExperiments() {
     if (!Array.isArray(loaded) || loaded.length === 0) {
       const initial = JSON.parse(JSON.stringify(INITIAL_EXPERIMENTS));
       localStorage.setItem(STORAGE_KEYS.EXPERIMENTS, JSON.stringify(initial));
-      localStorage.setItem(STORAGE_KEYS.VERSION, 'mbu_ds_data_version_v6_modules');
+      localStorage.setItem(STORAGE_KEYS.VERSION, 'mbu_ds_data_version_v10_experiments_4_5_6');
       return initial;
     }
 
+    // Filter out removed experiments (exp-1, exp-2, exp-3)
+    loaded = loaded.filter(e => e.id !== 'exp-1' && e.id !== 'exp-2' && e.id !== 'exp-3' && String(e.number) !== '1' && String(e.number) !== '2');
+
     // Force-sync official experiments and subtasks
     const currentVersion = localStorage.getItem(STORAGE_KEYS.VERSION);
-    if (currentVersion !== 'mbu_ds_data_version_v8_viva_records') {
+    if (currentVersion !== 'mbu_ds_data_version_v10_experiments_4_5_6') {
       INITIAL_EXPERIMENTS.forEach(initialExp => {
         const existingIdx = loaded.findIndex(e => e.id === initialExp.id);
         if (existingIdx !== -1) {
@@ -210,12 +216,12 @@ function loadExperiments() {
           loaded.push(JSON.parse(JSON.stringify(initialExp)));
         }
       });
-      localStorage.setItem(STORAGE_KEYS.VERSION, 'mbu_ds_data_version_v8_viva_records');
+      localStorage.setItem(STORAGE_KEYS.VERSION, 'mbu_ds_data_version_v10_experiments_4_5_6');
       localStorage.setItem(STORAGE_KEYS.EXPERIMENTS, JSON.stringify(loaded));
     }
 
-    // Filter out removed experiments (such as exp-3)
-    loaded = loaded.filter(e => e.id !== 'exp-3');
+    // Ensure removed experiments are filtered out
+    loaded = loaded.filter(e => e.id !== 'exp-1' && e.id !== 'exp-2' && e.id !== 'exp-3' && String(e.number) !== '1' && String(e.number) !== '2');
 
     // Ensure experiments are kept in numerical order
     const orderMap = new Map(INITIAL_EXPERIMENTS.map((e, idx) => [e.id, idx]));
