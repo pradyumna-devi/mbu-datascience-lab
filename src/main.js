@@ -2,7 +2,41 @@ import Chart from 'chart.js/auto';
 import confetti from 'canvas-confetti';
 import { INITIAL_PROFILE, INITIAL_EXPERIMENTS, INITIAL_MODULES, INITIAL_TOOLS } from './experimentsData.js';
 import { executePythonCode, initPyodideKernel, subscribeKernelStatus } from './pythonRunner.js';
-import { storeModulePdf, getModulePdf, deleteModulePdf, formatFileSize, generateSampleSyllabusPdfDataUrl } from './pdfStorage.js';
+import { storeModulePdf, getModulePdf, deleteModulePdf, formatFileSize, generateSampleSyllabusPdfDataUrl, generateModuleSyllabusPdfDataUrl, generateCandidateResumePdfDataUrl } from './pdfStorage.js';
+import { MODULES_LEARNING_MATERIAL } from './learningMaterialData.js';
+
+let activePdfBlobUrl = null;
+
+function escapeHtml(str) {
+  if (!str) return '';
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+}
+
+function dataUrlToPdfBlobUrl(dataUrl) {
+  if (!dataUrl) return null;
+  if (dataUrl.startsWith('blob:') || dataUrl.startsWith('http')) return dataUrl;
+  try {
+    const arr = dataUrl.split(',');
+    const mimeMatch = arr[0].match(/:(.*?);/);
+    const mime = mimeMatch ? mimeMatch[1] : 'application/pdf';
+    const bstr = atob(arr[1]);
+    let n = bstr.length;
+    const u8arr = new Uint8Array(n);
+    while (n--) {
+      u8arr[n] = bstr.charCodeAt(n);
+    }
+    const blob = new Blob([u8arr], { type: mime });
+    return URL.createObjectURL(blob);
+  } catch (e) {
+    console.warn('Failed to convert dataUrl to blob URL:', e);
+    return dataUrl;
+  }
+}
 import {
   initNeuralCanvas,
   init3DCardTilt,
@@ -25,8 +59,8 @@ import {
 // ==========================================
 const STORAGE_KEYS = {
   EXPERIMENTS: 'mbu_ds_experiments_v1',
-  PROFILE: 'mbu_ds_profile_v2_links',
-  MODULES: 'mbu_ds_modules_v3_two_modules',
+  PROFILE: 'mbu_ds_profile_v5_personal_email',
+  MODULES: 'mbu_ds_modules_v4_all_modules',
   THEME: 'mbu_ds_theme_mode',
   VERSION: 'mbu_ds_data_version_v8_viva_records'
 };
@@ -207,13 +241,22 @@ function loadProfile() {
     const raw = localStorage.getItem(STORAGE_KEYS.PROFILE);
     if (raw) {
       const parsed = JSON.parse(raw);
+      if (parsed.email === 'devi.pradyumna@mbu.asia' || !parsed.email) {
+        parsed.email = 'mudimelapradyumnadevi@gmail.com';
+      }
       return { ...INITIAL_PROFILE, ...parsed };
     }
-    // Also check older profile key
-    const oldRaw = localStorage.getItem('mbu_ds_profile_v1');
-    if (oldRaw) {
-      const oldParsed = JSON.parse(oldRaw);
-      return { ...INITIAL_PROFILE, ...oldParsed };
+    // Also check older profile keys
+    const oldKeys = ['mbu_ds_profile_v4_mudimela_resume', 'mbu_ds_profile_v1'];
+    for (const oldKey of oldKeys) {
+      const oldRaw = localStorage.getItem(oldKey);
+      if (oldRaw) {
+        const oldParsed = JSON.parse(oldRaw);
+        if (oldParsed.email === 'devi.pradyumna@mbu.asia' || !oldParsed.email) {
+          oldParsed.email = 'mudimelapradyumnadevi@gmail.com';
+        }
+        return { ...INITIAL_PROFILE, ...oldParsed };
+      }
     }
     return { ...INITIAL_PROFILE };
   } catch (e) {
@@ -227,11 +270,46 @@ function saveProfile() {
 
 function loadModules() {
   try {
-    const raw = localStorage.getItem(STORAGE_KEYS.MODULES);
+    let raw = localStorage.getItem(STORAGE_KEYS.MODULES);
+    if (!raw) {
+      raw = localStorage.getItem('mbu_ds_modules_v3_two_modules');
+    }
     if (raw) {
       const parsed = JSON.parse(raw);
-      if (Array.isArray(parsed) && parsed.length === INITIAL_MODULES.length && parsed.every(m => m.id === 'mod-1' || m.id === 'mod-2')) {
-        return parsed;
+      if (Array.isArray(parsed) && parsed.length > 0) {
+        // Synchronize with INITIAL_MODULES to guarantee flipCards, full topics, and syllabus exist
+        const merged = parsed.map(pMod => {
+          const initMatch = INITIAL_MODULES.find(m => m.id === pMod.id);
+          if (initMatch) {
+            return {
+              ...initMatch,
+              ...pMod,
+              topics: (initMatch.topics && initMatch.topics.length >= (pMod.topics?.length || 0)) ? initMatch.topics : pMod.topics,
+              flipCards: (initMatch.flipCards && initMatch.flipCards.length > 0) ? initMatch.flipCards : (pMod.flipCards || []),
+              syllabusUnits: initMatch.syllabusUnits || pMod.syllabusUnits,
+              hasPdf: true,
+              pdfFileName: pMod.pdfFileName || `${initMatch.code}_Syllabus.pdf`,
+              pdfFileSize: pMod.pdfFileSize || '1.24 MB',
+              pdfUploadDate: pMod.pdfUploadDate || 'Academic 2026-27'
+            };
+          }
+          return pMod;
+        });
+        // Ensure newly added initial modules (such as mod-3) are included if not present in cached storage
+        INITIAL_MODULES.forEach(initMod => {
+          if (!merged.some(m => m.id === initMod.id)) {
+            merged.push({
+              ...initMod,
+              hasPdf: true,
+              pdfFileName: `${initMod.code}_Syllabus.pdf`,
+              pdfFileSize: '1.24 MB',
+              pdfUploadDate: 'Academic 2026-27'
+            });
+          }
+        });
+
+        saveModules(merged);
+        return merged;
       }
     }
   } catch (e) {
@@ -354,8 +432,8 @@ function renderProfile() {
 
   const mailLink = document.getElementById('portfolioEmailLink');
   const mailHandle = document.getElementById('portfolioEmailHandle');
-  if (mailLink) mailLink.href = `mailto:${profile.email || "devi.pradyumna@mbu.asia"}`;
-  if (mailHandle) mailHandle.textContent = profile.email || "devi.pradyumna@mbu.asia";
+  if (mailLink) mailLink.href = `mailto:${profile.email || "mudimelapradyumnadevi@gmail.com"}`;
+  if (mailHandle) mailHandle.textContent = profile.email || "mudimelapradyumnadevi@gmail.com";
 
   const kaggleLink = document.getElementById('portfolioKaggleLink');
   const kaggleHandle = document.getElementById('portfolioKaggleHandle');
@@ -369,20 +447,34 @@ function renderProfile() {
 
   // CV / Resume Viewer Modal elements
   const cvName = document.getElementById('cvNameDisplay');
-  const cvRoll = document.getElementById('cvRollDisplay');
   const cvEmail = document.getElementById('cvEmailDisplay');
+  const cvPhone = document.getElementById('cvPhoneDisplay');
+  const cvYoutube = document.getElementById('cvYoutubeDisplay');
   const cvGithub = document.getElementById('cvGithubDisplay');
   const cvLinkedin = document.getElementById('cvLinkedinDisplay');
-  const cvFaculty = document.getElementById('cvFacultyDisplay');
-  const cvDesignation = document.getElementById('cvDesignationDisplay');
 
-  if (cvName) cvName.textContent = (profile.name || "M. PRADYUMNA DEVI").toUpperCase();
-  if (cvRoll) cvRoll.textContent = profile.id;
-  if (cvEmail) cvEmail.textContent = profile.email || "devi.pradyumna@mbu.asia";
-  if (cvGithub) cvGithub.textContent = (profile.githubUrl || '').replace(/https?:\/\/(www\.)?/, '') || "github.com/pradyumna-devi";
-  if (cvLinkedin) cvLinkedin.textContent = (profile.linkedinUrl || '').replace(/https?:\/\/(www\.)?/, '') || "linkedin.com/in/pradyumna-devi";
-  if (cvFaculty) cvFaculty.textContent = profile.faculty;
-  if (cvDesignation) cvDesignation.textContent = profile.designation;
+  if (cvName) cvName.textContent = profile.name || "Mudimela Pradyumna Devi";
+  if (cvEmail) {
+    cvEmail.textContent = profile.email || "mudimelapradyumnadevi@gmail.com";
+    cvEmail.href = `mailto:${profile.email || "mudimelapradyumnadevi@gmail.com"}`;
+  }
+  if (cvPhone) {
+    cvPhone.textContent = profile.phone || "9182361994";
+    cvPhone.href = `tel:${profile.phone || "9182361994"}`;
+  }
+  if (cvYoutube) {
+    cvYoutube.href = profile.youtubeUrl || "https://youtube.com/@mudimelapradyumnadevi";
+  }
+  if (cvLinkedin) {
+    const rawIn = (profile.linkedinUrl || "linkedin.com/in/mudimela-pradyumna-devi").replace(/^https?:\/\/(www\.)?/, '');
+    cvLinkedin.textContent = rawIn;
+    cvLinkedin.href = profile.linkedinUrl?.startsWith('http') ? profile.linkedinUrl : `https://${rawIn}`;
+  }
+  if (cvGithub) {
+    const rawGh = (profile.githubUrl || "github.com/pradyumna-devi").replace(/^https?:\/\/(www\.)?/, '');
+    cvGithub.textContent = rawGh;
+    cvGithub.href = profile.githubUrl?.startsWith('http') ? profile.githubUrl : `https://${rawGh}`;
+  }
 
   // Header count pill
   const expPill = document.getElementById('experimentsHeaderCountPill');
@@ -471,47 +563,27 @@ function downloadAcademicResume() {
   if (profile.customResumeDataUrl) {
     const a = document.createElement('a');
     a.href = profile.customResumeDataUrl;
-    a.download = profile.resumeName || "M_Pradyumna_Devi_Resume.pdf";
+    a.download = profile.resumeName || "Mudimela_Pradyumna_Devi_Resume.pdf";
     a.click();
     showToast("Downloaded resume document!");
     return;
   }
 
-  // Generate downloadable resume text/html document
-  const paper = document.getElementById('resumePaper');
-  if (!paper) return;
-
-  const resumeHtml = `
-<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="utf-8">
-  <title>${profile.name} - Academic Resume</title>
-  <style>
-    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; padding: 40px; color: #1e293b; max-width: 800px; margin: 0 auto; line-height: 1.5; }
-    h1 { margin: 0; color: #0f172a; font-size: 26px; }
-    .tagline { color: #0284c7; font-weight: 600; }
-    .institute { color: #475569; font-size: 13px; margin-bottom: 12px; }
-    .divider { height: 2px; background: #0284c7; margin: 12px 0 20px 0; }
-    .heading { font-size: 13px; font-weight: 800; color: #0369a1; text-transform: uppercase; border-bottom: 1.5px solid #e2e8f0; padding-bottom: 4px; margin: 20px 0 10px 0; letter-spacing: 0.5px; }
-    .top-row { display: flex; justify-content: space-between; font-weight: bold; }
-    .sub { color: #0284c7; font-size: 13px; }
-    ul { padding-left: 20px; font-size: 13px; }
-  </style>
-</head>
-<body>
-  ${paper.innerHTML}
-</body>
-</html>`;
-
-  const blob = new Blob([resumeHtml], { type: 'text/html' });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = profile.resumeName || `${(profile.name || "Student").replace(/\s+/g, '_')}_Resume.html`;
-  a.click();
-  URL.revokeObjectURL(url);
-  showToast("Academic Resume downloaded successfully!");
+  // Generate authentic PDF matching the uploaded resume PDF
+  try {
+    const pdfDataUrl = generateCandidateResumePdfDataUrl(profile);
+    const blobUrl = dataUrlToPdfBlobUrl(pdfDataUrl);
+    const a = document.createElement('a');
+    a.href = blobUrl;
+    a.download = profile.resumeName || "Mudimela_Pradyumna_Devi_Resume.pdf";
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    showToast("Downloaded Mudimela Pradyumna Devi Resume PDF!");
+  } catch (err) {
+    console.warn("Falling back to printable HTML view", err);
+    window.print();
+  }
 }
 
 // ==========================================
@@ -1009,6 +1081,26 @@ function updateCodeEditorGutter() {
   }
 }
 
+function saveWorkspaceCode() {
+  const editor = document.getElementById('workspaceCodeEditor');
+  if (!editor) return;
+  const exp = experiments.find(e => e.id === currentExpId);
+  if (exp && exp.subTasks) {
+    const st = exp.subTasks.find(s => s.letter === currentSubTaskLetter);
+    if (st) {
+      st.code = editor.value;
+      exp.userModified = true;
+      saveExperiments();
+      showToast("Custom code saved successfully!");
+      const saveTag = document.getElementById('editorSaveTag');
+      if (saveTag) {
+        saveTag.innerHTML = `<span style="color:#10b981;font-size:11px;font-weight:600;display:inline-flex;align-items:center;gap:3px;"><i data-lucide="check-check" style="width:12px;height:12px;"></i> Saved</span>`;
+        lucide.createIcons();
+      }
+    }
+  }
+}
+
 function resetWorkspaceCode() {
   const exp = experiments.find(e => e.id === currentExpId);
   if (!exp) return;
@@ -1345,9 +1437,17 @@ function renderModules() {
             </div>
           </div>
           <div class="pdf-chip-right-actions">
+            <button class="btn-view-study" data-action="view-study" data-id="${mod.id}" title="Comprehensive Syllabus Study Guide & Learning Material">
+              <i data-lucide="book-open"></i>
+              <span>Study Guide</span>
+            </button>
             <button class="btn-view-pdf" data-action="view-pdf" data-id="${mod.id}" title="Preview Syllabus PDF Document">
               <i data-lucide="eye"></i>
               <span>View PDF</span>
+            </button>
+            <button class="btn-view-flipcards" data-action="view-flipcards" data-id="${mod.id}" title="Interactive 3D Study Flip Cards">
+              <i data-lucide="layers"></i>
+              <span>Flip Cards</span>
             </button>
             <button class="btn-download-pdf-mini" data-action="download-pdf" data-id="${mod.id}" title="Download Syllabus PDF">
               <i data-lucide="download"></i>
@@ -1366,6 +1466,14 @@ function renderModules() {
             </div>
           </div>
           <div class="pdf-chip-right-actions">
+            <button class="btn-view-study" data-action="view-study" data-id="${mod.id}" title="Comprehensive Syllabus Study Guide & Learning Material">
+              <i data-lucide="book-open"></i>
+              <span>Study Guide</span>
+            </button>
+            <button class="btn-view-flipcards" data-action="view-flipcards" data-id="${mod.id}" title="Interactive 3D Study Flip Cards">
+              <i data-lucide="layers"></i>
+              <span>Flip Cards</span>
+            </button>
             <button class="btn-attach-pdf-trigger" data-action="upload-pdf-card" data-id="${mod.id}" title="Upload Syllabus PDF">
               <i data-lucide="upload-cloud"></i>
               <span>+ Upload PDF</span>
@@ -1422,10 +1530,22 @@ function renderModules() {
       handleDeleteModule(mod.id);
     });
 
+    // Action listener: View Study Guide / Learning Material
+    card.querySelector('[data-action="view-study"]')?.addEventListener('click', (e) => {
+      e.stopPropagation();
+      openPdfViewerModal(mod.id, 'study');
+    });
+
     // Action listener: View PDF
     card.querySelector('[data-action="view-pdf"]')?.addEventListener('click', (e) => {
       e.stopPropagation();
-      openPdfViewerModal(mod.id);
+      openPdfViewerModal(mod.id, 'document');
+    });
+
+    // Action listener: View Flip Cards
+    card.querySelector('[data-action="view-flipcards"]')?.addEventListener('click', (e) => {
+      e.stopPropagation();
+      openPdfViewerModal(mod.id, 'flipcards');
     });
 
     // Action listener: Download PDF
@@ -1709,9 +1829,524 @@ async function handleDeleteModule(moduleId) {
   showToast(`Module "${mod.code}" deleted successfully.`);
 }
 
-async function openPdfViewerModal(moduleId, fallbackDataUrl = null) {
+let currentViewerModuleId = null;
+let currentViewerMode = 'document';
+let currentViewerPdfUrl = null;
+
+let flipDeckState = {
+  moduleId: null,
+  cards: [],
+  currentIndex: 0,
+  isFlipped: false
+};
+
+function setPdfViewerMode(mode) {
+  currentViewerMode = mode;
+  const studyBtn = document.getElementById('pdfViewModeStudyBtn');
+  const docBtn = document.getElementById('pdfViewModeDocBtn');
+  const flipBtn = document.getElementById('pdfViewModeFlipBtn');
+
+  const studyBody = document.getElementById('pdfLearningMaterialBodyContainer');
+  const docBody = document.getElementById('pdfViewerBodyContainer');
+  const flipBody = document.getElementById('pdfFlipCardsBodyContainer');
+
+  if (studyBtn) studyBtn.classList.toggle('active', mode === 'study');
+  if (docBtn) docBtn.classList.toggle('active', mode === 'document');
+  if (flipBtn) flipBtn.classList.toggle('active', mode === 'flipcards');
+
+  if (mode === 'study') {
+    if (studyBody) studyBody.style.display = 'flex';
+    if (docBody) docBody.style.display = 'none';
+    if (flipBody) flipBody.style.display = 'none';
+    if (currentViewerModuleId) {
+      renderLearningMaterial(currentViewerModuleId);
+    }
+  } else if (mode === 'flipcards') {
+    if (studyBody) studyBody.style.display = 'none';
+    if (docBody) docBody.style.display = 'none';
+    if (flipBody) flipBody.style.display = 'flex';
+    if (flipDeckState.moduleId !== currentViewerModuleId) {
+      initFlipCardsDeck(currentViewerModuleId);
+    } else {
+      renderCurrentFlipCard();
+    }
+  } else {
+    // Standard PDF document view
+    if (studyBody) studyBody.style.display = 'none';
+    if (docBody) docBody.style.display = 'flex';
+    if (flipBody) flipBody.style.display = 'none';
+  }
+  lucide.createIcons();
+}
+
+function renderLearningMaterial(moduleId) {
+  const container = document.getElementById('pdfLearningMaterialBodyContainer');
+  if (!container) return;
+
   const mod = modules.find(m => m.id === moduleId);
-  if (!mod && !fallbackDataUrl) return;
+  if (!mod) {
+    container.innerHTML = '<div style="padding: 24px; color: var(--text-muted); text-align: center;">No module selected.</div>';
+    return;
+  }
+
+  const study = MODULES_LEARNING_MATERIAL[mod.id] || Object.values(MODULES_LEARNING_MATERIAL).find(m => m.code === mod.code);
+  const topics = study?.topics || (mod.topics || []).map((t, i) => ({
+    number: i + 1,
+    title: t,
+    unit: `Unit ${i < 2 ? 'I' : (i < 4 ? 'II' : 'III')}`,
+    concept: `Comprehensive conceptual breakdown and academic formulation for ${t}. Part of official Mohan Babu University curriculum.`,
+    codeExample: `# Practical implementation for ${t}\nimport numpy as np\nimport pandas as pd\nprint("Executing ${t}")`,
+    keyPoints: [
+      `Theoretical foundation for ${t}`,
+      `Practical integration in Python scientific stack`,
+      `Performance and validation best practices`
+    ],
+    labCorrelation: mod.relevantExpId ? `Experiment Mapped (${mod.relevantExpId})` : 'Digital Lab Workspace'
+  }));
+
+  const leadText = study?.leadSummary || mod.description || 'Comprehensive Academic Study Material & Syllabus Specification.';
+
+  // Build Hero Banner
+  const heroHtml = `
+    <div class="study-hero-banner">
+      <div class="study-hero-top">
+        <span class="study-hero-code-badge"><i data-lucide="award"></i> ${mod.code} &bull; ${mod.credits || '4 Credits'}</span>
+        <div class="study-hero-stats">
+          <span><i data-lucide="book-open"></i> ${topics.length} Syllabus Topics</span>
+          <span><i data-lucide="flask-conical"></i> ${mod.relevantExpTitle || 'Digital Lab Mapped'}</span>
+          <span><i data-lucide="calendar"></i> Academic 2026-27</span>
+        </div>
+      </div>
+      <h3 class="study-hero-title">${mod.title} &mdash; Official Syllabus Learning Material</h3>
+      <p class="study-hero-desc">${leadText}</p>
+    </div>
+  `;
+
+  // Build Search & Quick Navigation Bar
+  const tocPillsHtml = topics.map(t => {
+    const shortTitle = t.title.split(':')[0].split(',')[0].slice(0, 24);
+    return `
+      <a href="#study-topic-${t.number}" class="study-toc-pill" title="Jump to Topic ${t.number}: ${t.title}">
+        T${t.number}: ${shortTitle}...
+      </a>
+    `;
+  }).join('');
+
+  const controlsHtml = `
+    <div class="study-controls-row">
+      <div class="study-search-wrap">
+        <i data-lucide="search"></i>
+        <input type="text" id="studyMaterialSearchInput" class="study-search-input" placeholder="Search topic notes, code, formulas, keywords..." />
+      </div>
+      <div class="study-toc-pills">
+        <span style="font-size: 11.5px; font-weight: 700; color: var(--text-dim); text-transform: uppercase;">Quick Jump:</span>
+        ${tocPillsHtml}
+      </div>
+    </div>
+  `;
+
+  // Build Topic Cards
+  const topicCardsHtml = topics.map(t => {
+    const keyPointsHtml = (t.keyPoints || []).map(kp => `
+      <li>${kp}</li>
+    `).join('');
+
+    const codeBlockHtml = t.codeExample ? `
+      <div class="study-code-box">
+        <div class="study-code-topbar">
+          <span class="study-code-lang"><i data-lucide="code-2"></i> Python 3.12 Laboratory Implementation</span>
+          <button type="button" class="study-copy-btn" data-code="${encodeURIComponent(t.codeExample)}">
+            <i data-lucide="copy"></i> <span>Copy Code</span>
+          </button>
+        </div>
+        <pre class="study-code-pre"><code>${escapeHtml(t.codeExample)}</code></pre>
+      </div>
+    ` : '';
+
+    return `
+      <div class="study-topic-card" id="study-topic-${t.number}" data-topic-search="${(t.title + ' ' + (t.concept || '') + ' ' + (t.keyPoints || []).join(' ')).toLowerCase()}">
+        <div class="study-topic-header">
+          <div class="study-topic-badges">
+            <span class="study-unit-pill"><i data-lucide="bookmark"></i> ${t.unit}</span>
+            <span class="study-topic-num-badge">Topic ${t.number} of ${topics.length}</span>
+          </div>
+          <h4 class="study-topic-heading">${t.title}</h4>
+        </div>
+
+        <div class="study-concept-box">
+          <div class="study-section-label">
+            <i data-lucide="file-text"></i> Theoretical Foundation &amp; Academic Formulation
+          </div>
+          <p class="study-concept-text">${escapeHtml(t.concept || '')}</p>
+        </div>
+
+        ${codeBlockHtml}
+
+        <div class="study-takeaways-box">
+          <div class="study-takeaways-label">
+            <i data-lucide="check-circle-2"></i> Key Examination Takeaways &amp; Architectural Insights
+          </div>
+          <ul class="study-takeaways-list">
+            ${keyPointsHtml}
+          </ul>
+        </div>
+
+        <div class="study-lab-banner">
+          <div class="study-lab-info">
+            <i data-lucide="flask-conical"></i>
+            <div><strong>Applied Laboratory Mapping:</strong> ${t.labCorrelation || 'Practical Laboratory Assessment'}</div>
+          </div>
+          <button type="button" class="btn-tool btn-study-view-lab" data-exp-id="${mod.relevantExpId || ''}">
+            <i data-lucide="play"></i> <span>Launch Workspace</span>
+          </button>
+        </div>
+      </div>
+    `;
+  }).join('');
+
+  container.innerHTML = `
+    ${heroHtml}
+    ${controlsHtml}
+    <div id="studyTopicsListContainer" style="display: flex; flex-direction: column; gap: 20px;">
+      ${topicCardsHtml}
+    </div>
+  `;
+
+  // Attach search filter
+  const searchInput = container.querySelector('#studyMaterialSearchInput');
+  searchInput?.addEventListener('input', (e) => {
+    const q = e.target.value.toLowerCase().trim();
+    const cards = container.querySelectorAll('.study-topic-card');
+    cards.forEach(c => {
+      const txt = c.dataset.topicSearch || '';
+      c.style.display = (!q || txt.includes(q)) ? 'flex' : 'none';
+    });
+  });
+
+  // Attach copy code buttons
+  container.querySelectorAll('.study-copy-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const code = decodeURIComponent(btn.dataset.code || '');
+      navigator.clipboard.writeText(code).then(() => {
+        showToast("Python code copied to clipboard!");
+      }).catch(() => {
+        showToast("Code copied!");
+      });
+    });
+  });
+
+  // Attach launch workspace buttons
+  container.querySelectorAll('.btn-study-view-lab').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      closePdfViewerModal();
+      currentCategoryFilter = mod.category;
+      document.querySelectorAll('.category-chip').forEach(c => {
+        c.classList.toggle('active', c.dataset.category.toLowerCase() === mod.category.toLowerCase());
+      });
+      switchMainTab('experiments');
+      showToast(`Navigated to ${mod.category} laboratory workspace`);
+    });
+  });
+
+  // Smooth scroll for TOC pills
+  container.querySelectorAll('.study-toc-pill').forEach(pill => {
+    pill.addEventListener('click', (e) => {
+      e.preventDefault();
+      const targetId = pill.getAttribute('href')?.replace('#', '');
+      const el = container.querySelector(`#${targetId}`);
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    });
+  });
+
+  lucide.createIcons();
+}
+
+function initFlipCardsDeck(moduleId) {
+  const mod = modules.find(m => m.id === moduleId);
+  if (!mod) return;
+
+  flipDeckState.moduleId = moduleId;
+  
+  // Use curated flipCards or synthesize from mod.topics
+  if (Array.isArray(mod.flipCards) && mod.flipCards.length > 0) {
+    flipDeckState.cards = JSON.parse(JSON.stringify(mod.flipCards));
+  } else {
+    flipDeckState.cards = (mod.topics || []).map((t, idx) => ({
+      id: `syn-${idx}`,
+      unit: `Unit ${idx < 2 ? 'I' : (idx < 4 ? 'II' : 'III')}`,
+      topic: t,
+      question: `How does "${t}" serve as a core foundational pillar in data science and laboratory experiment pipelines?`,
+      highlights: [
+        "Theoretical foundations and mathematical formulation",
+        "Integration with standard Python data science ecosystem",
+        "Empirical evaluation and performance best practices"
+      ],
+      breakdown: [
+        `Systematic implementation guidelines and standard workflows for ${t}.`,
+        "Exploratory data analysis, error prevention, and reproducible execution.",
+        "Industry best practices, code structuring, and performance benchmarking."
+      ],
+      syntax: `# Example practical syntax for ${t}\nimport numpy as np\nimport pandas as pd\n# Lab implementation for ${t.toLowerCase()}`,
+      labExp: mod.relevantExpId ? `Experiment Mapped (${mod.relevantExpId})` : "Laboratory Experiment 1 & 2"
+    }));
+  }
+
+  flipDeckState.currentIndex = 0;
+  flipDeckState.isFlipped = false;
+
+  const codeEl = document.getElementById('flipDeckModuleCode');
+  const titleEl = document.getElementById('flipDeckModuleTitle');
+  if (codeEl) codeEl.textContent = mod.code;
+  if (titleEl) titleEl.innerHTML = `${mod.code}: ${mod.title} &mdash; Interactive Syllabus Deck`;
+
+  // Populate Quick Jump Dropdown
+  const jumpSelect = document.getElementById('flipQuickJumpSelect');
+  if (jumpSelect) {
+    jumpSelect.innerHTML = flipDeckState.cards.map((c, i) => `
+      <option value="${i}">Card ${i + 1}: ${c.topic}</option>
+    `).join('');
+    jumpSelect.value = "0";
+  }
+
+  // Populate Dot indicators
+  const dotsContainer = document.getElementById('flipDotsIndicator');
+  if (dotsContainer) {
+    dotsContainer.innerHTML = flipDeckState.cards.map((_, i) => `
+      <button type="button" class="flip-dot ${i === 0 ? 'active' : ''}" data-index="${i}" title="Jump to Card ${i + 1}"></button>
+    `).join('');
+
+    dotsContainer.querySelectorAll('.flip-dot').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const targetIdx = parseInt(btn.dataset.index, 10);
+        goToFlipCard(targetIdx);
+      });
+    });
+  }
+
+  renderCurrentFlipCard();
+}
+
+function renderCurrentFlipCard() {
+  if (!flipDeckState.cards || !flipDeckState.cards.length) return;
+
+  const idx = flipDeckState.currentIndex;
+  const card = flipDeckState.cards[idx];
+  const total = flipDeckState.cards.length;
+
+  // Counter badge
+  const countEl = document.getElementById('flipDeckCardCountDisplay');
+  if (countEl) countEl.textContent = `Card ${idx + 1} of ${total}`;
+
+  // Progress bar fill
+  const progressFill = document.getElementById('flipProgressBarFill');
+  if (progressFill) {
+    const pct = ((idx + 1) / total) * 100;
+    progressFill.style.width = `${pct}%`;
+  }
+
+  // Update dots indicator
+  document.querySelectorAll('#flipDotsIndicator .flip-dot').forEach((dot, dIdx) => {
+    dot.classList.toggle('active', dIdx === idx);
+  });
+
+  // Update jump dropdown
+  const jumpSelect = document.getElementById('flipQuickJumpSelect');
+  if (jumpSelect) jumpSelect.value = String(idx);
+
+  // Update inner card flip state
+  const innerCard = document.getElementById('flipCardInner');
+  if (innerCard) {
+    innerCard.classList.toggle('is-flipped', flipDeckState.isFlipped);
+  }
+
+  // Update navigation buttons enabled/disabled states
+  const prevBtn = document.getElementById('flipCardPrevBtn');
+  const nextBtn = document.getElementById('flipCardNextBtn');
+  if (prevBtn) prevBtn.disabled = idx === 0;
+  if (nextBtn) nextBtn.disabled = idx === total - 1;
+
+  // Render Front Face
+  const frontFace = document.getElementById('flipCardFrontFace');
+  if (frontFace) {
+    const rawHighlights = Array.isArray(card.highlights) && card.highlights.length > 0
+      ? card.highlights
+      : (Array.isArray(card.breakdown) ? card.breakdown.slice(0, 3) : (card.summary ? [card.summary] : []));
+
+    const highlightsHtml = rawHighlights.map(h => `
+      <li><i data-lucide="check-circle-2"></i> <span>${h}</span></li>
+    `).join('');
+
+    const labLabel = card.labExp || card.labMapping || 'Laboratory Experiment Mapped';
+
+    frontFace.innerHTML = `
+      <div>
+        <div class="flip-card-top-row">
+          <span class="flip-unit-pill"><i data-lucide="bookmark"></i> ${card.unit || 'Core Unit'}</span>
+          <span class="flip-card-index-badge">Topic ${idx + 1} of ${total}</span>
+        </div>
+        <h3 class="flip-topic-title">${card.topic}</h3>
+        <div class="flip-question-box">
+          <div class="flip-question-label">
+            <i data-lucide="help-circle"></i> Key Concept &amp; Discussion Prompt
+          </div>
+          <p class="flip-question-text">&ldquo;${card.question}&rdquo;</p>
+        </div>
+        <ul class="flip-highlights-list">
+          ${highlightsHtml}
+        </ul>
+      </div>
+      <div class="flip-card-footer">
+        <span class="flip-lab-link-pill">
+          <i data-lucide="flask-conical"></i> ${labLabel}
+        </span>
+        <span class="flip-hint-badge">
+          <i data-lucide="rotate-cw"></i> Click anywhere to flip for technical breakdown
+        </span>
+      </div>
+    `;
+  }
+
+  // Render Back Face
+  const backFace = document.getElementById('flipCardBackFace');
+  if (backFace) {
+    const rawBreakdown = Array.isArray(card.breakdown) && card.breakdown.length > 0
+      ? card.breakdown
+      : (Array.isArray(card.highlights) ? card.highlights : [card.summary || 'Technical breakdown details']);
+
+    const pointsHtml = rawBreakdown.map(b => `
+      <li>${b}</li>
+    `).join('');
+
+    const syntaxCode = card.syntax || card.keySyntax || '';
+    const syntaxHtml = syntaxCode ? `
+      <div class="flip-syntax-box">
+        <div class="flip-syntax-label">
+          <i data-lucide="code-2"></i> Practical Python Syntax / Command
+        </div>
+        <pre class="flip-syntax-code"><code>${syntaxCode}</code></pre>
+      </div>
+    ` : '';
+
+    const labLabel = card.labExp || card.labMapping || 'Directly tested in Laboratory Experiments';
+
+    backFace.innerHTML = `
+      <div>
+        <div class="flip-back-header">
+          <span class="flip-back-badge"><i data-lucide="book-open"></i> Technical In-Depth</span>
+          <span class="flip-card-index-badge">${card.unit || 'Syllabus Breakdown'}</span>
+        </div>
+        <h4 class="flip-back-topic-sub">${card.topic} &mdash; Practical Mechanics</h4>
+        <div class="flip-breakdown-box">
+          <ul class="flip-breakdown-points">
+            ${pointsHtml}
+          </ul>
+        </div>
+        ${syntaxHtml}
+        <div class="flip-lab-callout">
+          <i data-lucide="zap"></i>
+          <div><strong>Lab Mapping:</strong> ${labLabel}</div>
+        </div>
+      </div>
+      <div class="flip-card-footer">
+        <span class="flip-lab-link-pill">
+          <i data-lucide="check"></i> Mohan Babu University Curriculum
+        </span>
+        <span class="flip-hint-badge">
+          <i data-lucide="rotate-ccw"></i> Click anywhere to flip back to front
+        </span>
+      </div>
+    `;
+  }
+
+  lucide.createIcons();
+}
+
+function flipCurrentCard() {
+  flipDeckState.isFlipped = !flipDeckState.isFlipped;
+  const innerCard = document.getElementById('flipCardInner');
+  if (innerCard) {
+    innerCard.classList.toggle('is-flipped', flipDeckState.isFlipped);
+  }
+}
+
+function nextFlipCard() {
+  if (flipDeckState.currentIndex < flipDeckState.cards.length - 1) {
+    flipDeckState.currentIndex++;
+    flipDeckState.isFlipped = false;
+    renderCurrentFlipCard();
+  }
+}
+
+function prevFlipCard() {
+  if (flipDeckState.currentIndex > 0) {
+    flipDeckState.currentIndex--;
+    flipDeckState.isFlipped = false;
+    renderCurrentFlipCard();
+  }
+}
+
+function goToFlipCard(idx) {
+  if (idx >= 0 && idx < flipDeckState.cards.length) {
+    flipDeckState.currentIndex = idx;
+    flipDeckState.isFlipped = false;
+    renderCurrentFlipCard();
+  }
+}
+
+function shuffleFlipDeck() {
+  if (!flipDeckState.cards || !flipDeckState.cards.length) return;
+  const arr = [...flipDeckState.cards];
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  flipDeckState.cards = arr;
+  flipDeckState.currentIndex = 0;
+  flipDeckState.isFlipped = false;
+
+  const jumpSelect = document.getElementById('flipQuickJumpSelect');
+  if (jumpSelect) {
+    jumpSelect.innerHTML = flipDeckState.cards.map((c, i) => `
+      <option value="${i}">Card ${i + 1}: ${c.topic}</option>
+    `).join('');
+  }
+
+  renderCurrentFlipCard();
+  showToast("Shuffled syllabus flip deck!");
+}
+
+function resetFlipDeck() {
+  if (currentViewerModuleId) {
+    initFlipCardsDeck(currentViewerModuleId);
+    showToast("Reset flip deck to original syllabus order.");
+  }
+}
+
+async function openPdfViewerModal(moduleId, modeOrDataUrl = 'study') {
+  const mod = modules.find(m => m.id === moduleId);
+  currentViewerModuleId = moduleId;
+
+  let initialMode = 'study';
+  let customDataUrl = null;
+
+  if (modeOrDataUrl === 'flipcards') {
+    initialMode = 'flipcards';
+  } else if (modeOrDataUrl === 'document') {
+    initialMode = 'document';
+  } else if (modeOrDataUrl === 'study') {
+    initialMode = 'study';
+  } else if (typeof modeOrDataUrl === 'string' && (modeOrDataUrl.startsWith('data:') || modeOrDataUrl.startsWith('blob:') || modeOrDataUrl.startsWith('http'))) {
+    customDataUrl = modeOrDataUrl;
+    initialMode = 'document';
+  } else {
+    initialMode = 'study';
+  }
+
+  if (!mod && !customDataUrl) return;
 
   const modal = document.getElementById('modulePdfViewerModal');
   const titleEl = document.getElementById('pdfViewerModalTitle');
@@ -1724,101 +2359,140 @@ async function openPdfViewerModal(moduleId, fallbackDataUrl = null) {
 
   const titleText = mod ? `${mod.code}: ${mod.title}` : 'Syllabus PDF Document';
   const fileName = mod?.pdfFileName || `${mod?.code || 'Module'}_Syllabus.pdf`;
-  const fileSize = mod?.pdfFileSize || 'PDF';
+  const fileSize = mod?.pdfFileSize || 'PDF Document';
 
-  titleEl.textContent = titleText;
-  subtitleEl.textContent = `${fileName} • ${fileSize} • Mohan Babu University`;
+  if (titleEl) titleEl.textContent = titleText;
+  if (subtitleEl) subtitleEl.textContent = `${fileName} • ${fileSize} • Mohan Babu University`;
 
-  let pdfDataUrl = fallbackDataUrl;
+  // 1. Immediately open modal so user sees responsive feedback
+  if (modal) modal.style.display = 'flex';
 
-  if (!pdfDataUrl && mod) {
-    const stored = await getModulePdf(mod.id);
-    if (stored?.dataUrl) {
-      pdfDataUrl = stored.dataUrl;
-    } else if (mod.pdfDataUrl) {
-      pdfDataUrl = mod.pdfDataUrl;
-    } else {
-      pdfDataUrl = generateSampleSyllabusPdfDataUrl(
-        mod.code,
-        mod.title,
-        mod.category,
-        mod.hours || '30 Hours',
-        mod.credits || '4 Credits'
-      );
-    }
+  // 2. Render comprehensive learning material & flip cards immediately
+  try {
+    renderLearningMaterial(moduleId);
+    initFlipCardsDeck(moduleId);
+    setPdfViewerMode(initialMode);
+  } catch (e) {
+    console.warn("UI mode setup warning:", e);
   }
-
-  if (pdfDataUrl) {
-    iframe.src = pdfDataUrl;
-    iframe.style.display = 'block';
-    fallbackState.style.display = 'none';
-
-    downloadBtn.href = pdfDataUrl;
-    downloadBtn.download = fileName;
-
-    fallbackDownload.href = pdfDataUrl;
-    fallbackDownload.download = fileName;
-
-    openNewTabBtn.onclick = () => {
-      try {
-        const arr = pdfDataUrl.split(',');
-        const mime = arr[0].match(/:(.*?);/)[1];
-        const bstr = atob(arr[1]);
-        let n = bstr.length;
-        const u8arr = new Uint8Array(n);
-        while (n--) {
-          u8arr[n] = bstr.charCodeAt(n);
-        }
-        const blob = new Blob([u8arr], { type: mime });
-        const blobUrl = URL.createObjectURL(blob);
-        window.open(blobUrl, '_blank');
-      } catch (e) {
-        window.open(pdfDataUrl, '_blank');
-      }
-    };
-  } else {
-    iframe.style.display = 'none';
-    fallbackState.style.display = 'flex';
-  }
-
-  modal.style.display = 'flex';
   lucide.createIcons();
+
+  // 3. Load or generate PDF asynchronously
+  try {
+    let pdfDataUrl = customDataUrl;
+
+    if (!pdfDataUrl && mod) {
+      const stored = await getModulePdf(mod.id);
+      if (stored?.dataUrl) {
+        pdfDataUrl = stored.dataUrl;
+      } else if (mod.pdfDataUrl) {
+        pdfDataUrl = mod.pdfDataUrl;
+      } else {
+        pdfDataUrl = generateModuleSyllabusPdfDataUrl(mod);
+      }
+    }
+
+    currentViewerPdfUrl = pdfDataUrl;
+
+    if (pdfDataUrl) {
+      if (activePdfBlobUrl) {
+        try { URL.revokeObjectURL(activePdfBlobUrl); } catch (e) {}
+        activePdfBlobUrl = null;
+      }
+
+      const displayPdfUrl = dataUrlToPdfBlobUrl(pdfDataUrl);
+      if (displayPdfUrl && displayPdfUrl.startsWith('blob:')) {
+        activePdfBlobUrl = displayPdfUrl;
+      }
+
+      if (iframe) {
+        iframe.src = displayPdfUrl;
+        iframe.style.display = 'block';
+      }
+      if (fallbackState) fallbackState.style.display = 'none';
+
+      if (downloadBtn) {
+        downloadBtn.href = displayPdfUrl;
+        downloadBtn.download = fileName;
+        downloadBtn.onclick = (e) => {
+          e.preventDefault();
+          handleDownloadModulePdf(currentViewerModuleId);
+        };
+      }
+
+      if (fallbackDownload) {
+        fallbackDownload.href = displayPdfUrl;
+        fallbackDownload.download = fileName;
+        fallbackDownload.onclick = (e) => {
+          e.preventDefault();
+          handleDownloadModulePdf(currentViewerModuleId);
+        };
+      }
+
+      if (openNewTabBtn) {
+        openNewTabBtn.onclick = (e) => {
+          e.preventDefault();
+          window.open(displayPdfUrl, '_blank');
+        };
+      }
+    } else {
+      if (iframe) iframe.style.display = 'none';
+      if (fallbackState) fallbackState.style.display = 'flex';
+    }
+  } catch (err) {
+    console.error("PDF loading error:", err);
+    if (iframe) iframe.style.display = 'none';
+    if (fallbackState) fallbackState.style.display = 'flex';
+  }
 }
 
 function closePdfViewerModal() {
   const modal = document.getElementById('modulePdfViewerModal');
   const iframe = document.getElementById('modulePdfIframe');
   if (iframe) iframe.src = '';
+  if (activePdfBlobUrl) {
+    try { URL.revokeObjectURL(activePdfBlobUrl); } catch (e) {}
+    activePdfBlobUrl = null;
+  }
   if (modal) modal.style.display = 'none';
+  currentViewerModuleId = null;
 }
 
 async function handleDownloadModulePdf(moduleId) {
   const mod = modules.find(m => m.id === moduleId);
   if (!mod) return;
 
-  let pdfDataUrl = null;
-  const stored = await getModulePdf(mod.id);
-  if (stored?.dataUrl) {
-    pdfDataUrl = stored.dataUrl;
-  } else if (mod.pdfDataUrl) {
-    pdfDataUrl = mod.pdfDataUrl;
-  } else {
-    pdfDataUrl = generateSampleSyllabusPdfDataUrl(
-      mod.code,
-      mod.title,
-      mod.category,
-      mod.hours || '30 Hours',
-      mod.credits || '4 Credits'
-    );
-  }
+  try {
+    let pdfDataUrl = null;
+    const stored = await getModulePdf(mod.id);
+    if (stored?.dataUrl) {
+      pdfDataUrl = stored.dataUrl;
+    } else if (mod.pdfDataUrl) {
+      pdfDataUrl = mod.pdfDataUrl;
+    } else {
+      pdfDataUrl = generateModuleSyllabusPdfDataUrl(mod);
+    }
 
-  const a = document.createElement('a');
-  a.href = pdfDataUrl;
-  a.download = mod.pdfFileName || `${mod.code}_Syllabus.pdf`;
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-  showToast(`Downloading ${a.download}`);
+    if (!pdfDataUrl) {
+      showToast("Unable to generate PDF document", "error");
+      return;
+    }
+
+    const blobUrl = dataUrlToPdfBlobUrl(pdfDataUrl);
+    const a = document.createElement('a');
+    a.href = blobUrl;
+    a.download = mod.pdfFileName || `${mod.code}_Syllabus.pdf`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    setTimeout(() => {
+      try { URL.revokeObjectURL(blobUrl); } catch (e) {}
+    }, 2000);
+    showToast(`Downloading ${a.download}`);
+  } catch (err) {
+    console.error("Download module PDF failed:", err);
+    showToast("Error downloading PDF", "error");
+  }
 }
 
 function resetModulesToDefaults() {
@@ -2988,6 +3662,22 @@ document.addEventListener('DOMContentLoaded', () => {
       closeResumeViewerModal();
       closePdfViewerModal();
     }
+    // Flip cards keyboard shortcuts when module PDF viewer modal is open in flipcards mode
+    const pdfModal = document.getElementById('modulePdfViewerModal');
+    if (pdfModal && pdfModal.style.display !== 'none' && currentViewerMode === 'flipcards') {
+      if (!['INPUT', 'TEXTAREA', 'SELECT'].includes(document.activeElement?.tagName)) {
+        if (e.key === 'ArrowLeft') {
+          e.preventDefault();
+          prevFlipCard();
+        } else if (e.key === 'ArrowRight') {
+          e.preventDefault();
+          nextFlipCard();
+        } else if (e.key === ' ' || e.code === 'Space') {
+          e.preventDefault();
+          flipCurrentCard();
+        }
+      }
+    }
     if ((e.ctrlKey || e.metaKey) && (e.key === 'p' || e.key === 'P')) {
       if (activeView === 'workspace') {
         e.preventDefault();
@@ -3098,6 +3788,10 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('downloadResumeBtn')?.addEventListener('click', downloadAcademicResume);
   document.getElementById('downloadResumeFromViewerBtn')?.addEventListener('click', downloadAcademicResume);
   document.getElementById('printResumeBtn')?.addEventListener('click', () => window.print());
+  document.getElementById('editProfileFromResumeBtn')?.addEventListener('click', () => {
+    closeResumeViewerModal();
+    openProfileModal();
+  });
 
   document.getElementById('uploadPortfolioResumeInput')?.addEventListener('change', (e) => {
     const file = e.target.files[0];
@@ -3145,14 +3839,30 @@ document.addEventListener('DOMContentLoaded', () => {
   const gutterEl = document.getElementById('editorGutter');
 
   if (codeEditorEl) {
-    codeEditorEl.addEventListener('input', updateCodeEditorGutter);
+    codeEditorEl.addEventListener('input', () => {
+      updateCodeEditorGutter();
+      const exp = experiments.find(e => e.id === currentExpId);
+      if (exp && exp.subTasks) {
+        const st = exp.subTasks.find(s => s.letter === currentSubTaskLetter);
+        if (st) {
+          st.code = codeEditorEl.value;
+          exp.userModified = true;
+          saveExperiments();
+          const saveTag = document.getElementById('editorSaveTag');
+          if (saveTag) {
+            saveTag.innerHTML = `<span style="color:#10b981;font-size:11px;font-weight:600;display:inline-flex;align-items:center;gap:3px;"><i data-lucide="check" style="width:12px;height:12px;"></i> Auto-Saved</span>`;
+            lucide.createIcons();
+          }
+        }
+      }
+    });
     
     // Sync gutter scroll with editor textarea
     codeEditorEl.addEventListener('scroll', () => {
       if (gutterEl) gutterEl.scrollTop = codeEditorEl.scrollTop;
     });
 
-    // Handle Tab key and Shift+Enter
+    // Handle Tab key, Shift+Enter, and Ctrl+S
     codeEditorEl.addEventListener('keydown', (e) => {
       if (e.key === 'Tab') {
         e.preventDefault();
@@ -3164,10 +3874,14 @@ document.addEventListener('DOMContentLoaded', () => {
       } else if (e.key === 'Enter' && e.shiftKey) {
         e.preventDefault();
         executeVirtualKernel();
+      } else if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+        e.preventDefault();
+        saveWorkspaceCode();
       }
     });
   }
 
+  document.getElementById('saveWorkspaceCodeBtn')?.addEventListener('click', saveWorkspaceCode);
   document.getElementById('resetCodeBtn')?.addEventListener('click', resetWorkspaceCode);
   document.getElementById('downloadCodeBtn')?.addEventListener('click', downloadWorkspaceCode);
 
@@ -3475,8 +4189,28 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  // PDF Viewer Modal Close Button
+  // PDF Viewer Modal Controls & Flip Cards
   document.getElementById('closeModulePdfViewerModalBtn')?.addEventListener('click', closePdfViewerModal);
+  document.getElementById('pdfViewModeStudyBtn')?.addEventListener('click', () => setPdfViewerMode('study'));
+  document.getElementById('pdfViewModeDocBtn')?.addEventListener('click', () => setPdfViewerMode('document'));
+  document.getElementById('pdfViewModeFlipBtn')?.addEventListener('click', () => setPdfViewerMode('flipcards'));
+  
+  // Flip Card Deck Listeners
+  document.getElementById('flipCardInner')?.addEventListener('click', flipCurrentCard);
+  document.getElementById('flipCardInner')?.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      flipCurrentCard();
+    }
+  });
+  document.getElementById('flipCardToggleBtn')?.addEventListener('click', flipCurrentCard);
+  document.getElementById('flipCardPrevBtn')?.addEventListener('click', prevFlipCard);
+  document.getElementById('flipCardNextBtn')?.addEventListener('click', nextFlipCard);
+  document.getElementById('flipCardShuffleBtn')?.addEventListener('click', shuffleFlipDeck);
+  document.getElementById('flipCardResetBtn')?.addEventListener('click', resetFlipDeck);
+  document.getElementById('flipQuickJumpSelect')?.addEventListener('change', (e) => {
+    goToFlipCard(parseInt(e.target.value, 10));
+  });
 
   // Export / Import / Reset
   document.getElementById('exportDataBtn')?.addEventListener('click', exportLaboratoryJson);

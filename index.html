@@ -735,6 +735,9 @@ Ready to execute scripts. Choose a template or write Python code on the left and
                     <a class="btn-tool" id="workspaceGithubBtn" href="https://github.com/pradyumna-devi/mbu-datascience-lab" target="_blank" rel="noopener noreferrer" title="View this Python script on GitHub">
                       <i data-lucide="github"></i> GitHub
                     </a>
+                    <button class="btn-tool text-teal" id="saveWorkspaceCodeBtn" title="Save your edited code to laboratory storage (Ctrl + S)">
+                      <i data-lucide="save"></i> Save Code
+                    </button>
                     <button class="btn-tool" id="resetCodeBtn" title="Reset code to original experiment template">
                       <i data-lucide="rotate-ccw"></i> Reset
                     </button>
@@ -1118,7 +1121,7 @@ Ready to execute scripts. Choose a template or write Python code on the left and
             </div>
             <div class="form-group">
               <label for="formProfileEmail"><i data-lucide="mail" style="width: 14px; height: 14px; display: inline-block;"></i> Email Address</label>
-              <input type="email" id="formProfileEmail" placeholder="student@mbu.asia" />
+              <input type="email" id="formProfileEmail" placeholder="mudimelapradyumnadevi@gmail.com" />
             </div>
           </div>
 
@@ -1273,12 +1276,12 @@ Ready to execute scripts. Choose a template or write Python code on the left and
                     <i data-lucide="mail"></i>
                   </div>
                   <div>
-                    <div class="social-platform">University Email</div>
-                    <div class="social-handle" id="portfolioEmailHandle">devi.pradyumna@mbu.asia</div>
+                    <div class="social-platform">Primary Email</div>
+                    <div class="social-handle" id="portfolioEmailHandle">mudimelapradyumnadevi@gmail.com</div>
                   </div>
                 </div>
                 <div class="social-card-actions">
-                  <a href="mailto:devi.pradyumna@mbu.asia" class="btn-social-action visit-link-btn" id="portfolioEmailLink">
+                  <a href="mailto:mudimelapradyumnadevi@gmail.com" class="btn-social-action visit-link-btn" id="portfolioEmailLink">
                     <span>Send Mail</span>
                     <i data-lucide="arrow-up-right"></i>
                   </a>
@@ -1337,13 +1340,13 @@ Ready to execute scripts. Choose a template or write Python code on the left and
                 <i data-lucide="file-check-2"></i>
               </div>
               <div class="resume-info-content">
-                <div class="resume-title" id="portfolioResumeFileName">M_Pradyumna_Devi_Resume.pdf</div>
-                <div class="resume-meta">Academic CV &bull; Department of Data Science &bull; Updated for Academic Year 2026-2027</div>
+                <div class="resume-title" id="portfolioResumeFileName">Mudimela_Pradyumna_Devi_Resume.pdf</div>
+                <div class="resume-meta">B.Tech in CSE (Data Science) &bull; CGPA: 9.76 / 10.0 &bull; Mohan Babu University</div>
                 <div class="resume-tags">
-                  <span><i data-lucide="check"></i> Machine Learning</span>
-                  <span><i data-lucide="check"></i> Deep Learning</span>
-                  <span><i data-lucide="check"></i> Time Series Econometrics</span>
-                  <span><i data-lucide="check"></i> Python &amp; PyTorch</span>
+                  <span><i data-lucide="check"></i> C, C++, Java, Python</span>
+                  <span><i data-lucide="check"></i> DSA &amp; OOP</span>
+                  <span><i data-lucide="check"></i> Telegram Bot (n8n)</span>
+                  <span><i data-lucide="check"></i> MySQL &amp; GitHub</span>
                 </div>
               </div>
               <div class="resume-action-buttons">
@@ -1368,15 +1371,14 @@ Ready to execute scripts. Choose a template or write Python code on the left and
               <h4>Technical Competencies &amp; Lab Toolchain</h4>
             </div>
             <div class="skills-pill-cloud">
-              <span class="skill-pill active"><i data-lucide="code-2"></i> Python 3.12</span>
-              <span class="skill-pill"><i data-lucide="layers"></i> PyTorch</span>
-              <span class="skill-pill"><i data-lucide="table"></i> Pandas (MultiIndex)</span>
-              <span class="skill-pill"><i data-lucide="cpu"></i> Scikit-Learn</span>
-              <span class="skill-pill"><i data-lucide="bar-chart-2"></i> Matplotlib &amp; Seaborn</span>
-              <span class="skill-pill"><i data-lucide="trending-up"></i> ARIMA &amp; Dickey-Fuller</span>
-              <span class="skill-pill"><i data-lucide="database"></i> SQL &amp; Data Warehousing</span>
-              <span class="skill-pill"><i data-lucide="activity"></i> STL Decomposition</span>
-              <span class="skill-pill"><i data-lucide="network"></i> Convolutional Neural Nets</span>
+              <span class="skill-pill active"><i data-lucide="code-2"></i> Python</span>
+              <span class="skill-pill"><i data-lucide="terminal"></i> C &amp; C++</span>
+              <span class="skill-pill"><i data-lucide="coffee"></i> Java</span>
+              <span class="skill-pill"><i data-lucide="cpu"></i> Data Structures &amp; Algorithms</span>
+              <span class="skill-pill"><i data-lucide="box"></i> Object-Oriented Programming (OOP)</span>
+              <span class="skill-pill"><i data-lucide="bot"></i> Telegram Bot (n8n)</span>
+              <span class="skill-pill"><i data-lucide="database"></i> MySQL</span>
+              <span class="skill-pill"><i data-lucide="git-branch"></i> Git &amp; GitHub</span>
             </div>
           </div>
         </div>
@@ -1406,6 +1408,9 @@ Ready to execute scripts. Choose a template or write Python code on the left and
             </div>
           </div>
           <div class="header-right-tools">
+            <button class="btn-tool" id="editProfileFromResumeBtn" title="Edit Profile &amp; Resume Info">
+              <i data-lucide="edit-3"></i> Edit
+            </button>
             <button class="btn-tool" id="printResumeBtn" title="Print Resume">
               <i data-lucide="printer"></i> Print
             </button>
@@ -1419,98 +1424,78 @@ Ready to execute scripts. Choose a template or write Python code on the left and
         <!-- Rendered Academic Resume -->
         <div class="resume-document-viewport" id="resumeDocumentViewport">
           <div class="resume-paper" id="resumePaper">
-            <!-- Header -->
-            <div class="resume-paper-header">
-              <div class="resume-header-left">
-                <h1 class="resume-header-name" id="cvNameDisplay">M. PRADYUMNA DEVI</h1>
-                <div class="resume-header-tagline">B.Tech in Data Science &bull; School of Computing</div>
-                <div class="resume-header-institute">MOHAN BABU UNIVERSITY (School of Computing &bull; Data Science)</div>
+            <!-- Centered Header matching PDF -->
+            <div class="resume-paper-centered-header">
+              <h1 class="resume-candidate-name" id="cvNameDisplay">Mudimela Pradyumna Devi</h1>
+              <div class="resume-contact-row">
+                <span>Nandyal</span>
+                <span class="resume-contact-sep">|</span>
+                <a href="mailto:mudimelapradyumnadevi@gmail.com" class="resume-contact-link" id="cvEmailDisplay">mudimelapradyumnadevi@gmail.com</a>
+                <span class="resume-contact-sep">|</span>
+                <a href="tel:9182361994" class="resume-contact-link" id="cvPhoneDisplay">9182361994</a>
+                <span class="resume-contact-sep">|</span>
+                <a href="https://youtube.com/@mudimelapradyumnadevi" target="_blank" rel="noopener noreferrer" class="resume-contact-link" id="cvYoutubeDisplay">YouTube Channel</a>
               </div>
-              <div class="resume-header-contacts">
-                <div><i data-lucide="mail"></i> <span id="cvEmailDisplay">devi.pradyumna@mbu.asia</span></div>
-                <div><i data-lucide="phone"></i> <span>+91 98765 43210</span></div>
-                <div><svg style="width: 12px; height: 12px; display: inline-block; vertical-align: middle; margin-right: 3px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"></path><path d="M9 18c-4.51 2-5-2-7-2"></path></svg> <span id="cvGithubDisplay">github.com/pradyumna-devi</span></div>
-                <div><svg style="width: 12px; height: 12px; display: inline-block; vertical-align: middle; margin-right: 3px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect width="4" height="12" x="2" y="9"></rect><circle cx="4" cy="4" r="2"></circle></svg> <span id="cvLinkedinDisplay">linkedin.com/in/pradyumna-devi</span></div>
-                <div><i data-lucide="map-pin"></i> <span>Tirupati, Andhra Pradesh, India</span></div>
-              </div>
-            </div>
-
-            <div class="resume-divider"></div>
-
-            <!-- Education -->
-            <div class="resume-section-block">
-              <div class="resume-section-heading">ACADEMIC EDUCATION</div>
-              <div class="resume-entry">
-                <div class="resume-entry-top">
-                  <strong>Mohan Babu University (MBU), School of Computing</strong>
-                  <span class="resume-entry-date">2024 - 2028 (Expected)</span>
-                </div>
-                <div class="resume-entry-sub">Bachelor of Technology (B.Tech) - Department of Data Science | Roll: <strong id="cvRollDisplay">24102A030078</strong></div>
-                <div class="resume-entry-desc">
-                  Curriculum Coursework: Data Wrangling &amp; Exploratory Analysis, Applied Statistics &amp; Probability, Time Series Econometrics &amp; Stochastic Forecasting, Deep Learning &amp; Computer Vision, Machine Learning Algorithms, Database Engineering (SQL).
-                </div>
+              <div class="resume-contact-row">
+                <a href="https://linkedin.com/in/mudimela-pradyumna-devi" target="_blank" rel="noopener noreferrer" class="resume-contact-link" id="cvLinkedinDisplay">linkedin.com/in/mudimela-pradyumna-devi</a>
+                <span class="resume-contact-sep">|</span>
+                <a href="https://github.com/pradyumna-devi" target="_blank" rel="noopener noreferrer" class="resume-contact-link" id="cvGithubDisplay">github.com/pradyumna-devi</a>
               </div>
             </div>
 
-            <!-- Academic Laboratory Projects -->
-            <div class="resume-section-block">
-              <div class="resume-section-heading">DATA SCIENCE LABORATORY PROJECTS &amp; IMPLEMENTATIONS</div>
-              
-              <div class="resume-entry">
-                <div class="resume-entry-top">
-                  <strong>Data Science Digital Lab Library Portal (MBU Digital Lab)</strong>
-                  <span class="resume-entry-date">Academic Year 2026-2027</span>
-                </div>
-                <div class="resume-entry-sub">Technologies: Python 3.12, PyTorch, Pandas, Chart.js, Vite, statsmodels</div>
-                <ul class="resume-bullets">
-                  <li>Engineered a full-featured digital laboratory portal hosting multi-module data science curricula with interactive kernel execution and publication-quality diagnostic plotting.</li>
-                  <li>Architected responsive sub-task workspaces (A, B, C, D) incorporating video concept lectures, interactive code editor with line numbers, and live simulation runner.</li>
-                </ul>
+            <!-- Education Section -->
+            <div class="resume-academic-section">
+              <div class="resume-academic-heading">Education</div>
+              <div class="resume-row-between">
+                <div><strong>MOHAN BABU UNIVERSITY</strong>, B.Tech in Computer Science and Engineering (Data Science)</div>
+                <div class="resume-item-date">Aug 2024 &ndash; Present</div>
               </div>
-
-              <div class="resume-entry">
-                <div class="resume-entry-top">
-                  <strong>Stochastic Time Series Econometric Forecasting &amp; Stationarity Engine</strong>
-                  <span class="resume-entry-date">Lab Experiment 6</span>
-                </div>
-                <div class="resume-entry-sub">Technologies: statsmodels, ARIMA, Dickey-Fuller, Matplotlib</div>
-                <ul class="resume-bullets">
-                  <li>Implemented unit-root stationarity verification using the Augmented Dickey-Fuller (ADF) test with differencing order optimization for non-stationary series.</li>
-                  <li>Built STL seasonal decomposition and ARIMA(p,d,q) walk-forward cross-validation models yielding high forecasting fidelity on empirical telemetry data.</li>
-                </ul>
-              </div>
-
-              <div class="resume-entry">
-                <div class="resume-entry-top">
-                  <strong>Hierarchical Multi-Index Data Wrangling &amp; Imputation Engine</strong>
-                  <span class="resume-entry-date">Lab Experiment 4</span>
-                </div>
-                <div class="resume-entry-sub">Technologies: Pandas, NumPy, Data Pipeline Engineering</div>
-                <ul class="resume-bullets">
-                  <li>Constructed multi-tiered hierarchical index workflows with partial level slicing and multidimensional reshaping via stack and unstack transformations.</li>
-                  <li>Applied relational merge algorithms and combine-first null imputation techniques across heterogeneous tabular distributions.</li>
-                </ul>
-              </div>
+              <ul class="resume-clean-bullets">
+                <li><strong>CGPA:</strong> 9.76 / 10.0</li>
+                <li><strong>Coursework:</strong> Data Structures and Algorithms (DSA), Object-Oriented Programming (OOP), Database Management Systems (DBMS), Operating Systems, Software Engineering, Computer Networks</li>
+              </ul>
             </div>
 
-            <!-- Technical Skills -->
-            <div class="resume-section-block">
-              <div class="resume-section-heading">TECHNICAL PROFICIENCIES</div>
-              <div class="resume-skills-grid">
-                <div><strong>Languages:</strong> Python 3.12, SQL, C++, JavaScript (ES6+)</div>
-                <div><strong>Libraries &amp; Frameworks:</strong> Pandas, NumPy, PyTorch, Scikit-Learn, statsmodels, Matplotlib, Seaborn</div>
-                <div><strong>Data Science Core:</strong> Time Series Analysis (ARIMA, STL), Hierarchical Indexing, CNNs, Feature Engineering, Regression, Classification</div>
-                <div><strong>Developer Toolchain:</strong> Git, GitHub, Jupyter Notebooks, VS Code, Linux Shell, Vite</div>
-              </div>
+            <!-- Skills Section -->
+            <div class="resume-academic-section">
+              <div class="resume-academic-heading">Skills</div>
+              <ul class="resume-clean-bullets">
+                <li><strong>Programming Languages:</strong> C, C++, Java, Python</li>
+                <li><strong>Core Concepts:</strong> Data Structures and Algorithms, Object-Oriented Programming, Problem Solving</li>
+                <li><strong>Databases:</strong> MySQL (Basic)</li>
+                <li><strong>Tools:</strong> Git, GitHub</li>
+              </ul>
             </div>
 
-            <!-- Faculty Mentorship -->
-            <div class="resume-section-block">
-              <div class="resume-section-heading">FACULTY MENTORSHIP &amp; ACADEMIC AFFILIATION</div>
-              <div class="resume-entry">
-                <div><strong>Faculty Mentor:</strong> <span id="cvFacultyDisplay">Bosu Babu Sambana</span> (<span id="cvDesignationDisplay">Assistant Professor</span>)</div>
-                <div><strong>Department:</strong> Department of Data Science, School of Computing, Mohan Babu University</div>
+            <!-- Projects Section -->
+            <div class="resume-academic-section">
+              <div class="resume-academic-heading">Projects</div>
+              <div style="font-size: 13px; font-weight: 700; color: #111827; margin-bottom: 2px;">
+                &bull; Telegram Automation Bot using n8n
               </div>
+              <ul class="resume-sub-bullets">
+                <li>Built an automated Telegram bot using n8n to design event-driven workflows</li>
+                <li>Implemented conditional logic to process and respond to user messages</li>
+              </ul>
+            </div>
+
+            <!-- Activities & Community Engagement Section -->
+            <div class="resume-academic-section">
+              <div class="resume-academic-heading">Activities &amp; Community Engagement</div>
+              <ul class="resume-clean-bullets">
+                <li>Created and manage a YouTube channel focused on explaining Data Structures and Algorithms concepts</li>
+                <li>Shared DSA logic explanations through short videos</li>
+                <li>Built an early learner community</li>
+              </ul>
+            </div>
+
+            <!-- Certifications Section -->
+            <div class="resume-academic-section">
+              <div class="resume-academic-heading">Certifications</div>
+              <ul class="resume-clean-bullets">
+                <li>Microsoft Python Development Specialization &ndash; Microsoft</li>
+                <li>Google Data Analytics Specialization &ndash; Google</li>
+              </ul>
             </div>
 
           </div>
@@ -1670,6 +1655,20 @@ Ready to execute scripts. Choose a template or write Python code on the left and
             </div>
           </div>
           <div class="header-right-tools">
+            <div class="pdf-viewer-mode-switch" role="tablist" aria-label="PDF Viewer Display Mode">
+              <button type="button" class="pdf-mode-tab-btn active" id="pdfViewModeStudyBtn" data-mode="study" title="Comprehensive Syllabus Study Guide & Matter">
+                <i data-lucide="book-open"></i>
+                <span>Learning Material</span>
+              </button>
+              <button type="button" class="pdf-mode-tab-btn" id="pdfViewModeDocBtn" data-mode="document" title="Standard PDF Document View">
+                <i data-lucide="file-text"></i>
+                <span>PDF Document</span>
+              </button>
+              <button type="button" class="pdf-mode-tab-btn" id="pdfViewModeFlipBtn" data-mode="flipcards" title="View Syllabus Topics in Interactive 3D Flip Cards">
+                <i data-lucide="layers"></i>
+                <span>3D Flip Cards</span>
+              </button>
+            </div>
             <button class="btn-tool" id="openPdfNewTabBtn" title="Open PDF in New Browser Tab">
               <i data-lucide="external-link"></i> Open Tab
             </button>
@@ -1680,7 +1679,13 @@ Ready to execute scripts. Choose a template or write Python code on the left and
           </div>
         </div>
 
-        <div class="pdf-viewer-body" id="pdfViewerBodyContainer">
+        <!-- Mode 1: Interactive Learning Material Reader (Study Matter) -->
+        <div class="pdf-learning-material-body" id="pdfLearningMaterialBodyContainer">
+          <!-- Populated dynamically via JS -->
+        </div>
+
+        <!-- Mode 2: Standard PDF Document Viewer -->
+        <div class="pdf-viewer-body" id="pdfViewerBodyContainer" style="display: none;">
           <iframe id="modulePdfIframe" class="pdf-document-iframe" src="" title="Syllabus PDF Preview"></iframe>
           <div class="pdf-fallback-state" id="modulePdfFallbackState" style="display: none;">
             <i data-lucide="file-text" class="fallback-icon"></i>
@@ -1690,6 +1695,78 @@ Ready to execute scripts. Choose a template or write Python code on the left and
               <i data-lucide="download"></i> Download Syllabus PDF
             </a>
           </div>
+        </div>
+
+        <!-- 3D Flip Cards Viewer Body (Active when in Flip Cards Mode) -->
+        <div class="pdf-flipcards-body" id="pdfFlipCardsBodyContainer" style="display: none;">
+          <!-- Interactive Deck Header Bar -->
+          <div class="flip-deck-header-bar">
+            <div class="flip-deck-info">
+              <span class="flip-deck-tag" id="flipDeckModuleCode">DS-MOD-101</span>
+              <span class="flip-deck-title" id="flipDeckModuleTitle">Module 1: Introduction to Data Science &mdash; Syllabus Deck</span>
+            </div>
+            <div class="flip-deck-progress-badge">
+              <i data-lucide="sparkles"></i>
+              <span id="flipDeckCardCountDisplay">Card 1 of 6</span>
+            </div>
+            <div class="flip-deck-actions">
+              <button type="button" class="btn-tool" id="flipCardShuffleBtn" title="Shuffle Cards">
+                <i data-lucide="shuffle"></i> <span>Shuffle</span>
+              </button>
+              <button type="button" class="btn-tool" id="flipCardToggleBtn" title="Flip Card (Spacebar)">
+                <i data-lucide="rotate-cw"></i> <span>Flip Card</span>
+              </button>
+              <button type="button" class="btn-tool" id="flipCardResetBtn" title="Reset Deck">
+                <i data-lucide="rotate-ccw"></i> <span>Reset</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Progress Bar Strip -->
+          <div class="flip-progress-bar-wrap">
+            <div class="flip-progress-bar-fill" id="flipProgressBarFill" style="width: 16.6%;"></div>
+          </div>
+
+          <!-- 3D Flip Card Scene -->
+          <div class="flip-card-scene" id="flipCardScene">
+            <div class="flip-card-inner" id="flipCardInner" role="button" tabindex="0" title="Click anywhere or press Space to flip card">
+              
+              <!-- Front Side of Card -->
+              <div class="flip-card-face flip-card-front" id="flipCardFrontFace">
+                <!-- Dynamically populated via JS -->
+              </div>
+
+              <!-- Back Side of Card -->
+              <div class="flip-card-face flip-card-back" id="flipCardBackFace">
+                <!-- Dynamically populated via JS -->
+              </div>
+
+            </div>
+          </div>
+
+          <!-- Card Deck Navigation Strip -->
+          <div class="flip-deck-nav-strip">
+            <button type="button" class="flip-nav-btn prev" id="flipCardPrevBtn" title="Previous Topic (Left Arrow)">
+              <i data-lucide="chevron-left"></i>
+              <span>Previous Topic</span>
+            </button>
+            <div class="flip-dots-indicator" id="flipDotsIndicator">
+              <!-- Dot indicators dynamically rendered -->
+            </div>
+            <button type="button" class="flip-nav-btn next" id="flipCardNextBtn" title="Next Topic (Right Arrow)">
+              <span>Next Topic</span>
+              <i data-lucide="chevron-right"></i>
+            </button>
+          </div>
+
+          <!-- Quick Topic Jump Selector -->
+          <div class="flip-quick-jump-bar">
+            <label for="flipQuickJumpSelect"><i data-lucide="compass"></i> Jump to Topic:</label>
+            <select id="flipQuickJumpSelect" class="flip-jump-select">
+              <!-- Option items dynamically rendered -->
+            </select>
+          </div>
+
         </div>
       </div>
     </div>

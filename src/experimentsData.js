@@ -1,22 +1,27 @@
 // Mohan Babu University (MBU) - Data Science Digital Lab Library
 
 export const INITIAL_PROFILE = {
-  name: "M. Pradyumna Devi",
+  name: "Mudimela Pradyumna Devi",
   id: "24102A030078",
-  branch: "Data Science",
+  branch: "Computer Science and Engineering (Data Science)",
   section: "Section - 2",
   faculty: "Bosu Babu Sambana",
   designation: "Assistant Professor",
   avatarUrl: "/student-profile.jpg",
   githubUrl: "https://github.com/pradyumna-devi",
-  linkedinUrl: "https://linkedin.com/in/pradyumna-devi",
+  linkedinUrl: "https://linkedin.com/in/mudimela-pradyumna-devi",
   portfolioUrl: "https://pradyumna-devi.dev",
-  email: "devi.pradyumna@mbu.asia",
+  email: "mudimelapradyumnadevi@gmail.com",
+  phone: "9182361994",
+  location: "Nandyal",
+  cgpa: "9.76 / 10.0",
+  youtubeUrl: "https://youtube.com/@mudimelapradyumnadevi",
+  youtubeHandle: "YouTube Channel",
   kaggleUrl: "https://kaggle.com/pradyumnadevi",
   leetcodeUrl: "https://leetcode.com/pradyumna_devi",
-  bio: "Department of Data Science scholar at Mohan Babu University. Passionate about Time Series Econometrics, Deep Learning, Statistical Machine Learning, and Big Data Engineering.",
+  bio: "B.Tech in Computer Science and Engineering (Data Science) scholar at Mohan Babu University (CGPA: 9.76/10.0). Developer & technical educator building event-driven automation bots and explaining Data Structures & Algorithms concepts.",
   resumeUrl: "#",
-  resumeName: "M_Pradyumna_Devi_Resume.pdf"
+  resumeName: "Mudimela_Pradyumna_Devi_Resume.pdf"
 };
 
 export const INITIAL_EXPERIMENTS = [
@@ -2421,7 +2426,123 @@ export const INITIAL_MODULES = [
       "Unit III: Tabular Data Structures with Pandas & Exploratory Diagnostics"
     ],
     relevantExpId: "exp-1",
-    relevantExpTitle: "Experiment 1: Introduction to Data Science & Tabular Computing"
+    relevantExpTitle: "Experiment 1: Introduction to Data Science & Tabular Computing",
+    flipCards: [
+      {
+        id: "fc-1-1",
+        number: 1,
+        unit: "Unit I: Foundations & The Data Science Lifecycle",
+        topic: "Data Science lifecycle, multidisciplinary foundations & problem formulation",
+        question: "What is the multidisciplinary foundation of Data Science and how is an analytical problem formulated?",
+        icon: "layers",
+        summary: "Data Science bridges Domain Expertise, Mathematics/Statistics, and Computer Science to solve empirical problems.",
+        breakdown: [
+          "Problem Formulation: Define quantifiable business/scientific metrics (RMSE, F1-Score, AUC) and state testable hypotheses.",
+          "End-to-End Lifecycle: Telemetry Acquisition -> Cleaning/Hygiene -> Exploratory Data Analysis (EDA) -> Feature Engineering -> Model Training -> Validation -> Deployment.",
+          "Multidisciplinary Triangle: The intersection of Software Engineering, Statistical Inference, and Domain Subject-Matter Insight.",
+          "Evaluation Criteria: Ensuring statistical power, generalizability to out-of-distribution data, and avoiding target leakage."
+        ],
+        labMapping: "Experiment 1: Introduction to Data Science & Tabular Computing",
+        relevantTask: "Overview & Task 1A",
+        keySyntax: "import numpy as np\nimport pandas as pd\ndf.info()\ndf.describe()",
+        conceptTag: "Data Science Foundations"
+      },
+      {
+        id: "fc-1-2",
+        number: 2,
+        unit: "Unit I: Foundations & The Data Science Lifecycle",
+        topic: "Python data science ecosystem & interactive development environments",
+        question: "How does the Python computational ecosystem support interactive exploration and reproducible scientific workflows?",
+        icon: "terminal",
+        summary: "Python serves as the primary scientific computing language via optimized C-extensions, vector array libraries, and WebAssembly kernels.",
+        breakdown: [
+          "Core Computational Stack: CPython 3.12 interpreter, NumPy for N-dimensional arrays, Pandas for labeled tables, Matplotlib/Seaborn for publication plotting.",
+          "Interactive Environments: Jupyter Notebooks (.ipynb) integrating executable code, markdown prose, LaTeX math formulas, and interactive diagnostics.",
+          "WebAssembly Execution: Pyodide compilation enabling in-browser execution with isolated memory pointers without external servers.",
+          "Workflow Determinism: Setting random seeds (np.random.seed(42)) to guarantee repeatable analytical experiments."
+        ],
+        labMapping: "Interactive Python 3.12 WebAssembly Kernel & Jupyter Notebook Exporter",
+        relevantTask: "Workspace Virtual REPL",
+        keySyntax: "import sys, io\n%matplotlib inline\nnp.random.seed(42)",
+        conceptTag: "Python Scientific Stack"
+      },
+      {
+        id: "fc-1-3",
+        number: 3,
+        unit: "Unit II: Computational Ecosystem & Numerical Computing with NumPy",
+        topic: "NumPy N-dimensional array architectures, vectorization & numerical broadcasting",
+        question: "How does NumPy achieve high-speed computation via contiguous memory blocks, SIMD vectorization, and broadcasting?",
+        icon: "binary",
+        summary: "NumPy arrays (ndarray) eliminate dynamic Python interpreter overhead by executing pre-compiled C routines across contiguous memory buffers.",
+        breakdown: [
+          "Memory Architecture: Homogeneous, fixed-size C data types packed in contiguous RAM blocks for maximum CPU cache L1/L2 hits.",
+          "Vectorized Operations: Element-wise arithmetic applied in parallel across multidimensional arrays without explicit Python for-loops.",
+          "Broadcasting Semantics: Smaller arrays stretch along dimensions of size 1 to match larger operands without copying data in memory.",
+          "Boolean Masking & Slicing: Extracting data subsets with vectorized condition filters: data[data > 50]."
+        ],
+        labMapping: "Experiment 1 - Task 1A: NumPy Vector Arrays & Mathematical Computations",
+        relevantTask: "Task 1A",
+        keySyntax: "data = np.array([12, 18, 25, 30, 42, 55, 63, 78, 85, 92])\nstandardized = (data - np.mean(data)) / np.std(data)\nhigh_vals = data[data > 50]",
+        conceptTag: "NumPy Vectorization & SIMD"
+      },
+      {
+        id: "fc-1-4",
+        number: 4,
+        unit: "Unit III: Tabular Data Structures with Pandas & Exploratory Diagnostics",
+        topic: "Pandas Series and DataFrame structures, indexing, slicing & attribute inspection",
+        question: "How do Pandas Series and DataFrame structures operate, and how do loc[] and iloc[] indexing mechanisms differ?",
+        icon: "table",
+        summary: "Pandas provides high-performance tabular structures with labeled axes, heterogeneous column datatypes, and relational transformations.",
+        breakdown: [
+          "Core Data Structures: Series (1D labeled array with homogeneous values) and DataFrame (2D tabular matrix composed of aligned Series).",
+          "loc[] Indexing: Label-based selection using explicit index names and column labels; endpoints are inclusive.",
+          "iloc[] Indexing: Integer position-based indexing (0-indexed); endpoints are exclusive, matching Python slice convention.",
+          "Structural Inspection: df.shape, df.dtypes, df.columns, df.head(5), df.tail(5) for rapid dataset schema validation."
+        ],
+        labMapping: "Experiment 1 - Task 1B: Pandas DataFrame Construction & Exploratory Data Inspection",
+        relevantTask: "Task 1B",
+        keySyntax: "df = pd.DataFrame(data)\nhigh_scores = df.loc[df['Score'] >= 85, ['Name', 'Grade']]\nsubset = df.iloc[0:5, 1:4]",
+        conceptTag: "Pandas Indexing & Slicing"
+      },
+      {
+        id: "fc-1-5",
+        number: 5,
+        unit: "Unit III: Tabular Data Structures with Pandas & Exploratory Diagnostics",
+        topic: "Descriptive statistics: measures of central tendency, dispersion & exploratory distributions",
+        question: "What statistical measures quantify central tendency, dispersion, and feature distributions during exploratory data analysis?",
+        icon: "line-chart",
+        summary: "Descriptive statistics compress large-scale datasets into parametric and non-parametric summary metrics to characterize distributions.",
+        breakdown: [
+          "Central Tendency: Mean (arithmetic center), Median (50th percentile robust against outliers), Mode (peak frequency).",
+          "Dispersion & Spread: Variance (sigma^2), Standard Deviation (sigma), Interquartile Range (IQR = Q3 - Q1), Minimum & Maximum.",
+          "Z-Score Standardization: z = (x - mu) / sigma normalizes disparate features into zero-mean, unit-variance standardized distributions.",
+          "Automated Telemetry: df.describe() computes count, mean, std, min, 25%, 50%, 75%, and max across all numerical columns."
+        ],
+        labMapping: "Experiment 1 - Task 1B & Live Diagnostic Telemetry",
+        relevantTask: "Task 1B",
+        keySyntax: "stats_summary = df.describe()\nmu = df['Score'].mean()\nsigma = df['Score'].std()\niqr = df['Score'].quantile(0.75) - df['Score'].quantile(0.25)",
+        conceptTag: "Descriptive Statistics"
+      },
+      {
+        id: "fc-1-6",
+        number: 6,
+        unit: "Unit III: Tabular Data Structures with Pandas & Exploratory Diagnostics",
+        topic: "Data governance, ethical analytics, reproducibility & privacy standards",
+        question: "What ethical responsibilities, governance standards, and reproducibility practices are required in data science?",
+        icon: "award",
+        summary: "Modern data science mandates rigorous adherence to algorithmic accountability, privacy preservation, and immutable auditability.",
+        breakdown: [
+          "Algorithmic Fairness: Detecting historical bias in training sets, assessing disparate impact, avoiding proxy discrimination.",
+          "Privacy & Compliance: Anonymization, tokenization, differential privacy guarantees, adherence to DPDP Act and GDPR frameworks.",
+          "Reproducibility Standards: Environment locking (requirements.txt), fixed random states, immutable execution logs.",
+          "Academic Evaluation: Formal MBU Laboratory Observation Record sheets with multi-tier faculty assessment rubrics."
+        ],
+        labMapping: "Official MBU Lab Observation Record Sheet & Assessment Rubric",
+        relevantTask: "Lab Record Modal",
+        keySyntax: "np.random.seed(42)\n# Document data provenance & fairness metrics\nrecord_html = generate_lab_record(exp, subtask, code, output)",
+        conceptTag: "Data Governance & Ethics"
+      }
+    ]
   },
   {
     id: "mod-2",
@@ -2450,7 +2571,469 @@ export const INITIAL_MODULES = [
       "Unit III: Web Scraping, HTML DOM Parsing & Semi-Structured Data Pipelines"
     ],
     relevantExpId: "exp-2",
-    relevantExpTitle: "Experiment 2: Data Extraction, REST APIs & Web Scraping"
+    relevantExpTitle: "Experiment 2: Data Extraction, REST APIs & Web Scraping",
+    flipCards: [
+      {
+        id: "fc-2-1",
+        number: 1,
+        unit: "Unit I: Relational Database Connectivity & SQL Query Extraction",
+        topic: "Data acquisition pipelines: primary, secondary & third-party streaming sources",
+        question: "How are automated data acquisition pipelines structured across primary, secondary, and streaming data sources?",
+        icon: "database",
+        summary: "Data acquisition establishes the foundation of data engineering pipelines by ingesting telemetry from heterogeneous upstream providers.",
+        breakdown: [
+          "Data Source Taxonomy: Primary (first-party sensors, logs, user events), Secondary (relational operational DBs, data warehouses), Streaming (real-time message buses).",
+          "Ingestion Architectures: Scheduled batch ETL (extract-transform-load) windows vs. event-driven streaming micro-batches.",
+          "Ingestion Hygiene: Schema enforcement, encoding standardization (UTF-8), deduplication, and corruption quarantine."
+        ],
+        labMapping: "Experiment 2: Data Extraction, REST APIs & Web Scraping",
+        relevantTask: "Overview",
+        keySyntax: "import sqlite3\nimport requests\nimport json\nimport pandas as pd",
+        conceptTag: "Data Ingestion Architecture"
+      },
+      {
+        id: "fc-2-2",
+        number: 2,
+        unit: "Unit I: Relational Database Connectivity & SQL Query Extraction",
+        topic: "Relational database extraction: SQL queries, SQLite connections & DataFrame loading",
+        question: "How does Python interface with relational database engines using SQL queries and load records directly into Pandas DataFrames?",
+        icon: "git-merge",
+        summary: "Relational extraction connects to SQL engines, executes filtered/aggregated queries, and ingests tabular recordsets directly into memory.",
+        breakdown: [
+          "Database Connections: sqlite3.connect() establishing connection objects and cursor handles to in-memory (:memory:) or file-based databases.",
+          "Relational Queries: Executing SELECT, WHERE, GROUP BY, HAVING, and JOIN queries across multiple indexed tables.",
+          "Security & Parameterization: Using parameterized queries with tuple arguments (?) to prevent SQL injection vulnerabilities.",
+          "Pandas SQL Ingestion: pd.read_sql_query(query, conn) automatically handles cursor execution, column mapping, and DataFrame construction."
+        ],
+        labMapping: "Experiment 2 - Task 2A: Structured Data Extraction from SQLite Database with SQL Queries",
+        relevantTask: "Task 2A",
+        keySyntax: "conn = sqlite3.connect(':memory:')\nquery = 'SELECT department, AVG(salary) FROM employees GROUP BY department'\ndf = pd.read_sql_query(query, conn)\nconn.close()",
+        conceptTag: "SQL & Relational Extraction"
+      },
+      {
+        id: "fc-2-3",
+        number: 3,
+        unit: "Unit II: RESTful Web APIs, JSON/XML Endpoints & Authentication Protocols",
+        topic: "RESTful API consumption: HTTP methods, response headers & JSON data normalization",
+        question: "How are RESTful APIs consumed over HTTP and how are hierarchical nested JSON payloads flattened into tabular DataFrames?",
+        icon: "globe",
+        summary: "REST APIs deliver semi-structured JSON payloads that require HTTP protocol interaction and tabular normalization via json_normalize.",
+        breakdown: [
+          "HTTP Request Protocols: GET (read records), POST (submit queries/data), PUT/PATCH (mutations), DELETE (removals).",
+          "HTTP Response Telemetry: Status codes 200 (OK), 400 (Bad Request), 401 (Unauthorized), 403 (Forbidden), 429 (Rate Limit Exceeded).",
+          "Hierarchical JSON Normalization: pd.json_normalize(records) flattens nested JSON objects and arrays into 2D columnar DataFrames.",
+          "Schema Handling: Casting ISO-8601 date strings to datetime objects and managing sparse/null fields."
+        ],
+        labMapping: "Experiment 2 - Task 2B: RESTful JSON API Data Consumption & Normalization",
+        relevantTask: "Task 2B",
+        keySyntax: "res = requests.get('https://api.example.com/data', timeout=10)\npayload = res.json()\ndf = pd.json_normalize(payload['results'], sep='_')",
+        conceptTag: "REST APIs & JSON Normalization"
+      },
+      {
+        id: "fc-2-4",
+        number: 4,
+        unit: "Unit II: RESTful Web APIs, JSON/XML Endpoints & Authentication Protocols",
+        topic: "API authentication: API keys, Bearer tokens, rate limiting & pagination handling",
+        question: "How do API authentication tokens, rate limiting controls, and pagination loops ensure robust extraction in production?",
+        icon: "shield-check",
+        summary: "Production APIs require authentication credentials, rate-limiting compliance, and pagination loops to ingest full datasets safely.",
+        breakdown: [
+          "Authentication Schemes: API Keys in query/header, Basic Auth, OAuth 2.0 Bearer tokens (headers={'Authorization': f'Bearer {token}'}).",
+          "Rate Limit Compliance: Monitoring X-RateLimit-Remaining and Retry-After headers, implementing exponential backoff with jitter.",
+          "Pagination Loops: Iterating through offset/limit parameters or cursor tokens to consume multi-page datasets without memory exhaustion.",
+          "Connection Pooling: Using requests.Session() to reuse TCP connections across repetitive API calls."
+        ],
+        labMapping: "Experiment 2 - Task 2B: API Authentication & Header Configuration",
+        relevantTask: "Task 2B",
+        keySyntax: "headers = {'Authorization': f'Bearer {api_key}', 'Accept': 'application/json'}\nparams = {'page': page_num, 'limit': 50}\nsession = requests.Session()",
+        conceptTag: "API Security & Rate Limiting"
+      },
+      {
+        id: "fc-2-5",
+        number: 5,
+        unit: "Unit III: Web Scraping, HTML DOM Parsing & Semi-Structured Data Pipelines",
+        topic: "Web scraping protocols: BeautifulSoup, HTML DOM tree navigation & tag filtering",
+        question: "How does BeautifulSoup parse and traverse the HTML Document Object Model (DOM) to extract structured tabular datasets?",
+        icon: "file-code",
+        summary: "Web scraping parses unstructured HTML documents into hierarchical DOM element trees for targeted CSS selector extraction.",
+        breakdown: [
+          "DOM Tree Parsing: BeautifulSoup(html, 'html.parser') builds an in-memory navigable tree of tags, attributes, and text nodes.",
+          "Targeted Querying: soup.find() for single elements, soup.find_all() for collections, and soup.select() using standard CSS selectors.",
+          "Content Cleaning: element.get_text(strip=True), element.get('href'), parsing HTML <table> structures into list-of-lists for DataFrame conversion.",
+          "HTML Entities & Encoding: Handling special HTML character entities and multi-byte UTF-8 decodings."
+        ],
+        labMapping: "Experiment 2: HTML Web Scraping & DOM Parsing",
+        relevantTask: "Overview",
+        keySyntax: "from bs4 import BeautifulSoup\nsoup = BeautifulSoup(html_content, 'html.parser')\ntable = soup.find('table', {'id': 'reportTable'})\nrows = [[td.text.strip() for td in tr.find_all('td')] for tr in table.find_all('tr')]",
+        conceptTag: "HTML DOM Web Scraping"
+      },
+      {
+        id: "fc-2-6",
+        number: 6,
+        unit: "Unit III: Web Scraping, HTML DOM Parsing & Semi-Structured Data Pipelines",
+        topic: "Parsing semi-structured data: JSON, XML, CSV, TSV & unstructured text streams",
+        question: "What strategies and parsing libraries transform semi-structured formats (JSON, XML, CSV, TSV) into typed analytics matrices?",
+        icon: "file-spreadsheet",
+        summary: "Semi-structured data contains embedded delimiters or tags that require schema parsing and datatype coercion.",
+        breakdown: [
+          "Delimited Text: pd.read_csv() supporting custom separators (comma, tab, pipe), custom missing-value indicators, and chunksize streaming.",
+          "Hierarchical XML: xml.etree.ElementTree parsing root nodes, attributes, and XPath syntax queries.",
+          "JSON Serialization: json.loads() and json.dumps() for in-flight dictionary/string conversions.",
+          "Unstructured Regular Expressions: Using re.findall() and capture groups to extract timestamps, IP addresses, and numerical metrics from log files."
+        ],
+        labMapping: "Tools Suite: Dataset Inspector & Custom CSV Ingestion",
+        relevantTask: "Tools Tab",
+        keySyntax: "import xml.etree.ElementTree as ET\nroot = ET.fromstring(xml_text)\ndf = pd.read_csv('records.tsv', sep='\\t')\nlog_matches = re.findall(r'(\\d{4}-\\d{2}-\\d{2})\\s+(\\w+)', log_stream)",
+        conceptTag: "Data Serialization & Parsing"
+      },
+      {
+        id: "fc-2-7",
+        number: 7,
+        unit: "Unit III: Web Scraping, HTML DOM Parsing & Semi-Structured Data Pipelines",
+        topic: "Ethical data extraction, robots.txt compliance, error handling & network resiliency",
+        question: "What ethical compliance standards, robots.txt directives, and fault-tolerance policies govern automated web data acquisition?",
+        icon: "shield-alert",
+        summary: "Professional data extraction adheres strictly to robots.txt terms of service, server politeness delays, and defensive error handling.",
+        breakdown: [
+          "robots.txt Protocol: Checking /robots.txt using urllib.robotparser to respect User-agent permissions, Disallow rules, and Crawl-delay parameters.",
+          "Polite Extraction: Injecting custom User-Agent headers with contact information and applying rate-delay sleep timers between requests.",
+          "Network Resiliency: Wrapping remote requests in try...except requests.exceptions.RequestException with timeout limits.",
+          "Legal & Terms Compliance: Avoiding copyrighted data harvesting, respecting site terms of service, and ensuring analytical privacy."
+        ],
+        labMapping: "Experiment 2: Ethical Web Data Acquisition & Fault Tolerance",
+        relevantTask: "Overview",
+        keySyntax: "import urllib.robotparser as rp\nrobot = rp.RobotFileParser()\nrobot.set_url('https://target.com/robots.txt')\nrobot.read()\ncan_fetch = robot.can_fetch('*', 'https://target.com/data')",
+        conceptTag: "Ethical Extraction & Compliance"
+      }
+    ]
+  },
+  {
+    id: "mod-3",
+    code: "DS-MOD-103",
+    title: "Module 3: Data Visualization",
+    category: "Data Visualization",
+    hours: "14 Theory + 28 Lab Hours",
+    credits: "4 Credits",
+    gradient: "linear-gradient(135deg, rgba(236, 72, 153, 0.2), rgba(244, 63, 94, 0.1))",
+    borderColor: "rgba(236, 72, 153, 0.4)",
+    badgeColor: "#f472b6",
+    icon: "bar-chart-2",
+    description: "Visual exploration principles, Matplotlib figure and subplot API architecture, statistical charting with Pandas and Seaborn (line, bar, histogram, KDE density, scatter plots), multi-panel FacetGrid conditioning for categorical data, and modern interactive visualization libraries.",
+    topics: [
+      "A brief Matplotlib API primer (Figure, Axes, subplots & artist hierarchy)",
+      "Plotting with Pandas and Seaborn: Line plots & temporal trend analysis",
+      "Bar plots: Categorical comparisons, grouped & stacked representations",
+      "Histograms and density plots (Kernel Density Estimation & empirical distributions)",
+      "Scatter plots: Bivariate correlations, bubble sizes & regression trends",
+      "Facet grids and categorical data (FacetGrid, catplot, box & violin plots)",
+      "Other Python visualisation tools: Plotly interactive figures, Bokeh, Altair & Folium"
+    ],
+    syllabusUnits: [
+      "Unit I: Matplotlib Core API Primer, Figure Architectures & Subplot Hierarchies",
+      "Unit II: Statistical Graphics with Pandas & Seaborn (Line, Bar, Histogram, Density & Scatter Plots)",
+      "Unit III: Multi-Panel Facet Grids, Categorical Analytics & Modern Interactive Visualisation Toolkits"
+    ],
+    relevantExpId: "exp-5",
+    relevantExpTitle: "Experiment 5: Data Visualization with Matplotlib & Seaborn",
+    flipCards: [
+      {
+        id: "fc-3-1",
+        number: 1,
+        unit: "Unit I: Matplotlib Core API Primer, Figure Architectures & Subplot Hierarchies",
+        topic: "A brief Matplotlib API primer (Figure, Axes, subplots & artist hierarchy)",
+        question: "How does Matplotlib structure its object-oriented hierarchy of Figures, Axes, Spines, and Artists, and how do subplots operate?",
+        icon: "layout",
+        summary: "Matplotlib provides an object-oriented rendering engine with Figures representing top-level canvas containers and Axes hosting individual plot surfaces.",
+        breakdown: [
+          "Object-Oriented Architecture: fig, axes = plt.subplots(nrows, ncols) cleanly separates the canvas container (Figure) from individual coordinate systems (Axes).",
+          "Artist Hierarchy: Every graphical element (Line2D, Text, Rectangle, Axis spines, tick marks) is an Artist instance drawn on the rendering backend canvas.",
+          "Explicit vs. State-Machine (pyplot): Object-oriented ax.plot() provides deterministic multi-panel layout control, avoiding plt.plot() state-tracking collisions.",
+          "Figure Polish & Export: Configuring high-DPI resolution (dpi=300), tight bounding boxes (bbox_inches='tight'), and clean gridlines (ax.grid(True))."
+        ],
+        labMapping: "Experiment 5 - Task 5A: Line Plots with Title, Axis Labels, Ticks, Tick Labels, Annotations and Save to File",
+        relevantTask: "Task 5A",
+        keySyntax: "import matplotlib.pyplot as plt\nfig, ax = plt.subplots(2, 1, figsize=(10, 8))\nax[0].plot(months, sales, marker='o', lw=2, label='Sales')\nax[0].set_title('Monthly Sales')\nax[0].grid(True)\nplt.tight_layout()\nplt.savefig('sales_analysis.png', dpi=300, bbox_inches='tight')",
+        conceptTag: "Matplotlib Object-Oriented Hierarchy"
+      },
+      {
+        id: "fc-3-2",
+        number: 2,
+        unit: "Unit II: Statistical Graphics with Pandas & Seaborn (Line, Bar, Histogram, Density & Scatter Plots)",
+        topic: "Plotting with Pandas and Seaborn: Line plots & temporal trend analysis",
+        question: "How do Pandas and Seaborn streamline line plotting, temporal continuity, and confidence interval estimation across longitudinal series?",
+        icon: "trending-up",
+        summary: "Line plots illustrate continuous trends and time series, with Seaborn automatically calculating bootstrapped confidence intervals.",
+        breakdown: [
+          "Pandas Series/DataFrame Integration: df.plot(kind='line') directly uses index labels for X-axes and DataFrame column headers for legend entries.",
+          "Seaborn lineplot(): sns.lineplot(data=df, x='time', y='metric', hue='category') aggregates replicate observations and shades 95% bootstrap confidence bands.",
+          "Temporal Time-Series Formatting: Automatic date locator and date formatter handlers on Axes without manual tick placement.",
+          "Multi-Series Styling: Line styles (solid, dashed, dotted), markers (circles, diamonds), and semantic hue/style encodings."
+        ],
+        labMapping: "Experiment 5 - Task 5A & Experiment 6: Longitudinal Time-Series Line Plots & Trend Decomposition",
+        relevantTask: "Task 5A & Task 6A",
+        keySyntax: "import seaborn as sns\nimport pandas as pd\nsns.lineplot(data=time_df, x='Date', y='Metric', hue='Region', errorbar='ci')\nplt.title('Regional Metric Trends Over Time')\nplt.xlabel('Timestamp')\nplt.ylabel('Observed Value')",
+        conceptTag: "Line Plots & Time Trends"
+      },
+      {
+        id: "fc-3-3",
+        number: 3,
+        unit: "Unit II: Statistical Graphics with Pandas & Seaborn (Line, Bar, Histogram, Density & Scatter Plots)",
+        topic: "Bar plots: Categorical comparisons, grouped & stacked representations",
+        question: "How are categorical distributions and metric aggregations compared using vertical, horizontal, grouped, and stacked bar charts?",
+        icon: "bar-chart",
+        summary: "Bar plots encode numerical magnitudes for discrete categorical levels, supporting central tendency comparisons with error bars.",
+        breakdown: [
+          "Vertical vs. Horizontal Orientations: Use vertical bars for standard categories; switch to horizontal (sns.barplot(y='long_label')) to prevent label collisions.",
+          "Grouped Bar Charts: Comparing sub-groups side-by-side using the hue parameter (e.g. comparing Department across Gender or Year).",
+          "Stacked Bar Charts: Visualizing compositional part-to-whole proportions using df.plot(kind='bar', stacked=True).",
+          "Error Bars & Estimators: Seaborn's barplot automatically applies an estimator (default mean) with parametric or bootstrap error bars."
+        ],
+        labMapping: "Experiment 5 - Task 5B: Categorical Comparisons via Grouped & Stacked Bar Charts",
+        relevantTask: "Task 5B",
+        keySyntax: "sns.barplot(data=df, x='Department', y='Salary', hue='Level', palette='viridis')\n# Stacked bar via pandas\ndf_crosstab.plot(kind='bar', stacked=True, colormap='Spectral')\nplt.legend(title='Category Tier')",
+        conceptTag: "Bar Plots & Categorical Comparisons"
+      },
+      {
+        id: "fc-3-4",
+        number: 4,
+        unit: "Unit II: Statistical Graphics with Pandas & Seaborn (Line, Bar, Histogram, Density & Scatter Plots)",
+        topic: "Histograms and density plots (Kernel Density Estimation & empirical distributions)",
+        question: "How do histograms and Kernel Density Estimation (KDE) density plots reveal modality, skewness, and distribution shapes?",
+        icon: "activity",
+        summary: "Histograms bin continuous values into frequency counts, while KDE fits smooth continuous probability density functions over observed data.",
+        breakdown: [
+          "Histogram Binning Strategies: Choosing bin width using Sturges' rule, Freedman-Diaconis rule (robust to outliers), or explicit bin boundaries.",
+          "Kernel Density Estimation: Superimposing Gaussian kernels over each data point to compute a continuous density curve: sns.kdeplot().",
+          "Combined Distribution Inspection: sns.histplot(data=df, x='score', kde=True, stat='density') simultaneously showing discrete bars and continuous curve.",
+          "Skewness & Modality Diagnostics: Identifying unimodal, bimodal, right-skewed, and leptokurtic distribution characteristics."
+        ],
+        labMapping: "Experiment 5 - Task 5C: Empirical Distribution Modeling via Histograms & KDE Density",
+        relevantTask: "Task 5C",
+        keySyntax: "sns.histplot(data=df, x='FinalScore', kde=True, bins=25, stat='density', color='#06b6d4')\nplt.title('Empirical Distribution with KDE')\nplt.xlabel('Examination Score')\nplt.ylabel('Probability Density')",
+        conceptTag: "Histograms & Density Modeling"
+      },
+      {
+        id: "fc-3-5",
+        number: 5,
+        unit: "Unit II: Statistical Graphics with Pandas & Seaborn (Line, Bar, Histogram, Density & Scatter Plots)",
+        topic: "Scatter plots: Bivariate correlations, bubble sizes & regression trends",
+        question: "How do scatter plots expose bivariate correlations, non-linear relationships, multi-dimensional bubble encodings, and regression models?",
+        icon: "scatter-chart",
+        summary: "Scatter plots map Cartesian (X, Y) coordinates of continuous pairs, exposing covariance, clustering, and regression trajectories.",
+        breakdown: [
+          "Bivariate Correlation Inspection: Revealing linear association, heteroscedasticity, clustering, and outlier anomalies between two metrics.",
+          "Multidimensional Encodings: Mapping color to hue, marker shape to style, and circle diameter to numerical size (bubble plots).",
+          "Statistical Regression Fits: sns.regplot() and sns.lmplot() fitting Ordinary Least Squares (OLS) or polynomial regression lines with 95% confidence intervals.",
+          "Hexbin Density Plotting: Mitigating severe overplotting in large-scale datasets (N > 10,000) using hexagonal binning (plt.hexbin)."
+        ],
+        labMapping: "Experiment 5 - Task 5D: Bivariate Scatter Analysis & Linear Regression Modeling",
+        relevantTask: "Task 5D",
+        keySyntax: "sns.scatterplot(data=df, x='Experience', y='Salary', hue='Role', size='Projects', sizes=(40, 300))\nsns.regplot(data=df, x='Experience', y='Salary', scatter=False, color='#ef4444')\nplt.title('Experience vs Salary with Regression Fit')",
+        conceptTag: "Scatter Plots & Regression"
+      },
+      {
+        id: "fc-3-6",
+        number: 6,
+        unit: "Unit III: Multi-Panel Facet Grids, Categorical Analytics & Modern Interactive Visualisation Toolkits",
+        topic: "Facet grids and categorical data (FacetGrid, catplot, box & violin plots)",
+        question: "How do multi-panel FacetGrids and categorical plots (catplot, boxplots, violin plots) split multivariate spaces across discrete strata?",
+        icon: "grid",
+        summary: "Facet grids condition a dataset across categorical factors to produce small multiples, while box/violin plots summarize multi-group distributions.",
+        breakdown: [
+          "Small Multiples Architecture: sns.FacetGrid(df, col='Region', row='Year') creates a matrix of identical subplots parameterized by category.",
+          "Unified High-Level Interface: sns.catplot(kind='box' / 'violin' / 'strip' / 'swarm') unifying categorical distribution figures.",
+          "Boxplots vs. Violin Plots: Boxplots display five-number summary (min, Q1, median, Q3, max) with outlier points; violin plots combine boxplots with mirrored KDE densities.",
+          "Strip & Swarm Plots: Plotting individual jittered or non-overlapping raw observation points alongside aggregate summaries."
+        ],
+        labMapping: "Experiment 5 - Task 5E: Multi-Panel FacetGrid Conditioning & Box/Violin Plots",
+        relevantTask: "Task 5E",
+        keySyntax: "g = sns.FacetGrid(df, col='Department', hue='Gender', height=4)\ng.map(sns.scatterplot, 'Age', 'Salary')\ng.add_legend()\nsns.catplot(data=df, x='Department', y='Salary', kind='violin', inner='quartile')",
+        conceptTag: "Facet Grids & Categorical Analytics"
+      },
+      {
+        id: "fc-3-7",
+        number: 7,
+        unit: "Unit III: Multi-Panel Facet Grids, Categorical Analytics & Modern Interactive Visualisation Toolkits",
+        topic: "Other Python visualisation tools: Plotly interactive figures, Bokeh, Altair & Folium",
+        question: "What complementary Python visualization libraries exist for interactive web graphics, declarative grammars, and geospatial mapping?",
+        icon: "sparkles",
+        summary: "Modern Python ecosystems extend beyond static figures into interactive D3/WebGL web graphics, declarative grammars, and geographic maps.",
+        breakdown: [
+          "Plotly / Plotly Express: Web-first interactive visualizations supporting hover tooltips, zoom, pan, 3D surface rotations, and export to HTML/JSON.",
+          "Bokeh: Real-time streaming and large-scale interactive server dashboards rendered directly in browser HTML5 Canvas.",
+          "Altair (Vega-Lite Grammar): Declarative grammar of graphics defining charts through pure JSON specifications and intuitive aesthetic channels.",
+          "Folium: Leaflet.js wrapper in Python for interactive geospatial maps, choropleth heatmaps, and coordinate marker clusters."
+        ],
+        labMapping: "Tools Suite: Interactive Chart Engine & Telemetry HUD",
+        relevantTask: "Interactive Tools",
+        keySyntax: "import plotly.express as px\nfig = px.scatter(df, x='GDP', y='LifeExp', size='Pop', color='Continent', hover_name='Country', log_x=True)\nfig.write_html('interactive_chart.html')\n# Bokeh, Altair & Folium for streaming and geospatial dashboards",
+        conceptTag: "Interactive & Geospatial Toolkits"
+      }
+    ]
+  },
+  {
+    id: "mod-4",
+    code: "DS-MOD-104",
+    title: "Module 4: Statistical Thinking",
+    category: "Statistical Thinking",
+    hours: "14 Theory + 28 Lab Hours",
+    credits: "4 Credits",
+    gradient: "linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(20, 184, 166, 0.1))",
+    borderColor: "rgba(16, 185, 129, 0.4)",
+    badgeColor: "#34d399",
+    icon: "trending-up",
+    description: "Foundational statistical thinking and empirical data analysis: empirical distributions, histogram representation, outlier identification and summary statistics, variance and spread metrics, Probability Mass Functions (PMF) and the class size paradox, DataFrame indexing and filtering, Cumulative Distribution Functions (CDF), percentile-based metrics, random number sampling, and analytic distribution modeling.",
+    topics: [
+      "Distributions: Representing and plotting histograms, identifying outliers & summarizing distributions",
+      "Variance, standard deviation, spread metrics & reporting statistical results",
+      "Probability Mass Functions (PMF): Definition, plotting PMFs, other visualizations & the class size paradox",
+      "DataFrame indexing, conditional masking & exploratory cohort slicing",
+      "Cumulative Distribution Functions (CDF): Limits of PMFs, representing CDFs & empirical probabilities",
+      "Percentile-based statistics, random numbers, sampling & comparing percentile marks",
+      "Modelling distributions: Analytic distributions, exponential, normal, Pareto & model validation"
+    ],
+    syllabusUnits: [
+      "Unit I: Empirical Distributions, Histogram Binning, Outliers & Summary Variance",
+      "Unit II: Discrete Probability Models, Probability Mass Functions & Paradoxical Sampling",
+      "Unit III: Cumulative Distribution Functions, Percentile Metrics & Distribution Modeling"
+    ],
+    relevantExpId: "exp-1",
+    relevantExpTitle: "Experiment 1 & 5: Descriptive Statistics & Empirical Distribution Modeling",
+    flipCards: [
+      {
+        id: "fc-4-1",
+        number: 1,
+        unit: "Unit I: Empirical Distributions, Histogram Binning, Outliers & Summary Variance",
+        topic: "Distributions: Representing and plotting histograms, identifying outliers & summarizing distributions",
+        question: "How do histograms represent empirical data distributions, how are binning choices evaluated, and how are anomalous outliers detected and summarized?",
+        icon: "bar-chart",
+        summary: "Histograms partition continuous or discrete observations into non-overlapping bins, exposing shape, central clustering, spread, and outlier points.",
+        breakdown: [
+          "Histogram Construction: Discretizing continuous domain intervals into equal-width bins and counting observation frequencies in each bucket.",
+          "Binning Considerations: Under-binning oversmooths multi-modal peaks; over-binning introduces spurious sample noise; Freedman-Diaconis rule balances width.",
+          "Outlier Detection & Hygiene: Identifying values beyond 1.5 * IQR or 3 standard deviations; distinguishing genuine extreme events from recording errors.",
+          "Summary Statistics: Condensing distribution profiles into central tendency (mean, median, mode) and shape measures (skewness, kurtosis)."
+        ],
+        labMapping: "Experiment 1 - Task 1B & Experiment 5 - Task 5C: Empirical Distribution Modeling via Histograms",
+        relevantTask: "Task 1B & 5C",
+        keySyntax: "import numpy as np\nimport pandas as pd\nimport matplotlib.pyplot as plt\ncounts, bin_edges = np.histogram(data, bins='auto')\nq25, q75 = np.percentile(data, [25, 75])\niqr = q75 - q25\noutliers = data[(data < q25 - 1.5 * iqr) | (data > q75 + 1.5 * iqr)]",
+        conceptTag: "Histograms & Outlier Detection"
+      },
+      {
+        id: "fc-4-2",
+        number: 2,
+        unit: "Unit I: Empirical Distributions, Histogram Binning, Outliers & Summary Variance",
+        topic: "Variance, standard deviation, spread metrics & reporting statistical results",
+        question: "What metrics quantify statistical dispersion and variance, and how should analytical results and uncertainty be communicated accurately?",
+        icon: "activity",
+        summary: "Variance and standard deviation measure the dispersion of data points around their mean, establishing the basis for confidence intervals and statistical reporting.",
+        breakdown: [
+          "Sample vs. Population Variance: Applying Bessel's correction (N - 1 denominator) for unbiased sample variance estimation: s² = Σ(x - x̄)² / (n - 1).",
+          "Standard Deviation (σ): Square root of variance, expressing spread in original measurement units rather than squared units.",
+          "Robust Spread Metrics: Interquartile Range (IQR = Q3 - Q1) and Median Absolute Deviation (MAD), unaffected by extreme distribution tails.",
+          "Reporting Integrity: Stating point estimates alongside dispersion metrics (e.g., Mean ± Std or Median [IQR]) and sample size N to avoid misleading claims."
+        ],
+        labMapping: "Experiment 1 - Task 1B: Descriptive Statistics & Diagnostic Telemetry",
+        relevantTask: "Task 1B",
+        keySyntax: "variance = np.var(data, ddof=1)\nstd_dev = np.std(data, ddof=1)\nmad = np.median(np.abs(data - np.median(data)))\nprint(f'Mean: {np.mean(data):.2f} ± {std_dev:.2f} (N={len(data)})')",
+        conceptTag: "Variance & Dispersion Metrics"
+      },
+      {
+        id: "fc-4-3",
+        number: 3,
+        unit: "Unit II: Discrete Probability Models, Probability Mass Functions & Paradoxical Sampling",
+        topic: "Probability Mass Functions (PMF): Definition, plotting PMFs, other visualizations & the class size paradox",
+        question: "What is a Probability Mass Function (PMF), how does it normalize frequency counts into probabilities, and why does the Class Size Paradox occur?",
+        icon: "pie-chart",
+        summary: "A PMF maps discrete outcomes to relative probabilities summing to 1.0, revealing observational sampling biases such as the Class Size Paradox.",
+        breakdown: [
+          "PMF Normalization: Dividing discrete value counts by total sample size N so that Σ P(x) = 1.0, enabling direct comparison across unequal sample sizes.",
+          "Visualizing PMFs: Step plots and normalized discrete bar charts illustrating probabilities of exact discrete integer outcomes.",
+          "The Class Size Paradox: Institutional averages (mean students per class) differ sharply from student-perceived averages because larger classes sample more students.",
+          "Observer-Biased Weighting: Mathematically computing biased distributions by multiplying unweighted PMF probabilities by observation size: P_biased(x) = x * P(x) / μ."
+        ],
+        labMapping: "Tools Suite & Custom Statistical Thinking Workspace",
+        relevantTask: "PMF Telemetry",
+        keySyntax: "val_counts = pd.Series(sizes).value_counts().sort_index()\npmf = val_counts / len(sizes)\n# Unbiased vs Biased Student Perspective:\nbiased_pmf = pmf * pmf.index\nbiased_pmf /= biased_pmf.sum()\nprint('Dean Average:', pmf.index.to_series().mul(pmf).sum())\nprint('Student Average:', biased_pmf.index.to_series().mul(biased_pmf).sum())",
+        conceptTag: "Probability Mass Functions & Sampling Bias"
+      },
+      {
+        id: "fc-4-4",
+        number: 4,
+        unit: "Unit I: Empirical Distributions, Histogram Binning, Outliers & Summary Variance",
+        topic: "DataFrame indexing, conditional masking & exploratory cohort slicing",
+        question: "How does boolean indexing and hierarchical slicing in Pandas isolate demographic cohorts, experimental subgroups, and treatment distributions?",
+        icon: "table",
+        summary: "Conditional masking and label/integer indexing extract precise comparative cohorts for hypothesis testing and subgroup distribution analysis.",
+        breakdown: [
+          "Boolean Series Vectors: Applying vectorized logical operators (& for AND, | for OR, ~ for NOT) to generate truth masks across millions of rows.",
+          "loc vs. iloc Indexing: df.loc[condition, ['featureA', 'featureB']] guarantees explicit labeled selection without chained assignment warnings.",
+          "Cohort Segmentation: Splitting populations into control and treatment cohorts (e.g., first-born infants vs. other infants, high-income vs. low-income).",
+          "Grouped Stratification: df.groupby('cohort')['target'].agg(['mean', 'std', 'median', 'count']) for comparative group summaries."
+        ],
+        labMapping: "Experiment 1 - Task 1B & Experiment 4: Hierarchical Slicing & Grouping",
+        relevantTask: "Task 1B & Task 4A",
+        keySyntax: "cohort_mask = (df['Age'] >= 25) & (df['Status'] == 'Active')\ncohort_a = df.loc[cohort_mask, 'Score']\ncohort_b = df.loc[~cohort_mask, 'Score']\nprint(cohort_a.describe())",
+        conceptTag: "DataFrame Cohort Indexing"
+      },
+      {
+        id: "fc-4-5",
+        number: 5,
+        unit: "Unit III: Cumulative Distribution Functions, Percentile Metrics & Distribution Modeling",
+        topic: "Cumulative Distribution Functions (CDF): Limits of PMFs, representing CDFs & empirical probabilities",
+        question: "Why do PMFs break down when continuous values or sample sizes vary, and how does the Cumulative Distribution Function (CDF) resolve these limits?",
+        icon: "git-commit",
+        summary: "The CDF maps value x to probability P(X ≤ x), eliminating binning artifacts and providing smooth, sample-size-invariant distribution representations.",
+        breakdown: [
+          "Limits of PMFs: As sample size increases or continuous values have few duplicate points, PMF probabilities become tiny and noisy.",
+          "CDF Definition: CDF(x) = fraction of sample values ≤ x; monotonically non-decreasing curve from 0.0 to 1.0.",
+          "Empirical CDF (ECDF) Calculation: Sorting values x_(1) ≤ x_(2) ≤ ... ≤ x_(n) and assigning cumulative probabilities (1/n, 2/n, ..., n/n).",
+          "Interpreting Probabilities: Direct visual lookup of medians (CDF = 0.5), interquartile ranges (CDF = 0.75 - 0.25), and tail probabilities."
+        ],
+        labMapping: "Tools Suite: Statistical Metric Calculator & Custom ECDF Module",
+        relevantTask: "Tools Tab",
+        keySyntax: "sorted_data = np.sort(data)\ncdf_probs = np.arange(1, len(data) + 1) / len(data)\nplt.step(sorted_data, cdf_probs, where='post')\nplt.xlabel('Value (x)')\nplt.ylabel('Cumulative Probability P(X <= x)')\nplt.grid(True)",
+        conceptTag: "Cumulative Distribution Functions"
+      },
+      {
+        id: "fc-4-6",
+        number: 6,
+        unit: "Unit III: Cumulative Distribution Functions, Percentile Metrics & Distribution Modeling",
+        topic: "Percentile-based statistics, random numbers, sampling & comparing percentile marks",
+        question: "How are percentile ranks and inverse CDFs computed, and how does pseudo-random number generation enable Monte Carlo sampling simulations?",
+        icon: "shuffle",
+        summary: "Percentiles quantify relative rank within a distribution regardless of scale, while pseudo-random generators sample synthetic populations.",
+        breakdown: [
+          "Percentile Rank: The percentage of scores in a distribution that a specific value is greater than or equal to: percentile_rank = 100 * CDF(x).",
+          "Inverse CDF (Quantile Function): Given probability p ∈ [0, 1], returns the value x such that CDF(x) = p (e.g. median = quantile(0.50)).",
+          "Comparing Standardized Scores: Percentile ranks enable direct performance comparison across tests with differing scales, difficulty, and standard deviations.",
+          "Random Number Sampling: Using uniform generators (np.random.rand()) and inverse transform sampling to generate synthetic variables from target CDFs."
+        ],
+        labMapping: "Tools Suite: ML & Metric Calculator (Percentile & Critical Telemetry)",
+        relevantTask: "Metric Calculator",
+        keySyntax: "from scipy import stats\nrank = stats.percentileofscore(scores, 85)\nval_at_90th = np.percentile(scores, 90)\n# Random generation\nrandom_sample = np.random.choice(scores, size=100, replace=True)\nuniform_randoms = np.random.uniform(0, 1, 1000)",
+        conceptTag: "Percentiles & Random Sampling"
+      },
+      {
+        id: "fc-4-7",
+        number: 7,
+        unit: "Unit III: Cumulative Distribution Functions, Percentile Metrics & Distribution Modeling",
+        topic: "Modelling distributions: Analytic distributions, exponential, normal, Pareto & model validation",
+        question: "How are empirical data distributions fitted and validated against analytic models like the Normal, Exponential, Lognormal, and Pareto distributions?",
+        icon: "cpu",
+        summary: "Analytic distributions provide mathematical models that abstract noisy empirical data into compact parameterizations (μ, σ, λ, α).",
+        breakdown: [
+          "Analytic Model Families: Normal (bell curve for additive processes), Exponential (waiting times between Poisson events), Lognormal, and Pareto (power law 80/20 distributions).",
+          "Parameter Estimation: Maximum Likelihood Estimation (MLE) or sample moments (mean, variance) fitting model parameters to empirical observations.",
+          "Normal Probability (Q-Q) Plots: Plotting sorted sample quantiles against theoretical standard normal quantiles to test Gaussian normality.",
+          "Model Goodness-of-Fit: Evaluating Kolmogorov-Smirnov test (scipy.stats.kstest) and comparing empirical CDFs against analytic CDF curves."
+        ],
+        labMapping: "Experiment 5 - Task 5C & Tools Suite: Statistical Modeling Engine",
+        relevantTask: "Task 5C & Tools",
+        keySyntax: "from scipy import stats\n# Fit Normal distribution:\nmu, std = stats.norm.fit(data)\n# Q-Q plot for normality verification:\nstats.probplot(data, dist='norm', plot=plt)\n# Kolmogorov-Smirnov test:\nks_stat, p_val = stats.kstest(data, 'norm', args=(mu, std))",
+        conceptTag: "Analytic Distribution Modeling"
+      }
+    ]
   }
 ];
 
