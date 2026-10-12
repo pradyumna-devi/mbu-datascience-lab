@@ -38,18 +38,53 @@ export async function initPyodideKernel(onProgress = null) {
       notifyStatus('loading', 'Loading Pyodide runtime from CDN...');
       if (onProgress) onProgress('Loading Python 3.12 WebAssembly engine...');
 
-      // Ensure pyodide.js script tag exists
+      if (typeof window === 'undefined') {
+        notifyStatus('fallback', 'Client Evaluator Active (Offline/Test Mode)');
+        return null;
+      }
+
+      // Ensure pyodide.js script tag exists and window.loadPyodide is defined
       if (typeof window.loadPyodide !== 'function') {
         await new Promise((resolve, reject) => {
+          let timeoutId = null;
+          const pollInterval = setInterval(() => {
+            if (typeof window.loadPyodide === 'function') {
+              clearInterval(pollInterval);
+              clearTimeout(timeoutId);
+              resolve();
+            }
+          }, 50);
+
+          timeoutId = setTimeout(() => {
+            clearInterval(pollInterval);
+            reject(new Error('Pyodide script load timeout'));
+          }, 8000);
+
           const existingScript = document.querySelector('script[src*="pyodide"]');
           if (existingScript) {
-            existingScript.addEventListener('load', resolve);
-            existingScript.addEventListener('error', reject);
+            existingScript.addEventListener('load', () => {
+              clearInterval(pollInterval);
+              clearTimeout(timeoutId);
+              resolve();
+            });
+            existingScript.addEventListener('error', (err) => {
+              clearInterval(pollInterval);
+              clearTimeout(timeoutId);
+              reject(err);
+            });
           } else {
             const script = document.createElement('script');
             script.src = 'https://cdn.jsdelivr.net/pyodide/v0.26.4/full/pyodide.js';
-            script.onload = resolve;
-            script.onerror = reject;
+            script.onload = () => {
+              clearInterval(pollInterval);
+              clearTimeout(timeoutId);
+              resolve();
+            };
+            script.onerror = (err) => {
+              clearInterval(pollInterval);
+              clearTimeout(timeoutId);
+              reject(err);
+            };
             document.head.appendChild(script);
           }
         });

@@ -2984,6 +2984,8 @@ document.addEventListener('DOMContentLoaded', () => {
       closeAddExperimentModal();
       closeAddModuleModal();
       closeProfileModal();
+      closePortfolioModal();
+      closeResumeViewerModal();
       closePdfViewerModal();
     }
     if ((e.ctrlKey || e.metaKey) && (e.key === 'p' || e.key === 'P')) {
@@ -2996,6 +2998,15 @@ document.addEventListener('DOMContentLoaded', () => {
       e.preventDefault();
       openShortcutsModal();
     }
+  });
+
+  // Modal Backdrop Dismissal: Close modals when clicking overlay outside card
+  document.querySelectorAll('.modal-overlay').forEach(overlay => {
+    overlay.addEventListener('click', (e) => {
+      if (e.target === overlay) {
+        overlay.style.display = 'none';
+      }
+    });
   });
 
   // Modal triggers: Add Experiment
@@ -3208,29 +3219,54 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   // Scratchpad Run & Clear & Templates
-  document.getElementById('runScratchpadBtn')?.addEventListener('click', () => {
+  document.getElementById('runScratchpadBtn')?.addEventListener('click', async () => {
     const code = document.getElementById('scratchpadEditor')?.value || '';
     const out = document.getElementById('scratchpadOutput');
+    const runBtn = document.getElementById('runScratchpadBtn');
     if (!out) return;
 
-    out.textContent = ">>> Sending snippet to virtual Python REPL...\n>>> Interpreting abstract syntax tree...";
-    setTimeout(() => {
-      let printed = [];
-      const regex = /print\s*\(\s*(?:f?["'](.*?)["']|(.*?))\s*\)/g;
-      let m;
-      while ((m = regex.exec(code)) !== null) {
-        printed.push(m[1] || m[2] || '');
-      }
+    if (!code.trim()) {
+      showToast("Scratchpad editor is empty. Enter Python code to execute.", "info");
+      return;
+    }
 
-      let res = `[REPL Output - Python 3.11 Kernel]\nTimestamp: ${new Date().toLocaleTimeString()}\n`;
-      if (printed.length > 0) {
-        res += printed.map(p => `>>> ${p}`).join('\n');
+    if (runBtn) {
+      runBtn.disabled = true;
+      runBtn.innerHTML = `<i data-lucide="loader-2" class="spin"></i> Executing...`;
+      runBtn.style.opacity = '0.75';
+      lucide.createIcons();
+    }
+
+    out.textContent = ">>> Sending script to Python 3.12 WebAssembly REPL...\n>>> Initializing computation environment...\n";
+    try {
+      const result = await executePythonCode(code, (msg) => {
+        out.textContent = `>>> ${msg}\n`;
+      });
+
+      let res = `[REPL Output - Python 3.12 WebAssembly Kernel]\nTimestamp: ${new Date().toLocaleTimeString()}\nEngine: ${result.engine} | Execution Time: ${result.executionTime}s\n------------------------------------------------------------\n`;
+      if (result.success) {
+        res += (result.stdout && result.stdout.trim()) ? result.stdout : "[Process finished with exitcode 0 (No stdout output)]";
+        if (result.stderr && result.stderr.trim()) {
+          res += `\n\n--- Standard Error (stderr) ---\n${result.stderr}`;
+        }
+        showToast("REPL script executed successfully!", "success");
+        playSound('success');
       } else {
-        res += `>>> Script executed without uncaught exceptions.\n>>> Return code: 0 | CPU cycles: 12ms`;
+        res += (result.error || result.stderr || "Execution error encountered.");
+        showToast("Error in REPL script. Check terminal output.", "info");
       }
       out.textContent = res;
-      showToast("REPL script executed!");
-    }, 600);
+    } catch (err) {
+      out.textContent = `>>> Execution Failed:\n${err.message || err}`;
+      showToast("Execution failure", "info");
+    } finally {
+      if (runBtn) {
+        runBtn.disabled = false;
+        runBtn.innerHTML = `<i data-lucide="play"></i> Run Script`;
+        runBtn.style.opacity = '1';
+        lucide.createIcons();
+      }
+    }
   });
 
   document.getElementById('clearScratchpadOutputBtn')?.addEventListener('click', () => {

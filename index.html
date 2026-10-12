@@ -61,7 +61,27 @@
               </div>
             </div>
 
-
+            <!-- Center Command Bar / Search Section -->
+            <div class="header-search-section">
+              <div class="search-bar-compact" role="search">
+                <i data-lucide="search" class="search-icon"></i>
+                <input 
+                  type="text" 
+                  id="experimentSearchInput" 
+                  placeholder="Search experiments, tasks, algorithms (Ctrl+K)..." 
+                  aria-label="Search digital lab library"
+                  autocomplete="off"
+                />
+                <span class="search-kbd-shortcut">Ctrl K</span>
+                <button id="clearSearchBtn" class="clear-search-btn" title="Clear search" style="display: none;" type="button">
+                  <i data-lucide="x"></i>
+                </button>
+                <button class="search-action-btn" id="searchSubmitBtn" title="Search" type="button">
+                  <span>Search</span>
+                  <i data-lucide="search" style="width: 13px; height: 13px;"></i>
+                </button>
+              </div>
+            </div>
 
             <!-- Right Side: Executive Profile Pill & Add Experiment CTA -->
             <div class="header-right-profile">
@@ -265,7 +285,7 @@
         <div class="system-stats-strip">
           <div class="stat-pill">
             <span class="pulse-green"></span>
-            <span>Kernel: <strong>Python 3.11 (Active)</strong></span>
+            <span>Kernel: <strong>Python 3.12 WASM (Active)</strong></span>
           </div>
           <div class="toolbar-actions">
             <button class="btn-ghost-sm" id="exportDataBtn" title="Export Laboratory Experiments as JSON">
@@ -450,7 +470,7 @@
                   </button>
                 </div>
                 <div class="terminal-screen" id="scratchpadOutput">
-[Python 3.11 Kernel Initialized]
+[Python 3.12 WebAssembly Virtual Kernel Initialized]
 Ready to execute scripts. Choose a template or write Python code on the left and click 'Run Script'.
                 </div>
               </div>
@@ -700,7 +720,7 @@ Ready to execute scripts. Choose a template or write Python code on the left and
                 <div class="panel-header">
                   <div class="panel-title">
                     <i data-lucide="terminal" class="text-green"></i>
-                    <span>Python 3.11 Kernel Editor (Interactive)</span>
+                    <span>Python 3.12 Kernel Editor (Interactive)</span>
                   </div>
                   <div class="panel-actions">
                     <button class="btn-tool text-amber" id="generateLabRecordBtn" title="Generate & Print Official MBU Lab Record Sheet (Ctrl+P)">
@@ -1348,7 +1368,7 @@ Ready to execute scripts. Choose a template or write Python code on the left and
               <h4>Technical Competencies &amp; Lab Toolchain</h4>
             </div>
             <div class="skills-pill-cloud">
-              <span class="skill-pill active"><i data-lucide="code-2"></i> Python 3.11</span>
+              <span class="skill-pill active"><i data-lucide="code-2"></i> Python 3.12</span>
               <span class="skill-pill"><i data-lucide="layers"></i> PyTorch</span>
               <span class="skill-pill"><i data-lucide="table"></i> Pandas (MultiIndex)</span>
               <span class="skill-pill"><i data-lucide="cpu"></i> Scikit-Learn</span>
@@ -1441,7 +1461,7 @@ Ready to execute scripts. Choose a template or write Python code on the left and
                   <strong>Data Science Digital Lab Library Portal (MBU Digital Lab)</strong>
                   <span class="resume-entry-date">Academic Year 2026-2027</span>
                 </div>
-                <div class="resume-entry-sub">Technologies: Python 3.11, PyTorch, Pandas, Chart.js, Vite, statsmodels</div>
+                <div class="resume-entry-sub">Technologies: Python 3.12, PyTorch, Pandas, Chart.js, Vite, statsmodels</div>
                 <ul class="resume-bullets">
                   <li>Engineered a full-featured digital laboratory portal hosting multi-module data science curricula with interactive kernel execution and publication-quality diagnostic plotting.</li>
                   <li>Architected responsive sub-task workspaces (A, B, C, D) incorporating video concept lectures, interactive code editor with line numbers, and live simulation runner.</li>
@@ -1477,7 +1497,7 @@ Ready to execute scripts. Choose a template or write Python code on the left and
             <div class="resume-section-block">
               <div class="resume-section-heading">TECHNICAL PROFICIENCIES</div>
               <div class="resume-skills-grid">
-                <div><strong>Languages:</strong> Python 3.11, SQL, C++, JavaScript (ES6+)</div>
+                <div><strong>Languages:</strong> Python 3.12, SQL, C++, JavaScript (ES6+)</div>
                 <div><strong>Libraries &amp; Frameworks:</strong> Pandas, NumPy, PyTorch, Scikit-Learn, statsmodels, Matplotlib, Seaborn</div>
                 <div><strong>Data Science Core:</strong> Time Series Analysis (ARIMA, STL), Hierarchical Indexing, CNNs, Feature Engineering, Regression, Classification</div>
                 <div><strong>Developer Toolchain:</strong> Git, GitHub, Jupyter Notebooks, VS Code, Linux Shell, Vite</div>
