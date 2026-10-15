@@ -127,7 +127,10 @@ export function isAudioEnabled() {
 // -------------------------------------------------------------------------
 // 2. INTERACTIVE NEURAL CONSTELLATION CANVAS
 // -------------------------------------------------------------------------
-let particlesActive = localStorage.getItem('mbu_ds_particles_fx') !== 'false';
+let particlesActive = true;
+if (localStorage.getItem('mbu_ds_particles_fx') === 'false') {
+  localStorage.setItem('mbu_ds_particles_fx', 'true');
+}
 let canvasAnimId = null;
 
 export function initNeuralCanvas() {
@@ -139,8 +142,8 @@ export function initNeuralCanvas() {
   let height = (canvas.height = window.innerHeight);
 
   const particles = [];
-  const particleCount = Math.min(65, Math.floor((width * height) / 18000));
-  const mouse = { x: null, y: null, radius: 140 };
+  const particleCount = Math.min(80, Math.max(45, Math.floor((width * height) / 14000)));
+  const mouse = { x: null, y: null, radius: 160 };
 
   function resize() {
     width = canvas.width = window.innerWidth;
@@ -161,14 +164,14 @@ export function initNeuralCanvas() {
   // Shockwave burst on click
   window.addEventListener('click', (e) => {
     if (!particlesActive) return;
-    for (let i = 0; i < 6; i++) {
-      const angle = (Math.PI * 2 * i) / 6;
+    for (let i = 0; i < 8; i++) {
+      const angle = (Math.PI * 2 * i) / 8;
       particles.push({
         x: e.clientX,
         y: e.clientY,
-        vx: Math.cos(angle) * (2 + Math.random() * 2),
-        vy: Math.sin(angle) * (2 + Math.random() * 2),
-        size: 2 + Math.random() * 2,
+        vx: Math.cos(angle) * (2.5 + Math.random() * 2.5),
+        vy: Math.sin(angle) * (2.5 + Math.random() * 2.5),
+        size: 2.5 + Math.random() * 2,
         life: 1,
         isSparks: true
       });
@@ -223,10 +226,13 @@ function getThemeCanvasColors(theme) {
     constructor() {
       this.x = Math.random() * width;
       this.y = Math.random() * height;
-      this.vx = (Math.random() - 0.5) * 0.75;
-      this.vy = (Math.random() - 0.5) * 0.75;
-      this.size = Math.random() * 2.2 + 1;
+      this.vx = (Math.random() - 0.5) * 0.8;
+      this.vy = (Math.random() - 0.5) * 0.8;
+      this.baseSize = Math.random() * 2 + 1.2;
+      this.size = this.baseSize;
       this.colorChoice = Math.random() > 0.4 ? 1 : 2;
+      this.pulseSpeed = 0.02 + Math.random() * 0.03;
+      this.pulseAngle = Math.random() * Math.PI * 2;
     }
 
     update() {
@@ -236,6 +242,10 @@ function getThemeCanvasColors(theme) {
       if (this.x < 0 || this.x > width) this.vx *= -1;
       if (this.y < 0 || this.y > height) this.vy *= -1;
 
+      // Gentle pulsing size
+      this.pulseAngle += this.pulseSpeed;
+      this.size = this.baseSize + Math.sin(this.pulseAngle) * 0.4;
+
       // Mouse gentle interaction
       if (mouse.x !== null && mouse.y !== null) {
         const dx = mouse.x - this.x;
@@ -243,16 +253,16 @@ function getThemeCanvasColors(theme) {
         const dist = Math.hypot(dx, dy);
         if (dist < mouse.radius) {
           const force = (mouse.radius - dist) / mouse.radius;
-          this.x -= (dx / dist) * force * 1.5;
-          this.y -= (dy / dist) * force * 1.5;
+          this.x -= (dx / dist) * force * 1.6;
+          this.y -= (dy / dist) * force * 1.6;
         }
       }
     }
 
     draw(themeColors) {
       ctx.beginPath();
-      ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-      ctx.fillStyle = `${this.colorChoice === 1 ? themeColors.particle1 : themeColors.particle2} 0.75)`;
+      ctx.arc(this.x, this.y, Math.max(0.5, this.size), 0, Math.PI * 2);
+      ctx.fillStyle = `${this.colorChoice === 1 ? themeColors.particle1 : themeColors.particle2} 0.82)`;
       ctx.fill();
     }
   }
@@ -281,7 +291,7 @@ function getThemeCanvasColors(theme) {
         p.y += p.vy;
         p.life -= 0.025;
         ctx.beginPath();
-        ctx.arc(p.x, p.y, p.size * p.life, 0, Math.PI * 2);
+        ctx.arc(p.x, p.y, Math.max(0.2, p.size * p.life), 0, Math.PI * 2);
         ctx.fillStyle = `rgba(${themeColors.spark}, ${p.life})`;
         ctx.fill();
         if (p.life <= 0) particles.splice(i, 1);
@@ -296,14 +306,14 @@ function getThemeCanvasColors(theme) {
         const p2 = particles[j];
         if (p2.isSparks) continue;
         const dist = Math.hypot(p.x - p2.x, p.y - p2.y);
-        const maxDist = 125;
+        const maxDist = 140;
         if (dist < maxDist) {
-          const alpha = (1 - dist / maxDist) * (isLight ? 0.22 : 0.32);
+          const alpha = (1 - dist / maxDist) * (isLight ? 0.28 : 0.38);
           ctx.beginPath();
           ctx.moveTo(p.x, p.y);
           ctx.lineTo(p2.x, p2.y);
           ctx.strokeStyle = `rgba(${themeColors.line}, ${alpha})`;
-          ctx.lineWidth = 0.85;
+          ctx.lineWidth = 0.9;
           ctx.stroke();
         }
       }
@@ -312,12 +322,12 @@ function getThemeCanvasColors(theme) {
       if (mouse.x !== null && mouse.y !== null) {
         const mDist = Math.hypot(p.x - mouse.x, p.y - mouse.y);
         if (mDist < mouse.radius) {
-          const alpha = (1 - mDist / mouse.radius) * 0.45;
+          const alpha = (1 - mDist / mouse.radius) * 0.55;
           ctx.beginPath();
           ctx.moveTo(p.x, p.y);
           ctx.lineTo(mouse.x, mouse.y);
           ctx.strokeStyle = `rgba(${themeColors.mouseLine}, ${alpha})`;
-          ctx.lineWidth = 1;
+          ctx.lineWidth = 1.1;
           ctx.stroke();
         }
       }

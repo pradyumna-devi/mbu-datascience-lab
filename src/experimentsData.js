@@ -5,7 +5,7 @@ export const INITIAL_PROFILE = {
   id: "24102A030078",
   branch: "Computer Science and Engineering (Data Science)",
   section: "Section - 2",
-  faculty: "Bosu Babu Sambana",
+  faculty: "S. Bosubabu",
   designation: "Assistant Professor",
   avatarUrl: "./student-profile.jpg",
   githubUrl: "https://github.com/pradyumna-devi",

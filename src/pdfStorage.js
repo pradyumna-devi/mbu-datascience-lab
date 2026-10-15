@@ -268,7 +268,7 @@ export function generateModuleSyllabusPdfDataUrl(mod) {
     '/F2 9.5 Tf',
     `(Academic Program: B.Tech in Data Science | Credits: ${escapePdf(mod.credits || '4 Credits')} | Load: ${escapePdf(mod.hours || '14 Theory + 28 Lab Hours')}) Tj`,
     '0 -14 Td',
-    '(Faculty Evaluator: Bosu Babu Sambana, Assistant Professor | Candidate: M. Pradyumna Devi - 24102A030078) Tj',
+    '(Faculty Evaluator: S. Bosubabu, Assistant Professor | Candidate: M. Pradyumna Devi - 24102A030078) Tj',
     '0 -24 Td',
     '/F1 11 Tf',
     '(1. COURSE OVERVIEW & PEDAGOGICAL OBJECTIVES) Tj',

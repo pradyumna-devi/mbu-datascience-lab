@@ -57,7 +57,7 @@ export function generateLabRecordHtml(exp, subTask, code, output, profile) {
           </tr>
           <tr>
             <td class="meta-label">Faculty In-Charge:</td>
-            <td class="meta-value">${profile.faculty || 'Bosu Babu Sambana'} (${profile.designation || 'Assistant Professor'})</td>
+            <td class="meta-value">${profile.faculty || 'S. Bosubabu'} (${profile.designation || 'Assistant Professor'})</td>
             <td class="meta-label">Kernel Runtime:</td>
             <td class="meta-value">Python 3.12 WebAssembly (Pyodide AST)</td>
           </tr>
@@ -162,7 +162,7 @@ export function generateLabRecordHtml(exp, subTask, code, output, profile) {
           <div class="sig-block">
             <div class="sig-line"></div>
             <div class="sig-title">Signature of Faculty Evaluator</div>
-            <div class="sig-sub">${profile.faculty || 'Bosu Babu Sambana'} • Assistant Professor</div>
+            <div class="sig-sub">${profile.faculty || 'S. Bosubabu'} • Assistant Professor</div>
           </div>
         </div>
       </div>

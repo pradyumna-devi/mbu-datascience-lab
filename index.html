@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/png" href="/mbu-logo.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Data Science Digital Lab | Interactive Computational Laboratory &amp; Virtual Kernel</title>
+    <title>Data Science Digital Library | Interactive Computational Laboratory &amp; Virtual Kernel</title>
     
     <!-- Modern Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -34,7 +34,218 @@
     <div class="ambient-glow glow-indigo"></div>
     <div class="ambient-glow glow-purple"></div>
 
-    <div class="app-wrapper">
+    <!-- Subtle Cybernetic Laboratory Grid Background -->
+    <div class="cyber-bg-grid" aria-hidden="true"></div>
+
+    <!-- Backdrop for mobile sidebar drawer -->
+    <div class="sidebar-backdrop" id="sidebarBackdrop" title="Close sidebar navigation"></div>
+
+    <!-- Main Two-Column Layout Shell (Sidebar + Main Viewport) -->
+    <div class="app-layout-shell" id="appLayoutShell">
+
+      <!-- High-Performance Sleek Glassmorphic Portal Sidebar -->
+      <aside class="app-sidebar" id="appSidebar" aria-label="Portal Sidebar Navigation">
+      
+      <!-- 1. Sidebar Brand & Collapse Toggle Header -->
+      <div class="sidebar-header">
+        <div class="sidebar-brand-link" id="sidebarBrandHomeBtn" title="Return to Homepage">
+          <div class="sidebar-brand-icon">
+            <img src="/mbu-logo.png" alt="MBU Logo" class="sidebar-mbu-logo" />
+            <span class="sidebar-logo-pulse"></span>
+          </div>
+          <div class="sidebar-brand-text">
+            <span class="sidebar-brand-eyebrow">MOHAN BABU UNIV</span>
+            <span class="sidebar-brand-title">Digital Library</span>
+          </div>
+        </div>
+        <button class="sidebar-toggle-btn" id="sidebarCollapseBtn" title="Collapse / Expand Sidebar (Ctrl+\)" type="button" aria-label="Collapse sidebar">
+          <i data-lucide="chevron-left" class="collapse-icon"></i>
+        </button>
+      </div>
+
+      <!-- 2. Sidebar Scrollable Content Body -->
+      <div class="sidebar-body" id="sidebarBody">
+        
+        <!-- Primary Navigation Group: The 6 Core Options -->
+        <div class="sidebar-nav-group">
+          <div class="sidebar-group-title">
+            <span>PORTAL NAVIGATION</span>
+            <span class="sidebar-group-tag">6 Hubs</span>
+          </div>
+          <nav class="sidebar-nav-list" role="navigation" aria-label="Main Options">
+            
+            <!-- Option 1: Homepage -->
+            <button class="sidebar-nav-item active" data-tab="homepage" id="sidebarNavHomepage" type="button" title="Homepage - Overview & Dashboard">
+              <div class="sidebar-item-icon-wrap icon-blue">
+                <i data-lucide="home"></i>
+              </div>
+              <div class="sidebar-item-text">
+                <span class="sidebar-item-title">Homepage</span>
+                <span class="sidebar-item-sub">Overview &amp; Dashboard</span>
+              </div>
+              <span class="sidebar-item-badge badge-blue">Home</span>
+            </button>
+
+            <!-- Option 2: Modules -->
+            <button class="sidebar-nav-item" data-tab="modules" id="sidebarNavModules" type="button" title="Modules - Curriculum & Syllabus">
+              <div class="sidebar-item-icon-wrap icon-indigo">
+                <i data-lucide="layers"></i>
+              </div>
+              <div class="sidebar-item-text">
+                <span class="sidebar-item-title">Modules</span>
+                <span class="sidebar-item-sub">Curriculum &amp; Syllabus</span>
+              </div>
+              <span class="sidebar-item-badge badge-indigo" id="sidebarModulesBadge">2 Tracks</span>
+            </button>
+
+            <!-- Option 3: Lab -->
+            <button class="sidebar-nav-item" data-tab="lab" id="sidebarNavLab" type="button" title="Lab - Interactive Practical Labs">
+              <div class="sidebar-item-icon-wrap icon-cyan">
+                <i data-lucide="flask-conical"></i>
+              </div>
+              <div class="sidebar-item-text">
+                <span class="sidebar-item-title">Lab</span>
+                <span class="sidebar-item-sub">Interactive Practical Labs</span>
+              </div>
+              <span class="sidebar-item-badge badge-cyan" id="sidebarLabBadge">5 Labs</span>
+            </button>
+
+            <!-- Option 4: Tools -->
+            <button class="sidebar-nav-item" data-tab="tools" id="sidebarNavTools" type="button" title="Tools - REPL, CSV & Calculators">
+              <div class="sidebar-item-icon-wrap icon-emerald">
+                <i data-lucide="wrench"></i>
+              </div>
+              <div class="sidebar-item-text">
+                <span class="sidebar-item-title">Tools</span>
+                <span class="sidebar-item-sub">REPL, CSV &amp; Calculators</span>
+              </div>
+              <span class="sidebar-item-badge badge-emerald">4 Tools</span>
+            </button>
+
+            <!-- Option 5: Resources -->
+            <button class="sidebar-nav-item" data-tab="resources" id="sidebarNavResources" type="button" title="Resources - Docs, Datasets & Books">
+              <div class="sidebar-item-icon-wrap icon-purple">
+                <i data-lucide="book-marked"></i>
+              </div>
+              <div class="sidebar-item-text">
+                <span class="sidebar-item-title">Resources</span>
+                <span class="sidebar-item-sub">Docs, Datasets &amp; Books</span>
+              </div>
+              <span class="sidebar-item-badge badge-purple" id="sidebarResourcesBadge">8 Hubs</span>
+            </button>
+
+            <!-- Option 6: Projects -->
+            <button class="sidebar-nav-item" data-tab="projects" id="sidebarNavProjects" type="button" title="Projects - Capstone & Mini Projects">
+              <div class="sidebar-item-icon-wrap icon-amber">
+                <i data-lucide="folder-git-2"></i>
+              </div>
+              <div class="sidebar-item-text">
+                <span class="sidebar-item-title">Projects</span>
+                <span class="sidebar-item-sub">Capstone &amp; Mini Projects</span>
+              </div>
+              <span class="sidebar-item-badge badge-amber" id="sidebarProjectsBadge">1 Proj</span>
+            </button>
+
+          </nav>
+        </div>
+
+        <!-- Quick Experiments Shortcuts Section -->
+        <div class="sidebar-nav-group">
+          <div class="sidebar-group-title">
+            <span>CORE EXPERIMENTS</span>
+            <span class="sidebar-group-tag">Curriculum</span>
+          </div>
+          <div class="sidebar-quick-exps-list">
+            <button class="sidebar-sub-item" data-quick-exp="exp-6" type="button" title="Launch Exp 6: NumPy & Multi-Dimensional Array Operations">
+              <span class="sidebar-sub-num">06</span>
+              <span class="sidebar-sub-label">NumPy &amp; Multi-D Arrays</span>
+              <i data-lucide="arrow-up-right" class="sub-arrow"></i>
+            </button>
+            <button class="sidebar-sub-item" data-quick-exp="exp-7" type="button" title="Launch Exp 7: Automated Web Scraping & Tabular Extraction">
+              <span class="sidebar-sub-num">07</span>
+              <span class="sidebar-sub-label">Web Scraping &amp; Extraction</span>
+              <i data-lucide="arrow-up-right" class="sub-arrow"></i>
+            </button>
+            <button class="sidebar-sub-item" data-quick-exp="exp-8" type="button" title="Launch Exp 8: Data Wrangling, Cleaning & Multi-Indexing">
+              <span class="sidebar-sub-num">08</span>
+              <span class="sidebar-sub-label">Data Wrangling &amp; Cleaning</span>
+              <i data-lucide="arrow-up-right" class="sub-arrow"></i>
+            </button>
+            <button class="sidebar-sub-item" data-quick-exp="exp-9" type="button" title="Launch Exp 9: Exploratory Visualization & Multi-Panel Subplots">
+              <span class="sidebar-sub-num">09</span>
+              <span class="sidebar-sub-label">Exploratory Visualizations</span>
+              <i data-lucide="arrow-up-right" class="sub-arrow"></i>
+            </button>
+            <button class="sidebar-sub-item" data-quick-exp="exp-10" type="button" title="Launch Exp 10: Time Series Analysis & ARIMA Forecasting">
+              <span class="sidebar-sub-num">10</span>
+              <span class="sidebar-sub-label">Time Series &amp; ARIMA Models</span>
+              <i data-lucide="arrow-up-right" class="sub-arrow"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Developer Quick Launch Utilities Section -->
+        <div class="sidebar-nav-group">
+          <div class="sidebar-group-title">
+            <span>QUICK TOOLS</span>
+          </div>
+          <div class="sidebar-utilities-grid">
+            <button class="sidebar-tool-mini-card" id="sidebarToolReplBtn" type="button" title="Open Python 3.12 WebAssembly REPL">
+              <i data-lucide="terminal" class="text-cyan"></i>
+              <span>Python REPL</span>
+            </button>
+            <button class="sidebar-tool-mini-card" id="sidebarToolCsvBtn" type="button" title="Open CSV Dataset Inspector">
+              <i data-lucide="file-spreadsheet" class="text-emerald"></i>
+              <span>CSV Viewer</span>
+            </button>
+            <button class="sidebar-tool-mini-card" id="sidebarToolCalcBtn" type="button" title="Open Confusion Matrix & Stationarity Calculator">
+              <i data-lucide="calculator" class="text-amber"></i>
+              <span>Evaluator</span>
+            </button>
+            <button class="sidebar-tool-mini-card" id="sidebarToolCheatsheetsBtn" type="button" title="Open Python & Data Science Cheat Sheets">
+              <i data-lucide="bookmark" class="text-purple"></i>
+              <span>Cheatsheets</span>
+            </button>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- 3. Sidebar Footer: Runtime Status & Student Profile Snapshot -->
+      <div class="sidebar-footer">
+        
+        <!-- Live Virtual Kernel Badge -->
+        <div class="sidebar-kernel-status" id="sidebarKernelStatus" title="CPython 3.12 WebAssembly Engine Active">
+          <span class="sidebar-kernel-dot"></span>
+          <div class="sidebar-kernel-info">
+            <span class="kernel-label">CPython 3.12 WASM</span>
+            <span class="kernel-sub">Client Vector Runtime</span>
+          </div>
+        </div>
+
+        <!-- Student Mini Profile Card -->
+        <div class="sidebar-student-card" id="sidebarStudentCard" title="View Student Portfolio & Academic Credentials">
+          <div class="sidebar-student-avatar">
+            <img src="./student-profile.jpg" alt="Student Avatar" id="sidebarStudentAvatarImg" />
+            <span class="sidebar-online-dot"></span>
+          </div>
+          <div class="sidebar-student-meta">
+            <div class="student-name-row">
+              <span class="sidebar-student-name" id="sidebarStudentName">M. Pradyumna Devi</span>
+              <i data-lucide="badge-check" class="verified-icon"></i>
+            </div>
+            <span class="sidebar-student-roll" id="sidebarStudentRoll">Roll: 24102A030078</span>
+          </div>
+          <button class="sidebar-student-action" id="sidebarPortfolioQuickBtn" title="Open Portfolio Modal" type="button">
+            <i data-lucide="arrow-up-right"></i>
+          </button>
+        </div>
+
+      </div>
+
+    </aside>
+
+    <div class="app-wrapper" id="appWrapper">
       
       <!-- Top Header: Modern Professional Navbar -->
       <header class="app-header">
@@ -44,6 +255,10 @@
 
             <!-- Left Brand Section -->
             <div class="header-brand-section">
+              <!-- Sidebar Mobile / Tablet Drawer Toggle Button -->
+              <button class="sidebar-mobile-toggle-btn" id="sidebarMobileToggleBtn" title="Toggle Navigation Sidebar" type="button" aria-label="Toggle Navigation Sidebar">
+                <i data-lucide="menu"></i>
+              </button>
               <div class="brand-logo-frame" title="Mohan Babu University">
                 <img src="/mbu-logo.png" alt="Mohan Babu University Logo" class="mbu-official-header-logo" />
               </div>
@@ -53,7 +268,7 @@
                   <span class="eyebrow-divider">&bull;</span>
                   <span class="eyebrow-affil">Interactive Computational Studio</span>
                 </div>
-                <h1 class="portal-title"><span class="ds-brand-highlight">DATA SCIENCE</span> <span class="ds-title-sub">DIGITAL LAB</span></h1>
+                <h1 class="portal-title"><span class="ds-brand-highlight">DATA SCIENCE</span> <span class="ds-title-sub">DIGITAL LIBRARY</span></h1>
                 <div class="brand-status-chip" id="navbarKernelStatusChip" title="Python 3.12 WebAssembly Virtual Kernel">
                   <span class="status-pulse-dot" id="kernelStatusDot"></span>
                   <span id="kernelStatusText">Python 3.12 WASM Engine &bull; Active</span>
@@ -61,51 +276,23 @@
               </div>
             </div>
 
-            <!-- Center Command Bar / Search Section -->
-            <div class="header-search-section">
-              <div class="search-bar-compact" role="search">
-                <i data-lucide="search" class="search-icon"></i>
-                <input 
-                  type="text" 
-                  id="experimentSearchInput" 
-                  placeholder="Search experiments, tasks, algorithms (Ctrl+K)..." 
-                  aria-label="Search digital lab library"
-                  autocomplete="off"
-                />
-                <span class="search-kbd-shortcut">Ctrl K</span>
-                <button id="clearSearchBtn" class="clear-search-btn" title="Clear search" style="display: none;" type="button">
-                  <i data-lucide="x"></i>
-                </button>
-                <button class="search-action-btn" id="searchSubmitBtn" title="Search" type="button">
-                  <span>Search</span>
-                  <i data-lucide="search" style="width: 13px; height: 13px;"></i>
-                </button>
-              </div>
-            </div>
 
-            <!-- Right Side: Executive Profile Pill & Add Experiment CTA -->
+
+            <!-- Right Side: Executive Profile Pill & Theme Studio -->
             <div class="header-right-profile">
               <div class="profile-and-action-column">
                 
-                <!-- Modern Executive Profile Card -->
-                <div class="profile-card" id="profileCardWidget" title="Click to view details or edit">
+                <!-- Modern Executive Profile Card (Read-Only Credentials & Portfolio) -->
+                <div class="profile-card" id="profileCardWidget" title="View Student Portfolio, Resume &amp; Academic Credentials">
                   <div class="profile-badge-header">
                     <div class="avatar-container" id="avatarContainer">
                       <img id="userAvatarImg" src="./student-profile.jpg" alt="M. Pradyumna Devi" />
-                      <!-- Direct Avatar Upload Overlay -->
-                      <label for="avatarFileInput" class="avatar-upload-overlay" id="avatarUploadBtn" title="Upload profile photo" onclick="event.stopPropagation();">
-                        <i data-lucide="camera"></i>
-                      </label>
-                      <input type="file" id="avatarFileInput" accept="image/*" style="display: none;" />
                       <span class="status-indicator-dot" title="Kernel Connected"></span>
                     </div>
 
                     <div class="profile-main-meta">
                       <div class="profile-name-row">
                         <span class="profile-name" id="profileNameDisplay">M. Pradyumna Devi</span>
-                        <button class="edit-profile-mini-btn" id="editProfileTriggerBtn" title="Edit Profile Details">
-                          <i data-lucide="edit-3"></i>
-                        </button>
                       </div>
                       <div class="profile-chip" id="profileIdDisplay">Roll: 24102A030078</div>
                     </div>
@@ -123,7 +310,7 @@
                     </div>
                     <div class="detail-row">
                       <span class="detail-label">Faculty:</span>
-                      <span class="detail-val" id="profileFacultyDisplay">Bosu Babu Sambana</span>
+                      <span class="detail-val" id="profileFacultyDisplay">S. Bosubabu</span>
                     </div>
                     <div class="detail-row">
                       <span class="detail-label">Designation:</span>
@@ -131,11 +318,11 @@
                     </div>
                   </div>
 
-                  <!-- Profile View More & Links Button -->
+                  <!-- Profile View Details Button -->
                   <div class="profile-card-actions">
-                    <button class="btn-profile-view-more" id="openProfilePortfolioBtn" title="View More: Portfolio, GitHub, LinkedIn, Resume & Links">
+                    <button class="btn-profile-view-more" id="openProfilePortfolioBtn" title="View Student Profile Details &amp; Credentials">
                       <i data-lucide="user-check"></i>
-                      <span>View More &amp; Links</span>
+                      <span>Profile Details</span>
                       <i data-lucide="arrow-up-right" class="arrow-mini"></i>
                     </button>
                   </div>
@@ -160,17 +347,6 @@
                   </button>
                 </div>
 
-                <!-- Header Action CTA Buttons: Add Experiment & Add Module (Stacked) -->
-                <div class="header-action-buttons-col">
-                  <button class="btn-add-experiment" id="openAddExperimentModalBtn" title="Create New Laboratory Experiment">
-                    <i data-lucide="plus-circle"></i>
-                    <span>+ Add Experiment</span>
-                  </button>
-                  <button class="btn-add-module" id="headerAddModuleBtn" title="Add New Academic Curriculum Module">
-                    <i data-lucide="layers"></i>
-                    <span>+ Add Module</span>
-                  </button>
-                </div>
               </div>
             </div>
 
@@ -179,52 +355,18 @@
         </div>
       </header>
 
-      <!-- Real-Time Data Science Computational Telemetry Ribbon -->
-      <section class="live-telemetry-ribbon" id="liveTelemetryRibbon" aria-label="Data Science Computational Telemetry">
-        <div class="telemetry-inner layout-centered">
-          <div class="telemetry-badge-pulse">
-            <span class="telemetry-live-dot"></span>
-            <span class="telemetry-live-label"><i data-lucide="terminal"></i> DATA SCIENCE COMPUTATIONAL RUNTIME</span>
-          </div>
-          <div class="telemetry-items-marquee">
-            <div class="telemetry-chip">
-              <i data-lucide="binary" class="chip-icon text-cyan"></i>
-              <span class="chip-name">Vector Engine:</span>
-              <strong class="chip-val">CPython 3.12 WebAssembly</strong>
-            </div>
-            <div class="telemetry-chip">
-              <i data-lucide="database" class="chip-icon text-emerald"></i>
-              <span class="chip-name">Data Stack:</span>
-              <strong class="chip-val">NumPy &bull; Pandas &bull; Statsmodels &bull; PyTorch</strong>
-            </div>
-            <div class="telemetry-chip">
-              <i data-lucide="check-check" class="chip-icon text-indigo"></i>
-              <span class="chip-name">Applied Labs:</span>
-              <strong class="chip-val">5 DS Domains &bull; 19 Executable Scripts</strong>
-            </div>
-            <div class="telemetry-chip">
-              <i data-lucide="line-chart" class="chip-icon text-purple"></i>
-              <span class="chip-name">Visualization:</span>
-              <strong class="chip-val">Matplotlib &bull; Seaborn &bull; Reactive Charts</strong>
-            </div>
-            <div class="telemetry-chip">
-              <i data-lucide="sparkles" class="chip-icon text-amber"></i>
-              <span class="chip-name">AI Explainer:</span>
-              <strong class="chip-val">AST Inspection &amp; Complexity O(N)</strong>
-            </div>
-            <div class="telemetry-chip">
-              <i data-lucide="palette" class="chip-icon text-rose"></i>
-              <span class="chip-name">Theme:</span>
-              <strong class="chip-val" id="telemetryActiveThemeDisplay">Cyber Obsidian</strong>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- Primary Homepage Navigation Switcher: Modules | Lab Experiments | Tools -->
+      <!-- Primary Homepage Navigation Switcher: Homepage | Modules | Lab | Tools | Resources | Projects -->
       <nav class="portal-main-tabs-nav" id="portalMainTabsNav" aria-label="Portal Mode Navigation">
         <div class="main-tabs-inner">
           <div class="main-tabs-track" role="tablist">
+            <button class="portal-nav-tab active" id="mainTabHome" data-tab="homepage" role="tab" aria-selected="true">
+              <i data-lucide="home" class="tab-icon"></i>
+              <div class="tab-label-wrap">
+                <span class="tab-name">Homepage</span>
+                <span class="tab-sub">Overview &amp; Dashboard</span>
+              </div>
+              <span class="tab-count-pill">Overview</span>
+            </button>
             <button class="portal-nav-tab" id="mainTabModules" data-tab="modules" role="tab" aria-selected="false">
               <i data-lucide="layers" class="tab-icon"></i>
               <div class="tab-label-wrap">
@@ -233,10 +375,10 @@
               </div>
               <span class="tab-count-pill" id="modulesHeaderCountPill">2 Tracks</span>
             </button>
-            <button class="portal-nav-tab active" id="mainTabExperiments" data-tab="experiments" role="tab" aria-selected="true">
+            <button class="portal-nav-tab" id="mainTabExperiments" data-tab="lab" role="tab" aria-selected="false">
               <i data-lucide="flask-conical" class="tab-icon"></i>
               <div class="tab-label-wrap">
-                <span class="tab-name">Lab Experiments</span>
+                <span class="tab-name">Lab</span>
                 <span class="tab-sub">Interactive Practical Labs</span>
               </div>
               <span class="tab-count-pill" id="experimentsHeaderCountPill">5 Labs</span>
@@ -249,54 +391,21 @@
               </div>
               <span class="tab-count-pill">4 Utilities</span>
             </button>
-          </div>
-        </div>
-      </nav>
-
-      <!-- Category Filter & Lab Status Strip -->
-      <nav class="action-bar-strip">
-        <div class="categories-filter-group" id="categoryFiltersContainer">
-          <button class="category-chip active" data-category="ALL">
-            <i data-lucide="layers"></i>
-            <span>All Experiments (<span id="totalExpsCount">0</span>)</span>
-          </button>
-          <button class="category-chip" data-category="Introduction to Data Science">
-            <i data-lucide="binary"></i>
-            <span>Intro to Data Science</span>
-          </button>
-          <button class="category-chip" data-category="Data Extraction">
-            <i data-lucide="database"></i>
-            <span>Data Extraction</span>
-          </button>
-          <button class="category-chip" data-category="Data Wrangling">
-            <i data-lucide="git-merge"></i>
-            <span>Data Wrangling</span>
-          </button>
-          <button class="category-chip" data-category="Data Visualization">
-            <i data-lucide="bar-chart-3"></i>
-            <span>Data Visualization</span>
-          </button>
-          <button class="category-chip" data-category="Time Series">
-            <i data-lucide="trending-up"></i>
-            <span>Time Series</span>
-          </button>
-        </div>
-
-        <div class="system-stats-strip">
-          <div class="stat-pill">
-            <span class="pulse-green"></span>
-            <span>Kernel: <strong>Python 3.12 WASM (Active)</strong></span>
-          </div>
-          <div class="toolbar-actions">
-            <button class="btn-ghost-sm" id="exportDataBtn" title="Export Laboratory Experiments as JSON">
-              <i data-lucide="download"></i> Export JSON
+            <button class="portal-nav-tab" id="mainTabResources" data-tab="resources" role="tab" aria-selected="false">
+              <i data-lucide="book-marked" class="tab-icon"></i>
+              <div class="tab-label-wrap">
+                <span class="tab-name">Resources</span>
+                <span class="tab-sub">Docs &bull; Datasets &bull; Books</span>
+              </div>
+              <span class="tab-count-pill" id="resourcesHeaderCountPill">8 Hubs</span>
             </button>
-            <label class="btn-ghost-sm file-input-label" title="Import Experiments JSON">
-              <i data-lucide="upload"></i> Import JSON
-              <input type="file" id="importJsonFileInput" accept=".json" style="display: none;" />
-            </label>
-            <button class="btn-ghost-sm text-amber" id="resetDefaultsBtn" title="Reset to official MBU lab defaults">
-              <i data-lucide="rotate-ccw"></i> Reset
+            <button class="portal-nav-tab" id="mainTabProjects" data-tab="projects" role="tab" aria-selected="false">
+              <i data-lucide="folder-git-2" class="tab-icon"></i>
+              <div class="tab-label-wrap">
+                <span class="tab-name">Projects</span>
+                <span class="tab-sub">Capstone &amp; Mini Projects</span>
+              </div>
+              <span class="tab-count-pill" id="projectsHeaderCountPill">1 Project</span>
             </button>
           </div>
         </div>
@@ -304,9 +413,224 @@
 
       <!-- Main Portal Container -->
       <main class="main-portal-content">
-        
-        <!-- View 1: Experiments Grid matching hand sketch -->
-        <section class="view-panel active" id="experimentsGridView">
+
+        <!-- Option 1: Homepage Dashboard & Overview -->
+        <section class="view-panel active" id="homepageOverviewView">
+          <!-- Hero Section -->
+          <div class="homepage-hero-card">
+            <div class="hero-left-col">
+              <div class="hero-eyebrow">
+                <span class="badge-portal-school"><i data-lucide="graduation-cap"></i> MOHAN BABU UNIVERSITY</span>
+                <span class="badge-portal-dept"><i data-lucide="binary"></i> DEPARTMENT OF DATA SCIENCE</span>
+              </div>
+              <h2 class="hero-main-title">
+                Interactive Computational <span class="text-gradient-cyan">Data Science Digital Library</span> &amp; Research Portal
+              </h2>
+              <p class="hero-description">
+                A browser-native computational research studio powered by client-side <strong>Python 3.12 WebAssembly</strong>. Master multi-dimensional matrix operations, automated web extraction, statistical wrangling, exploratory data visualizations, and temporal analytics with zero latency.
+              </p>
+              <div class="hero-cta-group">
+                <button class="btn-hero-primary" id="heroExploreLabBtn">
+                  <i data-lucide="flask-conical"></i>
+                  <span>Explore Lab Experiments</span>
+                  <i data-lucide="arrow-right" class="arrow-icon"></i>
+                </button>
+                <button class="btn-hero-secondary" id="heroLaunchReplBtn">
+                  <i data-lucide="terminal"></i>
+                  <span>Launch Python REPL</span>
+                </button>
+                <button class="btn-hero-ghost" id="heroViewModulesBtn">
+                  <i data-lucide="layers"></i>
+                  <span>Modules</span>
+                </button>
+                <button class="btn-hero-ghost" id="heroViewResourcesBtn">
+                  <i data-lucide="book-marked"></i>
+                  <span>Resources</span>
+                </button>
+                <button class="btn-hero-ghost" id="heroViewProjectsBtn">
+                  <i data-lucide="folder-git-2"></i>
+                  <span>Projects</span>
+                </button>
+              </div>
+            </div>
+
+            <div class="hero-right-col">
+              <div class="hero-telemetry-glass-card">
+                <div class="telemetry-card-header">
+                  <div class="pulse-indicator-badge">
+                    <span class="live-dot-green"></span>
+                    <span>Virtual Kernel Telemetry</span>
+                  </div>
+                  <span class="runtime-badge-code">CPython 3.12 WASM</span>
+                </div>
+                <div class="hero-stats-grid">
+                  <div class="hero-stat-box">
+                    <div class="stat-number text-cyan">5</div>
+                    <div class="stat-label">Practical Labs</div>
+                    <div class="stat-sub">19 Executable Scripts</div>
+                  </div>
+                  <div class="hero-stat-box">
+                    <div class="stat-number text-indigo">2</div>
+                    <div class="stat-label">Academic Modules</div>
+                    <div class="stat-sub">Syllabus PDF &amp; Study Deck</div>
+                  </div>
+                  <div class="hero-stat-box">
+                    <div class="stat-number text-emerald">4</div>
+                    <div class="stat-label">Developer Utilities</div>
+                    <div class="stat-sub">REPL, CSV &amp; Calculators</div>
+                  </div>
+                  <div class="hero-stat-box">
+                    <div class="stat-number text-amber">1</div>
+                    <div class="stat-label">Automation Project</div>
+                    <div class="stat-sub">n8n Telegram Bot</div>
+                  </div>
+                </div>
+
+                <div class="hero-student-meta-strip">
+                  <div class="student-avatar-mini">
+                    <img src="./student-profile.jpg" alt="Mudimela Pradyumna Devi" />
+                  </div>
+                  <div class="student-meta-info">
+                    <strong>Mudimela Pradyumna Devi</strong>
+                    <span>Roll: 24102A030078 &bull; CGPA: 9.76/10.0</span>
+                  </div>
+                  <button class="btn-mini-profile-jump" id="heroOpenProfileBtn" title="View Student Portfolio">
+                    <i data-lucide="user-check"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Section: 5 Pillars Directory Cards -->
+          <div class="homepage-section-header">
+            <div>
+              <h3 class="homepage-section-title"><i data-lucide="compass" class="text-cyan"></i> Digital Library Ecosystem Navigation</h3>
+              <p class="homepage-section-sub">Explore the comprehensive features of the Data Science Digital Library portal.</p>
+            </div>
+          </div>
+
+          <div class="homepage-pillars-grid">
+            <!-- Pillar 1: Modules -->
+            <div class="pillar-card pillar-modules" data-jump-tab="modules">
+              <div class="pillar-icon-wrap">
+                <i data-lucide="layers"></i>
+              </div>
+              <div class="pillar-content">
+                <div class="pillar-eyebrow">CURRICULUM &amp; SYLLABUS</div>
+                <h4 class="pillar-title">Academic Modules</h4>
+                <p class="pillar-desc">Core syllabus tracks across Vector Calculus, Exploratory Data Wrangling, and Statistical Thinking with dynamic PDF generation and study flipcards.</p>
+                <div class="pillar-badges">
+                  <span class="pillar-chip"><i data-lucide="book-open"></i> 2 Core Tracks</span>
+                  <span class="pillar-chip"><i data-lucide="file-text"></i> PDF Manuals</span>
+                  <span class="pillar-chip"><i data-lucide="sparkles"></i> Study Decks</span>
+                </div>
+              </div>
+              <div class="pillar-action">
+                <span class="btn-pillar-link">Open Modules <i data-lucide="arrow-right"></i></span>
+              </div>
+            </div>
+
+            <!-- Pillar 2: Lab Experiments -->
+            <div class="pillar-card pillar-lab" data-jump-tab="lab">
+              <div class="pillar-icon-wrap">
+                <i data-lucide="flask-conical"></i>
+              </div>
+              <div class="pillar-content">
+                <div class="pillar-eyebrow">INTERACTIVE PRACTICALS</div>
+                <h4 class="pillar-title">Lab Experiments</h4>
+                <p class="pillar-desc">Execute Experiments 6 through 10 in Python 3.12 WASM: Multi-dimensional array operations, web extraction, data imputation, and ADF tests.</p>
+                <div class="pillar-badges">
+                  <span class="pillar-chip"><i data-lucide="code-2"></i> 5 Labs (19 Tasks)</span>
+                  <span class="pillar-chip"><i data-lucide="line-chart"></i> Matplotlib Plots</span>
+                  <span class="pillar-chip"><i data-lucide="help-circle"></i> Viva Voce</span>
+                </div>
+              </div>
+              <div class="pillar-action">
+                <span class="btn-pillar-link">Launch Lab <i data-lucide="arrow-right"></i></span>
+              </div>
+            </div>
+
+            <!-- Pillar 3: Tools -->
+            <div class="pillar-card pillar-tools" data-jump-tab="tools">
+              <div class="pillar-icon-wrap">
+                <i data-lucide="wrench"></i>
+              </div>
+              <div class="pillar-content">
+                <div class="pillar-eyebrow">DEVELOPER UTILITIES</div>
+                <h4 class="pillar-title">Data Science Tools</h4>
+                <p class="pillar-desc">Interactive Python REPL scratchpad with sample snippets, CSV Dataset Inspector with summary telemetry, and ML Metric Calculators.</p>
+                <div class="pillar-badges">
+                  <span class="pillar-chip"><i data-lucide="terminal"></i> Python REPL</span>
+                  <span class="pillar-chip"><i data-lucide="file-spreadsheet"></i> CSV Inspector</span>
+                  <span class="pillar-chip"><i data-lucide="calculator"></i> Metric Calc</span>
+                </div>
+              </div>
+              <div class="pillar-action">
+                <span class="btn-pillar-link">Open Tools <i data-lucide="arrow-right"></i></span>
+              </div>
+            </div>
+
+            <!-- Pillar 4: Resources -->
+            <div class="pillar-card pillar-resources" data-jump-tab="resources">
+              <div class="pillar-icon-wrap">
+                <i data-lucide="book-marked"></i>
+              </div>
+              <div class="pillar-content">
+                <div class="pillar-eyebrow">KNOWLEDGE BASE</div>
+                <h4 class="pillar-title">Resources &amp; Datasets</h4>
+                <p class="pillar-desc">Benchmark datasets (Iris, Titanic, Equities, Wine), official documentation, recommended textbooks, and rapid-copy Python syntax snippets.</p>
+                <div class="pillar-badges">
+                  <span class="pillar-chip"><i data-lucide="database"></i> 6 Datasets</span>
+                  <span class="pillar-chip"><i data-lucide="globe"></i> Official Docs</span>
+                  <span class="pillar-chip"><i data-lucide="download"></i> Lab Manual</span>
+                </div>
+              </div>
+              <div class="pillar-action">
+                <span class="btn-pillar-link">Browse Resources <i data-lucide="arrow-right"></i></span>
+              </div>
+            </div>
+
+            <!-- Pillar 5: Projects -->
+            <div class="pillar-card pillar-projects" data-jump-tab="projects">
+              <div class="pillar-icon-wrap">
+                <i data-lucide="folder-git-2"></i>
+              </div>
+              <div class="pillar-content">
+                <div class="pillar-eyebrow">RESEARCH &amp; CAPSTONES</div>
+                <h4 class="pillar-title">Capstone Projects</h4>
+                <p class="pillar-desc">Production-grade data science pipelines: Algorithmic stock trading, churn prediction, epidemiological curves, NLP sentiment mining, and AQI sensors.</p>
+                <div class="pillar-badges">
+                  <span class="pillar-chip"><i data-lucide="cpu"></i> 6 Ready Projects</span>
+                  <span class="pillar-chip"><i data-lucide="play"></i> 1-Click REPL Run</span>
+                  <span class="pillar-chip"><i data-lucide="plus-circle"></i> Submit Projects</span>
+                </div>
+              </div>
+              <div class="pillar-action">
+                <span class="btn-pillar-link">Explore Projects <i data-lucide="arrow-right"></i></span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Section: Quick Launch Experiments -->
+          <div class="homepage-section-header" style="margin-top: 32px;">
+            <div>
+              <h3 class="homepage-section-title"><i data-lucide="zap" class="text-amber"></i> Quick Launch Practical Experiments</h3>
+              <p class="homepage-section-sub">Jump directly into any of the 5 core practical laboratory experiments.</p>
+            </div>
+            <button class="btn-ghost-sm" id="homeViewAllExpsBtn">
+              <span>View All Experiments</span> <i data-lucide="arrow-right"></i>
+            </button>
+          </div>
+
+          <div class="home-quick-exps-grid" id="homeQuickExpsGrid">
+            <!-- Rendered dynamically via JS -->
+          </div>
+
+        </section>
+
+        <!-- View 1: Experiments Grid matching hand sketch (Option 3: Lab) -->
+        <section class="view-panel" id="experimentsGridView" style="display: none;">
           
 
           <div class="section-title-row">
@@ -375,10 +699,7 @@
               <i data-lucide="flask-conical-off"></i>
             </div>
             <h3>No Experiments Found</h3>
-            <p>No laboratory modules match your search filters. Try clearing search or add a new experiment.</p>
-            <button class="btn-primary" id="emptyStateAddBtn">
-              <i data-lucide="plus-circle"></i> Create New Experiment
-            </button>
+            <p>No laboratory modules match your current filters. Try clearing your search query or selecting another category.</p>
           </div>
         </section>
 
@@ -391,12 +712,6 @@
             </div>
             <div class="modules-quick-stats">
               <span class="stat-badge"><i data-lucide="book-open"></i> <span id="modulesCountBadge">2 Core Modules</span></span>
-              <button class="btn-primary" id="openAddModuleModalBtn" title="Add New Academic Module with Manual Syllabus PDF Upload">
-                <i data-lucide="plus-circle"></i> + Add Module
-              </button>
-              <button class="btn-ghost-sm" id="resetModulesBtn" title="Reset modules to official MBU defaults">
-                <i data-lucide="rotate-ccw"></i> Reset
-              </button>
             </div>
           </div>
 
@@ -588,6 +903,122 @@ Ready to execute scripts. Choose a template or write Python code on the left and
           </div>
         </section>
 
+        <!-- Option 5: Knowledge Resources & Datasets Hub -->
+        <section class="view-panel" id="resourcesGridView" style="display: none;">
+          <div class="section-title-row">
+            <div>
+              <h2 class="view-heading"><i data-lucide="book-marked" class="text-amber"></i> Data Science Knowledge Base &amp; Academic Resources</h2>
+              <p class="view-subheading">Curated standard benchmark datasets, official library documentation, recommended textbooks, downloadable lab manuals, and rapid-copy Python syntax snippets.</p>
+            </div>
+            <div class="resources-subnav-group" id="resourcesSubTabsContainer">
+              <button class="resource-subtab-btn active" data-res-filter="all">
+                <i data-lucide="layers"></i> All Resources
+              </button>
+              <button class="resource-subtab-btn" data-res-filter="datasets">
+                <i data-lucide="database"></i> Datasets
+              </button>
+              <button class="resource-subtab-btn" data-res-filter="docs">
+                <i data-lucide="globe"></i> Official Docs
+              </button>
+              <button class="resource-subtab-btn" data-res-filter="books">
+                <i data-lucide="book-open"></i> Books &amp; Manuals
+              </button>
+              <button class="resource-subtab-btn" data-res-filter="cheats">
+                <i data-lucide="code-2"></i> Quick Cheats
+              </button>
+            </div>
+          </div>
+
+          <!-- Datasets Section -->
+          <div class="resource-block" id="resSectionDatasets">
+            <div class="resource-block-header">
+              <div>
+                <h3 class="resource-block-title"><i data-lucide="database" class="text-cyan"></i> Benchmark Data Science Datasets</h3>
+                <span class="resource-block-sub">Ready to inspect, analyze in REPL, or download as CSV</span>
+              </div>
+              <span class="resource-count-badge" id="datasetsCountBadge">6 Datasets</span>
+            </div>
+            <div class="datasets-cards-grid" id="resourceDatasetsContainer">
+              <!-- Rendered dynamically from INITIAL_RESOURCES.datasets -->
+            </div>
+          </div>
+
+          <!-- Official Documentation Section -->
+          <div class="resource-block" id="resSectionDocs">
+            <div class="resource-block-header">
+              <div>
+                <h3 class="resource-block-title"><i data-lucide="globe" class="text-indigo"></i> Official Library Documentation &amp; Runtime Specs</h3>
+                <span class="resource-block-sub">Authoritative developer references and API specifications</span>
+              </div>
+              <span class="resource-count-badge">6 Ecosystem Libraries</span>
+            </div>
+            <div class="docs-cards-grid" id="resourceDocsContainer">
+              <!-- Rendered dynamically from INITIAL_RESOURCES.officialDocs -->
+            </div>
+          </div>
+
+          <!-- Textbooks & Lab Manual Section -->
+          <div class="resource-block" id="resSectionBooks">
+            <div class="resource-block-header">
+              <div>
+                <h3 class="resource-block-title"><i data-lucide="book-open" class="text-emerald"></i> Academic Textbooks &amp; Laboratory Manuals</h3>
+                <span class="resource-block-sub">Authoritative literature and official MBU lab records</span>
+              </div>
+              <span class="resource-count-badge">4 Core Texts</span>
+            </div>
+            <div class="books-cards-grid" id="resourceBooksContainer">
+              <!-- Rendered dynamically from INITIAL_RESOURCES.textbooks -->
+            </div>
+          </div>
+
+          <!-- Quick Copy Cheatsheets Section -->
+          <div class="resource-block" id="resSectionCheats">
+            <div class="resource-block-header">
+              <div>
+                <h3 class="resource-block-title"><i data-lucide="code-2" class="text-rose"></i> Rapid-Copy Python Data Science Snippets</h3>
+                <span class="resource-block-sub">Production-tested syntax snippets ready for your workspace or REPL</span>
+              </div>
+              <span class="resource-count-badge">4 Essential Snippets</span>
+            </div>
+            <div class="snippets-cards-grid" id="resourceSnippetsContainer">
+              <!-- Rendered dynamically from INITIAL_RESOURCES.quickSnippets -->
+            </div>
+          </div>
+        </section>
+
+        <!-- Option 6: Capstone & Applied Projects Hub -->
+        <section class="view-panel" id="projectsGridView" style="display: none;">
+          <div class="section-title-row">
+            <div>
+              <h2 class="view-heading"><i data-lucide="folder-git-2" class="text-emerald"></i> Data Science &amp; Automation Projects</h2>
+              <p class="view-subheading">Event-driven workflows, Telegram automation bot, and computational pipelines.</p>
+            </div>
+            <div class="projects-header-actions">
+              <button class="btn-primary" id="openSubmitProjectModalBtn">
+                <i data-lucide="plus-circle"></i> + Submit Project
+              </button>
+              <button class="btn-ghost-sm" id="resetProjectsBtn" title="Reset projects to official MBU defaults">
+                <i data-lucide="rotate-ccw"></i> Reset
+              </button>
+            </div>
+          </div>
+
+          <!-- Project Domain Filter Strip -->
+          <div class="projects-filter-strip" id="projectsFilterStrip">
+            <button class="project-domain-chip active" data-domain="ALL">
+              <i data-lucide="layers"></i> All Projects (<span id="totalProjectsCount">1</span>)
+            </button>
+            <button class="project-domain-chip" data-domain="Automation &amp; Bots">
+              <i data-lucide="bot"></i> Telegram Bot &amp; n8n
+            </button>
+          </div>
+
+          <!-- Projects Cards Grid -->
+          <div class="projects-cards-grid" id="projectsCardsContainer">
+            <!-- Dynamically rendered via JS -->
+          </div>
+        </section>
+
         <!-- View 2: Experiment Overview Breakdown (Middle view in sketch) -->
         <section class="view-panel" id="experimentOverviewView" style="display: none;">
           <div class="overview-breadcrumbs">
@@ -703,9 +1134,15 @@ Ready to execute scripts. Choose a template or write Python code on the left and
               </div>
             </div>
 
-            <!-- Sub-Task Quick Switcher Navigation: [A] [B] [C] [D] -->
-            <div class="subtask-nav-switcher" id="workspaceSubTaskTabs">
-              <!-- Dynamic tabs generated via JS -->
+            <!-- Sub-Task Quick Switcher Navigation: [A] [B] [C] [D] & Layout View Toggle -->
+            <div class="workspace-right-controls">
+              <div class="subtask-nav-switcher" id="workspaceSubTaskTabs">
+                <!-- Dynamic tabs generated via JS -->
+              </div>
+              <button class="btn-tool layout-toggle-btn" id="toggleIdeLayoutBtn" title="Toggle Side-by-Side Split or Full-Width Stacked View" type="button">
+                <i data-lucide="columns-2" id="layoutToggleIcon"></i>
+                <span id="layoutToggleText">Layout</span>
+              </button>
             </div>
           </div>
 
@@ -922,7 +1359,7 @@ Ready to execute scripts. Choose a template or write Python code on the left and
             <div class="footer-brand-wrap">
               <img src="/mbu-logo.png" alt="Mohan Babu University Logo" class="mbu-official-footer-logo" />
               <div>
-                <div class="footer-lab-name">DATA SCIENCE DIGITAL LABORATORY</div>
+                <div class="footer-lab-name">DATA SCIENCE DIGITAL LIBRARY</div>
                 <div class="footer-ds-meta">Interactive Computational Environment &bull; Python 3.12 WebAssembly Vector Engine</div>
                 <div class="footer-univ-sub">Academic Program: B.Tech Data Science &bull; School of Computing, Mohan Babu University</div>
               </div>
@@ -941,15 +1378,16 @@ Ready to execute scripts. Choose a template or write Python code on the left and
           <div class="footer-right">
             <div class="footer-author-tag">
               <div>Researcher: <strong>M. Pradyumna Devi</strong> (24102A030078)</div>
-              <small>Faculty Evaluator: Bosu Babu Sambana, Asst. Professor</small>
+              <small>Faculty Evaluator: S. Bosubabu, Asst. Professor</small>
             </div>
           </div>
         </div>
       </footer>
 
     </div>
+  </div>
 
-    <!-- ================= MODALS ================= -->
+  <!-- ================= MODALS ================= -->
 
     <!-- Modal 1: Add / Edit Experiment Modal -->
     <div class="modal-overlay" id="addExperimentModal" style="display: none;">
@@ -1163,62 +1601,128 @@ Ready to execute scripts. Choose a template or write Python code on the left and
               <i data-lucide="user-check"></i>
             </div>
             <div>
-              <h3>Student Profile &amp; Academic Portfolio</h3>
-              <p class="modal-subtitle">Mohan Babu University &bull; School of Computing &bull; Department of Data Science</p>
+              <h3>Student Profile &amp; Academic Credentials</h3>
+              <p class="modal-subtitle">Mohan Babu University &bull; School of Computing</p>
             </div>
           </div>
           <button class="modal-close-btn" id="closeProfilePortfolioModalBtn">&times;</button>
         </div>
 
         <div class="portfolio-modal-body">
-          <!-- Profile Hero Card -->
+          <!-- Profile Identity Header (Photo & Name) -->
           <div class="portfolio-hero-section">
             <div class="portfolio-avatar-wrap">
               <img id="portfolioAvatarImg" src="./student-profile.jpg" alt="Student Profile" />
-              <label for="portfolioAvatarUploadInput" class="avatar-change-floating-btn" title="Upload new photo">
-                <i data-lucide="camera"></i>
-                <input type="file" id="portfolioAvatarUploadInput" accept="image/*" style="display: none;" />
-              </label>
             </div>
             <div class="portfolio-hero-info">
               <div class="portfolio-hero-top">
-                <h2 class="portfolio-name" id="portfolioNameDisplay">M. Pradyumna Devi</h2>
-                <span class="portfolio-verified-badge"><i data-lucide="check-circle-2"></i> Verified Scholar</span>
+                <h2 class="portfolio-name" id="portfolioNameDisplay">Mudimela Pradyumna Devi</h2>
               </div>
-              <div class="portfolio-id-badge" id="portfolioRollDisplay">Roll No: 24102A030078 &bull; Data Science (Section - 2)</div>
-              <p class="portfolio-bio" id="portfolioBioDisplay">
-                Department of Data Science scholar at Mohan Babu University. Passionate about Time Series Econometrics, Deep Learning, Statistical Machine Learning, and Big Data Engineering.
-              </p>
-              
-              <div class="portfolio-meta-tags">
-                <span class="meta-tag"><i data-lucide="landmark"></i> Mohan Babu University</span>
-                <span class="meta-tag"><i data-lucide="award"></i> NAAC A+ Accredited</span>
-                <span class="meta-tag"><i data-lucide="user"></i> Guide: <strong id="portfolioGuideDisplay">Bosu Babu Sambana</strong></span>
+              <div class="portfolio-id-badge" id="portfolioHeroSubDisplay">B.Tech Student &bull; Mohan Babu University</div>
+            </div>
+          </div>
+
+          <!-- Academic Details & Faculty Information Grid -->
+          <div class="portfolio-section">
+            <div class="portfolio-section-title">
+              <i data-lucide="graduation-cap" class="text-cyan"></i>
+              <h4>Academic Details &amp; Faculty Information</h4>
+            </div>
+
+            <div class="profile-academic-grid">
+              <!-- Roll No -->
+              <div class="academic-info-card">
+                <div class="academic-info-icon">
+                  <i data-lucide="hash"></i>
+                </div>
+                <div class="academic-info-content">
+                  <div class="academic-info-label">Roll Number</div>
+                  <div class="academic-info-val" id="portfolioRollDisplay">24102A030078</div>
+                </div>
+              </div>
+
+              <!-- Department -->
+              <div class="academic-info-card">
+                <div class="academic-info-icon">
+                  <i data-lucide="building-2"></i>
+                </div>
+                <div class="academic-info-content">
+                  <div class="academic-info-label">Department</div>
+                  <div class="academic-info-val" id="portfolioDeptDisplay">Computer Science and Engineering (Data Science)</div>
+                </div>
+              </div>
+
+              <!-- Section -->
+              <div class="academic-info-card">
+                <div class="academic-info-icon">
+                  <i data-lucide="layers"></i>
+                </div>
+                <div class="academic-info-content">
+                  <div class="academic-info-label">Section</div>
+                  <div class="academic-info-val" id="portfolioSectionDisplayModal">Section - 2</div>
+                </div>
+              </div>
+
+              <!-- Faculty -->
+              <div class="academic-info-card">
+                <div class="academic-info-icon">
+                  <i data-lucide="user-check"></i>
+                </div>
+                <div class="academic-info-content">
+                  <div class="academic-info-label">Faculty Evaluator / Mentor</div>
+                  <div class="academic-info-val" id="portfolioFacultyDisplay">S. Bosubabu</div>
+                </div>
+              </div>
+
+              <!-- Designation -->
+              <div class="academic-info-card">
+                <div class="academic-info-icon">
+                  <i data-lucide="briefcase"></i>
+                </div>
+                <div class="academic-info-content">
+                  <div class="academic-info-label">Designation</div>
+                  <div class="academic-info-val" id="portfolioDesignationDisplay">Assistant Professor</div>
+                </div>
+              </div>
+
+              <!-- Mail ID -->
+              <div class="academic-info-card">
+                <div class="academic-info-icon">
+                  <i data-lucide="mail"></i>
+                </div>
+                <div class="academic-info-content">
+                  <div class="academic-info-label">Official Mail ID</div>
+                  <div class="academic-info-val">
+                    <a href="mailto:mudimelapradyumnadevi@gmail.com" id="portfolioEmailLink">
+                      <span id="portfolioEmailDisplay">mudimelapradyumnadevi@gmail.com</span>
+                    </a>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
 
-          <!-- Professional Links & Social Profiles ("my github link, linkedin link and all others") -->
+          <!-- Handles & Links: GitHub & LeetCode -->
           <div class="portfolio-section">
             <div class="portfolio-section-title">
-              <i data-lucide="share-2" class="text-cyan"></i>
-              <h4>Professional Profiles &amp; Social Links</h4>
+              <i data-lucide="link" class="text-indigo"></i>
+              <h4>Coding Handles &amp; Profiles</h4>
             </div>
 
             <div class="social-links-grid">
-              <!-- GitHub Link Card -->
+              <!-- GitHub Handle -->
               <div class="social-link-card github-card">
                 <div class="social-link-left">
                   <div class="social-icon github-icon">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"></path><path d="M9 18c-4.51 2-5-2-7-2"></path></svg>
                   </div>
                   <div>
-                    <div class="social-platform">GitHub Profile</div>
+                    <div class="social-platform">GitHub Handle</div>
                     <div class="social-handle" id="portfolioGithubHandle">@pradyumna-devi</div>
                   </div>
                 </div>
                 <div class="social-card-actions">
-                  <button class="btn-social-action copy-link-btn" id="copyGithubLinkBtn" title="Copy GitHub URL">
+                  <button class="btn-social-action copy-link-btn" id="copyGithubLinkBtn" title="Copy GitHub URL" type="button">
                     <i data-lucide="copy"></i>
                   </button>
                   <a href="https://github.com/pradyumna-devi" target="_blank" rel="noopener noreferrer" class="btn-social-action visit-link-btn" id="portfolioGithubLink">
@@ -1228,97 +1732,21 @@ Ready to execute scripts. Choose a template or write Python code on the left and
                 </div>
               </div>
 
-              <!-- LinkedIn Link Card -->
-              <div class="social-link-card linkedin-card">
-                <div class="social-link-left">
-                  <div class="social-icon linkedin-icon">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect width="4" height="12" x="2" y="9"></rect><circle cx="4" cy="4" r="2"></circle></svg>
-                  </div>
-                  <div>
-                    <div class="social-platform">LinkedIn Network</div>
-                    <div class="social-handle" id="portfolioLinkedinHandle">linkedin.com/in/pradyumna-devi</div>
-                  </div>
-                </div>
-                <div class="social-card-actions">
-                  <button class="btn-social-action copy-link-btn" id="copyLinkedinLinkBtn" title="Copy LinkedIn URL">
-                    <i data-lucide="copy"></i>
-                  </button>
-                  <a href="https://linkedin.com/in/pradyumna-devi" target="_blank" rel="noopener noreferrer" class="btn-social-action visit-link-btn" id="portfolioLinkedinLink">
-                    <span>Connect</span>
-                    <i data-lucide="external-link"></i>
-                  </a>
-                </div>
-              </div>
-
-              <!-- Portfolio Website Link Card -->
-              <div class="social-link-card portfolio-site-card">
-                <div class="social-link-left">
-                  <div class="social-icon web-icon">
-                    <i data-lucide="globe"></i>
-                  </div>
-                  <div>
-                    <div class="social-platform">Personal Portfolio</div>
-                    <div class="social-handle" id="portfolioWebsiteHandle">pradyumna-devi.dev</div>
-                  </div>
-                </div>
-                <div class="social-card-actions">
-                  <a href="https://pradyumna-devi.dev" target="_blank" rel="noopener noreferrer" class="btn-social-action visit-link-btn" id="portfolioWebsiteLink">
-                    <span>Explore</span>
-                    <i data-lucide="external-link"></i>
-                  </a>
-                </div>
-              </div>
-
-              <!-- Email Link Card -->
-              <div class="social-link-card email-card">
-                <div class="social-link-left">
-                  <div class="social-icon mail-icon">
-                    <i data-lucide="mail"></i>
-                  </div>
-                  <div>
-                    <div class="social-platform">Primary Email</div>
-                    <div class="social-handle" id="portfolioEmailHandle">mudimelapradyumnadevi@gmail.com</div>
-                  </div>
-                </div>
-                <div class="social-card-actions">
-                  <a href="mailto:mudimelapradyumnadevi@gmail.com" class="btn-social-action visit-link-btn" id="portfolioEmailLink">
-                    <span>Send Mail</span>
-                    <i data-lucide="arrow-up-right"></i>
-                  </a>
-                </div>
-              </div>
-
-              <!-- Kaggle / Coding Hub -->
-              <div class="social-link-card kaggle-card">
-                <div class="social-link-left">
-                  <div class="social-icon kaggle-icon">
-                    <i data-lucide="database"></i>
-                  </div>
-                  <div>
-                    <div class="social-platform">Kaggle Data Science</div>
-                    <div class="social-handle" id="portfolioKaggleHandle">kaggle.com/pradyumnadevi</div>
-                  </div>
-                </div>
-                <div class="social-card-actions">
-                  <a href="https://kaggle.com/pradyumnadevi" target="_blank" rel="noopener noreferrer" class="btn-social-action visit-link-btn" id="portfolioKaggleLink">
-                    <span>Rankings</span>
-                    <i data-lucide="external-link"></i>
-                  </a>
-                </div>
-              </div>
-
-              <!-- LeetCode / Algorithmic Hub -->
+              <!-- LeetCode Handle -->
               <div class="social-link-card leetcode-card">
                 <div class="social-link-left">
                   <div class="social-icon leetcode-icon">
                     <i data-lucide="code"></i>
                   </div>
                   <div>
-                    <div class="social-platform">LeetCode &amp; Problem Solving</div>
+                    <div class="social-platform">LeetCode Handle</div>
                     <div class="social-handle" id="portfolioLeetcodeHandle">leetcode.com/pradyumna_devi</div>
                   </div>
                 </div>
                 <div class="social-card-actions">
+                  <button class="btn-social-action copy-link-btn" id="copyLeetcodeLinkBtn" title="Copy LeetCode URL" type="button">
+                    <i data-lucide="copy"></i>
+                  </button>
                   <a href="https://leetcode.com/pradyumna_devi" target="_blank" rel="noopener noreferrer" class="btn-social-action visit-link-btn" id="portfolioLeetcodeLink">
                     <span>Solved</span>
                     <i data-lucide="external-link"></i>
@@ -1328,7 +1756,7 @@ Ready to execute scripts. Choose a template or write Python code on the left and
             </div>
           </div>
 
-          <!-- Resume & Curriculum Vitae Section ("and also my resume") -->
+          <!-- Resume & Curriculum Vitae Section ("resume adhi ala ne unchu") -->
           <div class="portfolio-section">
             <div class="portfolio-section-title">
               <i data-lucide="file-text" class="text-amber"></i>
@@ -1341,54 +1769,23 @@ Ready to execute scripts. Choose a template or write Python code on the left and
               </div>
               <div class="resume-info-content">
                 <div class="resume-title" id="portfolioResumeFileName">Mudimela_Pradyumna_Devi_Resume.pdf</div>
-                <div class="resume-meta">B.Tech in CSE (Data Science) &bull; CGPA: 9.76 / 10.0 &bull; Mohan Babu University</div>
-                <div class="resume-tags">
-                  <span><i data-lucide="check"></i> C, C++, Java, Python</span>
-                  <span><i data-lucide="check"></i> DSA &amp; OOP</span>
-                  <span><i data-lucide="check"></i> Telegram Bot (n8n)</span>
-                  <span><i data-lucide="check"></i> MySQL &amp; GitHub</span>
-                </div>
+                <div class="resume-meta">B.Tech in CSE (Data Science) &bull; Mohan Babu University</div>
               </div>
               <div class="resume-action-buttons">
-                <button class="btn-primary" id="openResumeViewerBtn">
+                <button class="btn-primary" id="openResumeViewerBtn" type="button">
                   <i data-lucide="eye"></i> View Resume
                 </button>
-                <button class="btn-secondary" id="downloadResumeBtn">
+                <button class="btn-secondary" id="downloadResumeBtn" type="button">
                   <i data-lucide="download"></i> Download PDF
                 </button>
-                <label class="btn-ghost-sm file-input-label" title="Upload your own custom resume file">
-                  <i data-lucide="upload"></i> Upload New
-                  <input type="file" id="uploadPortfolioResumeInput" accept=".pdf,.doc,.docx" style="display: none;" />
-                </label>
               </div>
-            </div>
-          </div>
-
-          <!-- Academic Skill Competencies -->
-          <div class="portfolio-section">
-            <div class="portfolio-section-title">
-              <i data-lucide="cpu" class="text-green"></i>
-              <h4>Technical Competencies &amp; Lab Toolchain</h4>
-            </div>
-            <div class="skills-pill-cloud">
-              <span class="skill-pill active"><i data-lucide="code-2"></i> Python</span>
-              <span class="skill-pill"><i data-lucide="terminal"></i> C &amp; C++</span>
-              <span class="skill-pill"><i data-lucide="coffee"></i> Java</span>
-              <span class="skill-pill"><i data-lucide="cpu"></i> Data Structures &amp; Algorithms</span>
-              <span class="skill-pill"><i data-lucide="box"></i> Object-Oriented Programming (OOP)</span>
-              <span class="skill-pill"><i data-lucide="bot"></i> Telegram Bot (n8n)</span>
-              <span class="skill-pill"><i data-lucide="database"></i> MySQL</span>
-              <span class="skill-pill"><i data-lucide="git-branch"></i> Git &amp; GitHub</span>
             </div>
           </div>
         </div>
 
         <div class="modal-footer">
-          <button type="button" class="btn-secondary" id="editFromPortfolioBtn">
-            <i data-lucide="edit-3"></i> Edit Portfolio &amp; Links
-          </button>
           <button type="button" class="btn-primary" id="closePortfolioModalBottomBtn">
-            <i data-lucide="check"></i> Done
+            <i data-lucide="check"></i> Close
           </button>
         </div>
       </div>
@@ -1408,9 +1805,6 @@ Ready to execute scripts. Choose a template or write Python code on the left and
             </div>
           </div>
           <div class="header-right-tools">
-            <button class="btn-tool" id="editProfileFromResumeBtn" title="Edit Profile &amp; Resume Info">
-              <i data-lucide="edit-3"></i> Edit
-            </button>
             <button class="btn-tool" id="printResumeBtn" title="Print Resume">
               <i data-lucide="printer"></i> Print
             </button>
@@ -1780,7 +2174,7 @@ Ready to execute scripts. Choose a template or write Python code on the left and
               <i data-lucide="file-check"></i>
             </div>
             <div>
-              <h3>Data Science Digital Laboratory Observation Record</h3>
+              <h3>Data Science Digital Library Observation Record</h3>
               <p class="modal-subtitle">Official Academic Practical Assessment &bull; Print or Save as PDF</p>
             </div>
           </div>
@@ -1833,7 +2227,7 @@ Ready to execute scripts. Choose a template or write Python code on the left and
             </div>
             <div>
               <h3>Keyboard Shortcuts</h3>
-              <p class="modal-subtitle">Power User Keybindings &bull; Data Science Digital Lab</p>
+              <p class="modal-subtitle">Power User Keybindings &bull; Data Science Digital Library</p>
             </div>
           </div>
           <button class="modal-close-btn" id="closeShortcutsModalBtn">&times;</button>
@@ -1864,37 +2258,111 @@ Ready to execute scripts. Choose a template or write Python code on the left and
       </div>
     </div>
 
-    <!-- Floating Cyber-Navigation HUD Dock -->
+    <!-- Modal: Project Architecture & Execution Details -->
+    <div class="modal-overlay" id="projectDetailsModal" style="display: none;">
+      <div class="modal-card modal-lg project-modal-card">
+        <div class="modal-header">
+          <div class="modal-title-wrap">
+            <div class="modal-icon-badge bg-gradient-cyan">
+              <i data-lucide="cpu"></i>
+            </div>
+            <div>
+              <h3 id="projModalTitle">Project Architecture &amp; Execution</h3>
+              <p class="modal-subtitle" id="projModalSubtitle">Domain &bull; Pipeline &bull; Python WebAssembly Code</p>
+            </div>
+          </div>
+          <button class="modal-close-btn" id="closeProjectDetailsModalBtn">&times;</button>
+        </div>
+
+        <div class="project-modal-body" id="projectDetailsModalBody">
+          <!-- Populated dynamically via JS -->
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal: Submit New Capstone Project -->
+    <div class="modal-overlay" id="submitProjectModal" style="display: none;">
+      <div class="modal-card modal-md">
+        <div class="modal-header">
+          <div class="modal-title-wrap">
+            <div class="modal-icon-badge bg-gradient-indigo">
+              <i data-lucide="plus-circle"></i>
+            </div>
+            <div>
+              <h3>Submit New Data Science Project</h3>
+              <p class="modal-subtitle">Add Student Research or Capstone Pipeline to Portal</p>
+            </div>
+          </div>
+          <button class="modal-close-btn" id="closeSubmitProjectModalBtn">&times;</button>
+        </div>
+
+        <form id="submitProjectForm" class="modal-form-body">
+          <div class="form-group">
+            <label for="formProjTitle">Project Title <span class="required-star">*</span></label>
+            <input type="text" id="formProjTitle" placeholder="e.g., Credit Card Fraud Detection Pipeline" required />
+          </div>
+
+          <div class="form-row-2">
+            <div class="form-group">
+              <label for="formProjDomain">Domain Track <span class="required-star">*</span></label>
+              <select id="formProjDomain" required>
+                <option value="Machine Learning">Machine Learning</option>
+                <option value="Time Series & Finance">Time Series &amp; Finance</option>
+                <option value="Natural Language Processing">Natural Language Processing</option>
+                <option value="Data Analytics & Public Health">Data Analytics &amp; Public Health</option>
+                <option value="Environmental Data Engineering">Environmental Data Engineering</option>
+                <option value="Computer Vision">Computer Vision</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="formProjDifficulty">Difficulty Level</label>
+              <select id="formProjDifficulty">
+                <option value="Beginner">Beginner</option>
+                <option value="Intermediate" selected>Intermediate</option>
+                <option value="Advanced">Advanced</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="formProjTechStack">Tech Stack (Comma-separated)</label>
+            <input type="text" id="formProjTechStack" placeholder="Python 3.12, Pandas, Scikit-Learn, Matplotlib" />
+          </div>
+
+          <div class="form-group">
+            <label for="formProjSummary">Summary &amp; Abstract <span class="required-star">*</span></label>
+            <textarea id="formProjSummary" rows="3" placeholder="Brief explanation of the objective, statistical methodology, and expected results..." required></textarea>
+          </div>
+
+          <div class="form-group">
+            <label for="formProjCode">Runnable Python Script <span class="required-star">*</span></label>
+            <textarea id="formProjCode" rows="6" class="code-font-textarea" placeholder="# Enter complete runnable Python code..." required></textarea>
+          </div>
+
+          <div class="modal-footer">
+            <button type="button" class="btn-secondary" id="cancelSubmitProjectBtn">Cancel</button>
+            <button type="submit" class="btn-primary" id="saveProjectBtn">
+              <i data-lucide="save"></i> Submit Project
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Floating Quick Actions Dock (Back to Top, Colour Theme, Code Editor) -->
     <aside class="floating-cyber-dock" id="floatingCyberDock" aria-label="Quick Actions Dock">
       <div class="dock-inner-glass">
-        <button class="dock-action-btn active" id="dockToggleParticlesBtn" title="Toggle Neural Particle Background FX">
-          <i data-lucide="sparkles"></i>
-          <span class="dock-tooltip">Particles FX: ON</span>
-        </button>
-        <button class="dock-action-btn active" id="dockAudioFxBtn" title="Toggle Interactive Audio Cues">
-          <i data-lucide="volume-2" id="dockAudioIcon"></i>
-          <span class="dock-tooltip" id="dockAudioTooltip">Sound FX: ON</span>
-        </button>
-        <button class="dock-action-btn" id="dockScratchpadBtn" title="Open Interactive Python REPL Scratchpad">
-          <i data-lucide="terminal"></i>
-          <span class="dock-tooltip">REPL Scratchpad</span>
-        </button>
-        <button class="dock-action-btn" id="dockShortcutsBtn" title="Keyboard Shortcuts Cheat Sheet (?)">
-          <i data-lucide="command"></i>
-          <span class="dock-tooltip">Shortcuts (?)</span>
-        </button>
-        <button class="dock-action-btn" id="dockThemeCycleBtn" title="Cycle Visual Theme (Obsidian, Synthwave, Matrix, Nordic, Light)">
-          <i data-lucide="palette"></i>
-          <span class="dock-tooltip">Cycle Theme</span>
-        </button>
-        <button class="dock-action-btn" id="dockConfettiBtn" title="Celebration Fireworks FX">
-          <i data-lucide="party-popper"></i>
-          <span class="dock-tooltip">Celebrate!</span>
-        </button>
-        <div class="dock-divider"></div>
         <button class="dock-action-btn btn-scroll-top" id="dockScrollTopBtn" title="Scroll to Top">
           <i data-lucide="arrow-up"></i>
           <span class="dock-tooltip">Back to Top</span>
+        </button>
+        <button class="dock-action-btn" id="dockThemeCycleBtn" title="Cycle Visual Theme (Obsidian, Synthwave, Matrix, Nordic, Light)">
+          <i data-lucide="palette"></i>
+          <span class="dock-tooltip">Colour Theme</span>
+        </button>
+        <button class="dock-action-btn" id="dockScratchpadBtn" title="Open Interactive Python Code Editor">
+          <i data-lucide="code-2"></i>
+          <span class="dock-tooltip">Editor Option</span>
         </button>
       </div>
     </aside>

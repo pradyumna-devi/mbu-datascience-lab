@@ -1,6 +1,7 @@
 import Chart from 'chart.js/auto';
 import confetti from 'canvas-confetti';
 import { INITIAL_PROFILE, INITIAL_EXPERIMENTS, INITIAL_MODULES, INITIAL_TOOLS } from './experimentsData.js';
+import { INITIAL_RESOURCES, INITIAL_PROJECTS } from './resourcesAndProjectsData.js';
 import { executePythonCode, initPyodideKernel, subscribeKernelStatus } from './pythonRunner.js';
 import { storeModulePdf, getModulePdf, deleteModulePdf, formatFileSize, generateSampleSyllabusPdfDataUrl, generateModuleSyllabusPdfDataUrl, generateCandidateResumePdfDataUrl } from './pdfStorage.js';
 import { MODULES_LEARNING_MATERIAL } from './learningMaterialData.js';
@@ -61,6 +62,7 @@ const STORAGE_KEYS = {
   EXPERIMENTS: 'mbu_ds_experiments_v3_clean',
   PROFILE: 'mbu_ds_profile_v5_personal_email',
   MODULES: 'mbu_ds_modules_v4_all_modules',
+  PROJECTS: 'mbu_ds_projects_v2',
   THEME: 'mbu_ds_theme_mode',
   VERSION: 'mbu_ds_data_version_v10_experiments_4_5_6'
 };
@@ -68,8 +70,11 @@ const STORAGE_KEYS = {
 let experiments = loadExperiments();
 let profile = loadProfile();
 let modules = loadModules();
+let projects = loadProjects();
 let activeView = 'grid'; // 'grid' | 'overview' | 'workspace'
-let activeMainTab = 'experiments'; // 'modules' | 'experiments' | 'tools'
+let activeMainTab = 'homepage'; // 'homepage' | 'modules' | 'lab' | 'tools' | 'resources' | 'projects'
+let currentResourceFilter = 'all';
+let currentProjectDomain = 'ALL';
 let currentExpId = null;
 let currentSubTaskLetter = null;
 let currentCategoryFilter = 'ALL';
@@ -250,6 +255,12 @@ function loadProfile() {
       if (parsed.email === 'devi.pradyumna@mbu.asia' || !parsed.email) {
         parsed.email = 'mudimelapradyumnadevi@gmail.com';
       }
+      if (!parsed.faculty || parsed.faculty === 'Bosu Babu Sambana') parsed.faculty = 'S. Bosubabu';
+      if (!parsed.designation) parsed.designation = INITIAL_PROFILE.designation;
+      if (!parsed.leetcodeUrl) parsed.leetcodeUrl = INITIAL_PROFILE.leetcodeUrl;
+      if (!parsed.githubUrl) parsed.githubUrl = INITIAL_PROFILE.githubUrl;
+      if (!parsed.branch) parsed.branch = INITIAL_PROFILE.branch;
+      if (!parsed.section) parsed.section = INITIAL_PROFILE.section;
       return { ...INITIAL_PROFILE, ...parsed };
     }
     // Also check older profile keys
@@ -261,6 +272,12 @@ function loadProfile() {
         if (oldParsed.email === 'devi.pradyumna@mbu.asia' || !oldParsed.email) {
           oldParsed.email = 'mudimelapradyumnadevi@gmail.com';
         }
+        if (!oldParsed.faculty || oldParsed.faculty === 'Bosu Babu Sambana') oldParsed.faculty = 'S. Bosubabu';
+        if (!oldParsed.designation) oldParsed.designation = INITIAL_PROFILE.designation;
+        if (!oldParsed.leetcodeUrl) oldParsed.leetcodeUrl = INITIAL_PROFILE.leetcodeUrl;
+        if (!oldParsed.githubUrl) oldParsed.githubUrl = INITIAL_PROFILE.githubUrl;
+        if (!oldParsed.branch) oldParsed.branch = INITIAL_PROFILE.branch;
+        if (!oldParsed.section) oldParsed.section = INITIAL_PROFILE.section;
         return { ...INITIAL_PROFILE, ...oldParsed };
       }
     }
@@ -360,6 +377,39 @@ function saveModules(data = modules) {
   }
 }
 
+function loadProjects() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEYS.PROJECTS);
+    if (!raw) {
+      const initial = JSON.parse(JSON.stringify(INITIAL_PROJECTS));
+      localStorage.setItem(STORAGE_KEYS.PROJECTS, JSON.stringify(initial));
+      return initial;
+    }
+    const loaded = JSON.parse(raw);
+    if (Array.isArray(loaded)) {
+      const hasOldProjects = loaded.some(p => p.id === 'proj-trading-signals' || p.id === 'proj-customer-churn');
+      if (hasOldProjects) {
+        const initial = JSON.parse(JSON.stringify(INITIAL_PROJECTS));
+        localStorage.setItem(STORAGE_KEYS.PROJECTS, JSON.stringify(initial));
+        return initial;
+      }
+      return loaded.length > 0 ? loaded : JSON.parse(JSON.stringify(INITIAL_PROJECTS));
+    }
+    return JSON.parse(JSON.stringify(INITIAL_PROJECTS));
+  } catch (e) {
+    console.error('Error loading projects:', e);
+    return JSON.parse(JSON.stringify(INITIAL_PROJECTS));
+  }
+}
+
+function saveProjects(data = projects) {
+  try {
+    localStorage.setItem(STORAGE_KEYS.PROJECTS, JSON.stringify(data));
+  } catch (e) {
+    console.error('Error saving projects:', e);
+  }
+}
+
 // ==========================================
 // TOAST NOTIFICATIONS & FEEDBACK
 // ==========================================
@@ -409,42 +459,30 @@ function renderProfile() {
   const portAvatar = document.getElementById('portfolioAvatarImg');
   const portName = document.getElementById('portfolioNameDisplay');
   const portRoll = document.getElementById('portfolioRollDisplay');
-  const portBio = document.getElementById('portfolioBioDisplay');
-  const portGuide = document.getElementById('portfolioGuideDisplay');
+  const portDept = document.getElementById('portfolioDeptDisplay');
+  const portSection = document.getElementById('portfolioSectionDisplayModal');
+  const portFaculty = document.getElementById('portfolioFacultyDisplay');
+  const portDesignation = document.getElementById('portfolioDesignationDisplay');
+  const portEmailLink = document.getElementById('portfolioEmailLink');
+  const portEmailDisplay = document.getElementById('portfolioEmailDisplay');
   const portResumeFile = document.getElementById('portfolioResumeFileName');
   
   if (portAvatar && profile.avatarUrl) portAvatar.src = normalizeAssetUrl(profile.avatarUrl);
-  if (portName) portName.textContent = profile.name;
-  if (portRoll) portRoll.textContent = `Roll No: ${profile.id} • ${profile.branch || "Data Science"} (${profile.section || "Section - 2"})`;
-  if (portBio) portBio.textContent = profile.bio || INITIAL_PROFILE.bio;
-  if (portGuide) portGuide.textContent = profile.faculty;
-  if (portResumeFile) portResumeFile.textContent = profile.resumeName || "M_Pradyumna_Devi_Resume.pdf";
+  if (portName) portName.textContent = profile.name || "Mudimela Pradyumna Devi";
+  if (portRoll) portRoll.textContent = profile.id || "24102A030078";
+  if (portDept) portDept.textContent = profile.branch || "Computer Science and Engineering (Data Science)";
+  if (portSection) portSection.textContent = profile.section || "Section - 2";
+  if (portFaculty) portFaculty.textContent = profile.faculty || "S. Bosubabu";
+  if (portDesignation) portDesignation.textContent = profile.designation || "Assistant Professor";
+  if (portEmailLink) portEmailLink.href = `mailto:${profile.email || "mudimelapradyumnadevi@gmail.com"}`;
+  if (portEmailDisplay) portEmailDisplay.textContent = profile.email || "mudimelapradyumnadevi@gmail.com";
+  if (portResumeFile) portResumeFile.textContent = profile.resumeName || "Mudimela_Pradyumna_Devi_Resume.pdf";
 
-  // Social & Professional links
+  // Handles & Links: GitHub & LeetCode
   const ghLink = document.getElementById('portfolioGithubLink');
   const ghHandle = document.getElementById('portfolioGithubHandle');
   if (ghLink) ghLink.href = profile.githubUrl || "https://github.com/pradyumna-devi";
   if (ghHandle) ghHandle.textContent = `@${(profile.githubUrl || '').replace(/https?:\/\/(www\.)?github\.com\/?/, '') || 'pradyumna-devi'}`;
-
-  const inLink = document.getElementById('portfolioLinkedinLink');
-  const inHandle = document.getElementById('portfolioLinkedinHandle');
-  if (inLink) inLink.href = profile.linkedinUrl || "https://linkedin.com/in/pradyumna-devi";
-  if (inHandle) inHandle.textContent = (profile.linkedinUrl || '').replace(/https?:\/\/(www\.)?/, '') || 'linkedin.com/in/pradyumna-devi';
-
-  const webLink = document.getElementById('portfolioWebsiteLink');
-  const webHandle = document.getElementById('portfolioWebsiteHandle');
-  if (webLink) webLink.href = profile.portfolioUrl || "https://pradyumna-devi.dev";
-  if (webHandle) webHandle.textContent = (profile.portfolioUrl || '').replace(/https?:\/\/(www\.)?/, '') || 'pradyumna-devi.dev';
-
-  const mailLink = document.getElementById('portfolioEmailLink');
-  const mailHandle = document.getElementById('portfolioEmailHandle');
-  if (mailLink) mailLink.href = `mailto:${profile.email || "mudimelapradyumnadevi@gmail.com"}`;
-  if (mailHandle) mailHandle.textContent = profile.email || "mudimelapradyumnadevi@gmail.com";
-
-  const kaggleLink = document.getElementById('portfolioKaggleLink');
-  const kaggleHandle = document.getElementById('portfolioKaggleHandle');
-  if (kaggleLink) kaggleLink.href = profile.kaggleUrl || "https://kaggle.com/pradyumnadevi";
-  if (kaggleHandle) kaggleHandle.textContent = (profile.kaggleUrl || '').replace(/https?:\/\/(www\.)?/, '') || 'kaggle.com/pradyumnadevi';
 
   const leetLink = document.getElementById('portfolioLeetcodeLink');
   const leetHandle = document.getElementById('portfolioLeetcodeHandle');
@@ -485,6 +523,21 @@ function renderProfile() {
   // Header count pill
   const expPill = document.getElementById('experimentsHeaderCountPill');
   if (expPill) expPill.textContent = `${experiments.length} Labs`;
+
+  // Sidebar student preview & badges sync
+  const sbName = document.getElementById('sidebarStudentName');
+  const sbRoll = document.getElementById('sidebarStudentRoll');
+  const sbAvatar = document.getElementById('sidebarStudentAvatarImg');
+  if (sbName) sbName.textContent = profile.name || "M. Pradyumna Devi";
+  if (sbRoll) sbRoll.textContent = `Roll: ${profile.id || '24102A030078'}`;
+  if (sbAvatar && profile.avatarUrl) sbAvatar.src = normalizeAssetUrl(profile.avatarUrl);
+
+  const sbLabBadge = document.getElementById('sidebarLabBadge');
+  if (sbLabBadge) sbLabBadge.textContent = `${experiments.length} Labs`;
+  const sbModulesBadge = document.getElementById('sidebarModulesBadge');
+  if (sbModulesBadge) sbModulesBadge.textContent = `${modules.length} Tracks`;
+  const sbProjectsBadge = document.getElementById('sidebarProjectsBadge');
+  if (sbProjectsBadge) sbProjectsBadge.textContent = `${projects.length} Projs`;
 }
 
 function handleAvatarFileUpload(file) {
@@ -593,33 +646,60 @@ function downloadAcademicResume() {
 }
 
 // ==========================================
-// HOMEPAGE MAIN TABS: MODULES | EXPERIMENTS | TOOLS
+// HOMEPAGE MAIN TABS: HOMEPAGE | MODULES | LAB | TOOLS | RESOURCES | PROJECTS
 // ==========================================
 function switchMainTab(tabName) {
+  // Normalize tab names & aliases
+  if (tabName === 'home') tabName = 'homepage';
+  if (tabName === 'experiments') tabName = 'lab';
+
   activeMainTab = tabName;
 
   // Update tabs buttons UI
   document.querySelectorAll('.portal-nav-tab').forEach(btn => {
-    const isTarget = btn.dataset.tab === tabName;
+    let btnTab = btn.dataset.tab;
+    if (btnTab === 'home') btnTab = 'homepage';
+    if (btnTab === 'experiments') btnTab = 'lab';
+    const isTarget = btnTab === tabName;
     btn.classList.toggle('active', isTarget);
     btn.setAttribute('aria-selected', isTarget ? 'true' : 'false');
   });
 
+  // Update sidebar nav items UI
+  document.querySelectorAll('.sidebar-nav-item').forEach(btn => {
+    let btnTab = btn.dataset.tab;
+    if (btnTab === 'home') btnTab = 'homepage';
+    if (btnTab === 'experiments') btnTab = 'lab';
+    const isTarget = btnTab === tabName;
+    btn.classList.toggle('active', isTarget);
+    btn.setAttribute('aria-selected', isTarget ? 'true' : 'false');
+  });
+
+  const homeView = document.getElementById('homepageOverviewView');
   const gridView = document.getElementById('experimentsGridView');
   const modulesView = document.getElementById('modulesGridView');
   const toolsView = document.getElementById('toolsGridView');
+  const resourcesView = document.getElementById('resourcesGridView');
+  const projectsView = document.getElementById('projectsGridView');
   const actionBarStrip = document.querySelector('.action-bar-strip');
 
-  // Hide all 3 main views
+  // Hide all 6 main views
+  if (homeView) homeView.style.display = 'none';
   if (gridView) gridView.style.display = 'none';
   if (modulesView) modulesView.style.display = 'none';
   if (toolsView) toolsView.style.display = 'none';
+  if (resourcesView) resourcesView.style.display = 'none';
+  if (projectsView) projectsView.style.display = 'none';
 
-  if (tabName === 'modules') {
+  if (tabName === 'homepage') {
+    if (homeView) homeView.style.display = 'block';
+    if (actionBarStrip) actionBarStrip.style.display = 'none';
+    renderHomepageOverview();
+  } else if (tabName === 'modules') {
     if (modulesView) modulesView.style.display = 'block';
     if (actionBarStrip) actionBarStrip.style.display = 'none';
     renderModules();
-  } else if (tabName === 'experiments') {
+  } else if (tabName === 'lab') {
     if (gridView) gridView.style.display = 'block';
     if (actionBarStrip) actionBarStrip.style.display = 'flex';
     renderExperimentsGrid();
@@ -627,6 +707,14 @@ function switchMainTab(tabName) {
     if (toolsView) toolsView.style.display = 'block';
     if (actionBarStrip) actionBarStrip.style.display = 'none';
     renderTools();
+  } else if (tabName === 'resources') {
+    if (resourcesView) resourcesView.style.display = 'block';
+    if (actionBarStrip) actionBarStrip.style.display = 'none';
+    renderResources();
+  } else if (tabName === 'projects') {
+    if (projectsView) projectsView.style.display = 'block';
+    if (actionBarStrip) actionBarStrip.style.display = 'none';
+    renderProjects();
   }
 
   window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -639,18 +727,24 @@ function switchMainTab(tabName) {
 function switchView(viewName, expId = null, subTaskLetter = null) {
   playSound('click');
   activeView = viewName;
+  const homeView = document.getElementById('homepageOverviewView');
   const gridView = document.getElementById('experimentsGridView');
   const modulesView = document.getElementById('modulesGridView');
   const toolsView = document.getElementById('toolsGridView');
+  const resourcesView = document.getElementById('resourcesGridView');
+  const projectsView = document.getElementById('projectsGridView');
   const overviewView = document.getElementById('experimentOverviewView');
   const workspaceView = document.getElementById('subTaskWorkspaceView');
   const mainTabsNav = document.getElementById('portalMainTabsNav');
   const actionBarStrip = document.querySelector('.action-bar-strip');
 
   // Hide all panels
+  if (homeView) { homeView.style.display = 'none'; homeView.classList.remove('active'); }
   if (gridView) { gridView.style.display = 'none'; gridView.classList.remove('active'); }
   if (modulesView) { modulesView.style.display = 'none'; modulesView.classList.remove('active'); }
   if (toolsView) { toolsView.style.display = 'none'; toolsView.classList.remove('active'); }
+  if (resourcesView) { resourcesView.style.display = 'none'; resourcesView.classList.remove('active'); }
+  if (projectsView) { projectsView.style.display = 'none'; projectsView.classList.remove('active'); }
   if (overviewView) { overviewView.style.display = 'none'; overviewView.classList.remove('active'); }
   if (workspaceView) { workspaceView.style.display = 'none'; workspaceView.classList.remove('active'); }
 
@@ -659,7 +753,7 @@ function switchView(viewName, expId = null, subTaskLetter = null) {
 
   if (viewName === 'grid') {
     if (mainTabsNav) mainTabsNav.style.display = 'block';
-    switchMainTab(activeMainTab);
+    switchMainTab(activeMainTab || 'homepage');
   } else if (viewName === 'overview') {
     if (mainTabsNav) mainTabsNav.style.display = 'none';
     if (actionBarStrip) actionBarStrip.style.display = 'none';
@@ -1495,14 +1589,6 @@ function renderModules() {
           <span class="module-code-badge" style="color: ${mod.badgeColor || '#38bdf8'}; border-color: ${mod.borderColor || 'rgba(56, 189, 248, 0.3)'}; background: rgba(56, 189, 248, 0.1);">${mod.code}</span>
           <span class="module-credits-pill">${mod.credits || '4 Credits'} &bull; ${mod.hours || 'Course Load'}</span>
         </div>
-        <div class="module-header-actions">
-          <button class="module-action-btn edit" data-action="edit-module" data-id="${mod.id}" title="Edit Module &amp; Syllabus PDF">
-            <i data-lucide="edit-3"></i>
-          </button>
-          <button class="module-action-btn delete" data-action="delete-module" data-id="${mod.id}" title="Remove Module">
-            <i data-lucide="trash-2"></i>
-          </button>
-        </div>
       </div>
 
       <h3 class="module-title">${mod.title}</h3>
@@ -1523,18 +1609,6 @@ function renderModules() {
         </button>
       </div>
     `;
-
-    // Action listener: Edit Module
-    card.querySelector('[data-action="edit-module"]')?.addEventListener('click', (e) => {
-      e.stopPropagation();
-      openModuleModal(mod.id);
-    });
-
-    // Action listener: Delete Module
-    card.querySelector('[data-action="delete-module"]')?.addEventListener('click', (e) => {
-      e.stopPropagation();
-      handleDeleteModule(mod.id);
-    });
 
     // Action listener: View Study Guide / Learning Material
     card.querySelector('[data-action="view-study"]')?.addEventListener('click', (e) => {
@@ -2863,6 +2937,608 @@ function renderCheatsheets() {
   lucide.createIcons();
 }
 
+// ==========================================
+// HOMEPAGE DASHBOARD RENDERER (OPTION 1)
+// ==========================================
+function renderHomepageOverview() {
+  const container = document.getElementById('homeQuickExpsGrid');
+  if (container) {
+    container.innerHTML = experiments.map(exp => {
+      const subTasksHtml = (exp.subTasks || []).map(st => `
+        <button class="home-quick-subtask-btn" data-exp-id="${exp.id}" data-task-letter="${st.letter}" title="Launch ${st.codeId || st.letter}: ${escapeHtml(st.title)}">
+          ${st.letter}
+        </button>
+      `).join('');
+
+      return `
+        <div class="home-quick-exp-card">
+          <div>
+            <div class="home-quick-exp-top">
+              <span class="home-quick-exp-num">Exp ${exp.number}</span>
+              <span class="home-quick-exp-cat">${escapeHtml(exp.category)}</span>
+            </div>
+            <h4 class="home-quick-exp-title">${escapeHtml(exp.title)}</h4>
+            <div class="home-quick-subtasks">
+              ${subTasksHtml}
+            </div>
+          </div>
+          <button class="home-quick-card-btn" data-exp-id="${exp.id}">
+            <span>Launch Experiment</span>
+            <i data-lucide="arrow-right" style="width: 14px; height: 14px;"></i>
+          </button>
+        </div>
+      `;
+    }).join('');
+
+    // Attach listeners on quick subtask buttons
+    container.querySelectorAll('.home-quick-subtask-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const expId = btn.dataset.expId;
+        const letter = btn.dataset.taskLetter;
+        switchView('workspace', expId, letter);
+      });
+    });
+
+    // Attach listeners on quick launch card buttons
+    container.querySelectorAll('.home-quick-card-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const expId = btn.dataset.expId;
+        switchView('overview', expId);
+      });
+    });
+  }
+
+  // Hero action buttons
+  document.getElementById('heroExploreLabBtn')?.addEventListener('click', () => switchMainTab('lab'));
+  document.getElementById('heroLaunchReplBtn')?.addEventListener('click', () => {
+    switchMainTab('tools');
+    const scratchBtn = document.querySelector('[data-tool="scratchpad"]');
+    if (scratchBtn) scratchBtn.click();
+  });
+  document.getElementById('heroViewModulesBtn')?.addEventListener('click', () => switchMainTab('modules'));
+  document.getElementById('heroViewResourcesBtn')?.addEventListener('click', () => switchMainTab('resources'));
+  document.getElementById('heroViewProjectsBtn')?.addEventListener('click', () => switchMainTab('projects'));
+  document.getElementById('heroOpenProfileBtn')?.addEventListener('click', openPortfolioModal);
+  document.getElementById('homeViewAllExpsBtn')?.addEventListener('click', () => switchMainTab('lab'));
+
+  // Pillars click handlers
+  document.querySelectorAll('.pillar-card').forEach(card => {
+    card.addEventListener('click', () => {
+      const targetTab = card.dataset.jumpTab;
+      if (targetTab) switchMainTab(targetTab);
+    });
+  });
+
+  lucide.createIcons();
+}
+
+// ==========================================
+// RESOURCES HUB RENDERER (OPTION 5)
+// ==========================================
+function renderResources() {
+  const datasetsContainer = document.getElementById('resourceDatasetsContainer');
+  const docsContainer = document.getElementById('resourceDocsContainer');
+  const booksContainer = document.getElementById('resourceBooksContainer');
+  const snippetsContainer = document.getElementById('resourceSnippetsContainer');
+
+  // Datasets
+  if (datasetsContainer) {
+    datasetsContainer.innerHTML = INITIAL_RESOURCES.datasets.map(ds => `
+      <div class="dataset-resource-card">
+        <div>
+          <div class="dataset-card-header">
+            <div class="dataset-icon-circle">
+              <i data-lucide="${ds.icon || 'database'}"></i>
+            </div>
+            <span class="project-domain-tag">${escapeHtml(ds.category)}</span>
+          </div>
+          <h4 class="dataset-card-title">${escapeHtml(ds.title)}</h4>
+          <p class="dataset-card-desc">${escapeHtml(ds.description)}</p>
+          <div class="dataset-meta-pills">
+            <span class="dataset-meta-pill"><i data-lucide="rows"></i> ${escapeHtml(ds.samples)}</span>
+            <span class="dataset-meta-pill"><i data-lucide="columns"></i> ${escapeHtml(ds.features)}</span>
+            <span class="dataset-meta-pill"><i data-lucide="file"></i> ${escapeHtml(ds.format)}</span>
+            <span class="dataset-meta-pill"><i data-lucide="hard-drive"></i> ${escapeHtml(ds.size)}</span>
+          </div>
+        </div>
+        <div class="dataset-card-actions">
+          <button class="btn-dataset-inspect" data-csv-key="${ds.csvKey}" title="Open this dataset in CSV Dataset Inspector">
+            <i data-lucide="file-spreadsheet" style="width: 14px; height: 14px;"></i> Inspect
+          </button>
+          <button class="btn-dataset-repl" data-ds-id="${ds.id}" title="Load Python analysis script into REPL">
+            <i data-lucide="terminal" style="width: 14px; height: 14px;"></i> REPL
+          </button>
+          <button class="btn-dataset-download" data-ds-id="${ds.id}" title="Download CSV Dataset">
+            <i data-lucide="download" style="width: 14px; height: 14px;"></i>
+          </button>
+        </div>
+      </div>
+    `).join('');
+
+    // Inspect in CSV Tool listeners
+    datasetsContainer.querySelectorAll('.btn-dataset-inspect').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const csvKey = btn.dataset.csvKey;
+        switchMainTab('tools');
+        setTimeout(() => {
+          const dsBtn = document.querySelector('[data-tool="dataset"]');
+          if (dsBtn) dsBtn.click();
+          const selector = document.getElementById('datasetSelector');
+          if (selector && csvKey) {
+            selector.value = csvKey;
+            selector.dispatchEvent(new Event('change'));
+          }
+        }, 50);
+      });
+    });
+
+    // Run in REPL listeners
+    datasetsContainer.querySelectorAll('.btn-dataset-repl').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const dsId = btn.dataset.dsId;
+        const ds = INITIAL_RESOURCES.datasets.find(d => d.id === dsId);
+        if (ds && ds.sampleScript) {
+          switchMainTab('tools');
+          setTimeout(() => {
+            const replBtn = document.querySelector('[data-tool="scratchpad"]');
+            if (replBtn) replBtn.click();
+            const editor = document.getElementById('scratchpadEditor');
+            if (editor) {
+              editor.value = ds.sampleScript;
+              showToast(`Loaded ${ds.title} analysis script into REPL!`, 'success');
+            }
+          }, 50);
+        }
+      });
+    });
+
+    // Download CSV listeners
+    datasetsContainer.querySelectorAll('.btn-dataset-download').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const dsId = btn.dataset.dsId;
+        const ds = INITIAL_RESOURCES.datasets.find(d => d.id === dsId);
+        if (ds) {
+          downloadResourceDatasetCsv(ds);
+        }
+      });
+    });
+  }
+
+  // Official Docs
+  if (docsContainer) {
+    docsContainer.innerHTML = INITIAL_RESOURCES.officialDocs.map(doc => `
+      <div class="doc-card">
+        <div>
+          <div class="doc-card-top">
+            <div class="doc-card-icon">
+              <i data-lucide="${doc.icon || 'globe'}"></i>
+            </div>
+            <span class="runtime-badge-code">${escapeHtml(doc.version)}</span>
+          </div>
+          <h4 class="doc-card-title">${escapeHtml(doc.name)}</h4>
+          <p class="doc-card-summary">${escapeHtml(doc.summary)}</p>
+          <div class="doc-card-topics">
+            ${(doc.topics || []).map(t => `<span class="doc-topic-tag">${escapeHtml(t)}</span>`).join('')}
+          </div>
+        </div>
+        <div style="border-top: 1px solid rgba(255, 255, 255, 0.06); padding-top: 10px;">
+          <a href="${doc.url}" target="_blank" rel="noopener noreferrer" class="btn-doc-link">
+            <span>Read Official Documentation</span>
+            <i data-lucide="external-link" style="width: 13px; height: 13px;"></i>
+          </a>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  // Textbooks & Lab Manual
+  if (booksContainer) {
+    booksContainer.innerHTML = INITIAL_RESOURCES.textbooks.map(b => `
+      <div class="book-card">
+        <div>
+          <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px;">
+            <span class="project-domain-tag">${escapeHtml(b.badge)}</span>
+            <i data-lucide="${b.icon || 'book-open'}" class="text-amber" style="width: 18px; height: 18px;"></i>
+          </div>
+          <h4 class="book-card-title">${escapeHtml(b.title)}</h4>
+          <div class="book-card-author">${escapeHtml(b.author)} &bull; ${escapeHtml(b.edition)}</div>
+          <p class="book-card-desc">${escapeHtml(b.description)}</p>
+        </div>
+        <div>
+          ${b.isDownloadableManual ? `
+            <button class="btn-primary" id="downloadManualPdfBtn" style="width: 100%; font-size: 12px; padding: 8px;">
+              <i data-lucide="file-down"></i> Generate &amp; Download Official Lab Manual PDF
+            </button>
+          ` : `
+            <span class="pillar-chip" style="display: flex; justify-content: center; width: 100%;">
+              <i data-lucide="bookmark"></i> MBU Library Reference Available
+            </span>
+          `}
+        </div>
+      </div>
+    `).join('');
+
+    document.getElementById('downloadManualPdfBtn')?.addEventListener('click', downloadLabManualPdf);
+  }
+
+  // Quick Snippets
+  if (snippetsContainer) {
+    snippetsContainer.innerHTML = INITIAL_RESOURCES.quickSnippets.map((snip, idx) => `
+      <div class="snippet-card">
+        <div class="snippet-card-header">
+          <div>
+            <h4 class="snippet-card-title">${escapeHtml(snip.title)}</h4>
+            <span style="font-size: 11px; color: #94a3b8;">${escapeHtml(snip.category)}</span>
+          </div>
+          <div class="snippet-actions">
+            <button class="btn-ghost-sm btn-copy-snip" data-idx="${idx}" title="Copy code snippet">
+              <i data-lucide="copy"></i> Copy
+            </button>
+            <button class="btn-ghost-sm btn-run-snip" data-idx="${idx}" title="Run in REPL">
+              <i data-lucide="play"></i> REPL
+            </button>
+          </div>
+        </div>
+        <pre class="snippet-code-box"><code>${escapeHtml(snip.code)}</code></pre>
+      </div>
+    `).join('');
+
+    snippetsContainer.querySelectorAll('.btn-copy-snip').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const idx = parseInt(btn.dataset.idx, 10);
+        const snip = INITIAL_RESOURCES.quickSnippets[idx];
+        if (snip) {
+          navigator.clipboard.writeText(snip.code).then(() => {
+            showToast("Copied snippet to clipboard!", "success");
+          });
+        }
+      });
+    });
+
+    snippetsContainer.querySelectorAll('.btn-run-snip').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const idx = parseInt(btn.dataset.idx, 10);
+        const snip = INITIAL_RESOURCES.quickSnippets[idx];
+        if (snip) {
+          switchMainTab('tools');
+          setTimeout(() => {
+            const replBtn = document.querySelector('[data-tool="scratchpad"]');
+            if (replBtn) replBtn.click();
+            const editor = document.getElementById('scratchpadEditor');
+            if (editor) {
+              editor.value = snip.code;
+              showToast("Loaded snippet into REPL!", "info");
+            }
+          }, 50);
+        }
+      });
+    });
+  }
+
+  // Subtabs filter logic for Resources
+  document.querySelectorAll('.resource-subtab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.resource-subtab-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const filter = btn.dataset.resFilter;
+      currentResourceFilter = filter;
+
+      const secDatasets = document.getElementById('resSectionDatasets');
+      const secDocs = document.getElementById('resSectionDocs');
+      const secBooks = document.getElementById('resSectionBooks');
+      const secCheats = document.getElementById('resSectionCheats');
+
+      if (secDatasets) secDatasets.style.display = (filter === 'all' || filter === 'datasets') ? 'block' : 'none';
+      if (secDocs) secDocs.style.display = (filter === 'all' || filter === 'docs') ? 'block' : 'none';
+      if (secBooks) secBooks.style.display = (filter === 'all' || filter === 'books') ? 'block' : 'none';
+      if (secCheats) secCheats.style.display = (filter === 'all' || filter === 'cheats') ? 'block' : 'none';
+    });
+  });
+
+  lucide.createIcons();
+}
+
+function downloadResourceDatasetCsv(ds) {
+  try {
+    const sample = SAMPLE_DATASETS[ds.csvKey];
+    let csvContent = "";
+    if (sample) {
+      csvContent = sample.columns.join(",") + "\n" + sample.data.map(r => r.join(",")).join("\n");
+    } else {
+      csvContent = "feature_1,feature_2,feature_3,target\n1.2,3.4,5.6,0\n2.3,4.5,6.7,1\n3.1,2.9,4.8,0\n";
+    }
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = ds.filename || `${ds.csvKey || 'dataset'}.csv`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    showToast(`Downloaded ${ds.title} CSV!`);
+  } catch (e) {
+    console.error("CSV download error:", e);
+    showToast("Error downloading CSV dataset", "error");
+  }
+}
+
+function downloadLabManualPdf() {
+  try {
+    const sampleMod = modules[0] || INITIAL_MODULES[0];
+    const pdfDataUrl = generateModuleSyllabusPdfDataUrl(sampleMod, MODULES_LEARNING_MATERIAL[sampleMod.id]);
+    const blobUrl = dataUrlToPdfBlobUrl(pdfDataUrl);
+    const a = document.createElement('a');
+    a.href = blobUrl;
+    a.download = "MBU_Data_Science_Digital_Library_Manual.pdf";
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    showToast("Downloaded Official MBU Data Science Digital Library Manual PDF!");
+  } catch (err) {
+    console.error("PDF download error:", err);
+    showToast("Lab Manual PDF generation error", "error");
+  }
+}
+
+// ==========================================
+// CAPSTONE PROJECTS HUB RENDERER (OPTION 6)
+// ==========================================
+function renderProjects() {
+  const container = document.getElementById('projectsCardsContainer');
+  const countEl = document.getElementById('totalProjectsCount');
+  if (countEl) countEl.textContent = projects.length;
+
+  if (!container) return;
+
+  const filtered = (currentProjectDomain === 'ALL')
+    ? projects
+    : projects.filter(p => p.domain.toLowerCase() === currentProjectDomain.toLowerCase());
+
+  container.innerHTML = filtered.map(p => {
+    const stackChips = (p.techStack || []).map(t => `<span class="project-stack-chip">${escapeHtml(t)}</span>`).join('');
+    const metricsHtml = (p.keyMetrics || []).map(m => `
+      <span class="project-metric-item">
+        ${escapeHtml(m.label)}: <strong>${escapeHtml(m.val)}</strong>
+      </span>
+    `).join(' &bull; ');
+
+    return `
+      <div class="project-card" id="proj-${p.id}">
+        <div>
+          <div class="project-card-top">
+            <span class="project-domain-tag">${escapeHtml(p.domain)}</span>
+            <span class="project-difficulty-pill"><i data-lucide="gauge"></i> ${escapeHtml(p.difficulty || 'Intermediate')}</span>
+          </div>
+          <h3 class="project-card-title">${escapeHtml(p.title)}</h3>
+          <p class="project-card-summary">${escapeHtml(p.summary)}</p>
+          <div class="project-stack-wrap">
+            ${stackChips}
+          </div>
+          ${metricsHtml ? `<div class="project-metrics-row">${metricsHtml}</div>` : ''}
+        </div>
+        <div class="project-card-actions">
+          <button class="btn-project-run" data-proj-id="${p.id}" title="Run project script in REPL Virtual Kernel">
+            <i data-lucide="play" style="width: 14px; height: 14px;"></i> Run in REPL
+          </button>
+          <button class="btn-project-details" data-proj-id="${p.id}" title="View Architecture & Pipeline Details">
+            <i data-lucide="eye" style="width: 14px; height: 14px;"></i> Details
+          </button>
+          <button class="btn-ghost-sm btn-proj-download" data-proj-id="${p.id}" title="Download Python Script (.py)">
+            <i data-lucide="download" style="width: 14px; height: 14px;"></i>
+          </button>
+        </div>
+      </div>
+    `;
+  }).join('');
+
+  // Action listeners
+  container.querySelectorAll('.btn-project-run').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const projId = btn.dataset.projId;
+      const proj = projects.find(p => p.id === projId);
+      if (proj && proj.code) {
+        switchMainTab('tools');
+        setTimeout(() => {
+          const replBtn = document.querySelector('[data-tool="scratchpad"]');
+          if (replBtn) replBtn.click();
+          const editor = document.getElementById('scratchpadEditor');
+          if (editor) {
+            editor.value = proj.code;
+            showToast(`Loaded "${proj.title}" into Python REPL! Ready to run.`, 'success');
+          }
+        }, 50);
+      }
+    });
+  });
+
+  container.querySelectorAll('.btn-project-details').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const projId = btn.dataset.projId;
+      const proj = projects.find(p => p.id === projId);
+      if (proj) openProjectDetailsModal(proj);
+    });
+  });
+
+  container.querySelectorAll('.btn-proj-download').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const projId = btn.dataset.projId;
+      const proj = projects.find(p => p.id === projId);
+      if (proj && proj.code) {
+        const blob = new Blob([proj.code], { type: 'text/x-python' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `${proj.id || 'project'}.py`;
+        a.click();
+        document.body.appendChild(a);
+        URL.revokeObjectURL(url);
+        showToast(`Downloaded ${proj.title} script!`);
+      }
+    });
+  });
+
+  // Filter chips
+  document.querySelectorAll('.project-domain-chip').forEach(chip => {
+    chip.addEventListener('click', () => {
+      document.querySelectorAll('.project-domain-chip').forEach(c => c.classList.remove('active'));
+      chip.classList.add('active');
+      currentProjectDomain = chip.dataset.domain;
+      renderProjects();
+    });
+  });
+
+  lucide.createIcons();
+}
+
+function openProjectDetailsModal(proj) {
+  const modal = document.getElementById('projectDetailsModal');
+  const titleEl = document.getElementById('projModalTitle');
+  const subEl = document.getElementById('projModalSubtitle');
+  const bodyEl = document.getElementById('projectDetailsModalBody');
+  if (!modal || !bodyEl) return;
+
+  if (titleEl) titleEl.textContent = proj.title;
+  if (subEl) subEl.textContent = `${proj.domain} • ${proj.difficulty} Level • ${proj.datasetName || 'Curated Dataset'}`;
+
+  const stackChips = (proj.techStack || []).map(t => `<span class="project-stack-chip">${escapeHtml(t)}</span>`).join('');
+  const stepsList = (proj.architecture || []).map((step, idx) => `
+    <div class="arch-step-item">
+      <span class="arch-step-num">${idx + 1}</span>
+      <span>${escapeHtml(step)}</span>
+    </div>
+  `).join('');
+
+  const metricsHtml = (proj.keyMetrics || []).map(m => `
+    <span class="project-metric-item">
+      ${escapeHtml(m.label)}: <strong>${escapeHtml(m.val)}</strong>
+    </span>
+  `).join(' &bull; ');
+
+  bodyEl.innerHTML = `
+    <div class="project-modal-desc-box">
+      <p style="margin-bottom: 8px;"><strong>Problem Abstract:</strong> ${escapeHtml(proj.description || proj.summary)}</p>
+      <div style="display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px;">
+        ${stackChips}
+      </div>
+    </div>
+
+    ${metricsHtml ? `
+      <div class="project-metrics-row" style="margin-bottom: 20px;">
+        <strong>Validation Metrics:</strong>&nbsp;${metricsHtml}
+      </div>
+    ` : ''}
+
+    <div class="project-architecture-box">
+      <div class="project-arch-title"><i data-lucide="git-merge"></i> Architectural Pipeline &amp; Processing Phases</div>
+      <div class="arch-steps-list">
+        ${stepsList || '<p class="text-muted">No architecture steps specified.</p>'}
+      </div>
+    </div>
+
+    <div class="project-code-wrapper">
+      <div class="project-code-header">
+        <span style="font-size: 13px; font-weight: 700; color: #f8fafc; display: flex; align-items: center; gap: 6px;">
+          <i data-lucide="terminal" class="text-cyan"></i> Complete Executable Python Code
+        </span>
+        <div style="display: flex; gap: 8px;">
+          <button class="btn-ghost-sm" id="modalCopyProjCodeBtn">
+            <i data-lucide="copy"></i> Copy Code
+          </button>
+          <button class="btn-hero-primary" id="modalRunProjInReplBtn" style="padding: 6px 12px; font-size: 12px;">
+            <i data-lucide="play"></i> Run in REPL
+          </button>
+        </div>
+      </div>
+      <pre class="project-code-area"><code>${escapeHtml(proj.code)}</code></pre>
+    </div>
+  `;
+
+  document.getElementById('modalCopyProjCodeBtn')?.addEventListener('click', () => {
+    navigator.clipboard.writeText(proj.code).then(() => {
+      showToast("Project source code copied to clipboard!", "success");
+    });
+  });
+
+  document.getElementById('modalRunProjInReplBtn')?.addEventListener('click', () => {
+    closeProjectDetailsModal();
+    switchMainTab('tools');
+    setTimeout(() => {
+      const replBtn = document.querySelector('[data-tool="scratchpad"]');
+      if (replBtn) replBtn.click();
+      const editor = document.getElementById('scratchpadEditor');
+      if (editor) {
+        editor.value = proj.code;
+        showToast(`Loaded ${proj.title} into Python REPL! Ready to run.`, "success");
+      }
+    }, 50);
+  });
+
+  modal.style.display = 'flex';
+  lucide.createIcons();
+}
+
+function closeProjectDetailsModal() {
+  const modal = document.getElementById('projectDetailsModal');
+  if (modal) modal.style.display = 'none';
+}
+
+function openSubmitProjectModal() {
+  const modal = document.getElementById('submitProjectModal');
+  if (modal) {
+    document.getElementById('submitProjectForm')?.reset();
+    modal.style.display = 'flex';
+  }
+}
+
+function closeSubmitProjectModal() {
+  const modal = document.getElementById('submitProjectModal');
+  if (modal) modal.style.display = 'none';
+}
+
+function handleProjectFormSubmit(e) {
+  e.preventDefault();
+  const title = document.getElementById('formProjTitle')?.value.trim();
+  const domain = document.getElementById('formProjDomain')?.value;
+  const difficulty = document.getElementById('formProjDifficulty')?.value;
+  const techStackRaw = document.getElementById('formProjTechStack')?.value.trim();
+  const summary = document.getElementById('formProjSummary')?.value.trim();
+  const code = document.getElementById('formProjCode')?.value.trim();
+
+  if (!title || !summary || !code) {
+    showToast("Please fill in all required fields", "warning");
+    return;
+  }
+
+  const newProj = {
+    id: `proj-custom-${Date.now()}`,
+    title,
+    domain: domain || 'Machine Learning',
+    difficulty: difficulty || 'Intermediate',
+    badge: 'Student Submission',
+    badgeColor: '#10b981',
+    techStack: techStackRaw ? techStackRaw.split(',').map(s => s.trim()).filter(Boolean) : ['Python 3.12'],
+    summary,
+    description: summary,
+    code,
+    keyMetrics: [
+      { label: 'Status', val: 'Student Research Pipeline' }
+    ],
+    architecture: [
+      "Data Ingestion: Load dataset into virtual Python kernel",
+      "Feature Processing: Transform & clean attributes",
+      "Model Execution: Fit mathematical estimator or algorithm",
+      "Evaluation: Print diagnostic metrics"
+    ]
+  };
+
+  projects.unshift(newProj);
+  saveProjects();
+  closeSubmitProjectModal();
+  renderProjects();
+  showToast(`Project "${title}" submitted and added to portfolio!`, 'success');
+}
 
 // ==========================================
 // ADD / EDIT EXPERIMENT MODAL & FORM
@@ -3111,7 +3787,7 @@ function exportLaboratoryJson() {
   const data = {
     metadata: {
       institution: "Mohan Babu University",
-      lab: "Data Science Digital Lab Library",
+      lab: "Data Science Digital Library",
       department: "Department of Data Science",
       motto: "Dream. Believe. Achieve.",
       exportedAt: new Date().toISOString(),
@@ -3190,12 +3866,25 @@ document.addEventListener('DOMContentLoaded', () => {
   updateMasteryHUD();
   initFloatingCyberDock({
     onOpenScratchpad: () => {
+      if (activeView === 'workspace') {
+        const editor = document.getElementById('workspaceCodeEditor');
+        if (editor) {
+          editor.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          editor.focus();
+          return;
+        }
+      }
       switchView('grid');
       switchMainTab('tools');
       setTimeout(() => {
         const scratchBtn = document.querySelector('[data-tool="scratchpad"]');
         if (scratchBtn) scratchBtn.click();
-      }, 50);
+        const scratchEditor = document.getElementById('scratchpadEditor');
+        if (scratchEditor) {
+          scratchEditor.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          scratchEditor.focus();
+        }
+      }, 60);
     }
   });
   renderProfile();
@@ -3203,6 +3892,7 @@ document.addEventListener('DOMContentLoaded', () => {
   renderModules();
   init3DCardTilt();
   initCursorSpotlight();
+  switchMainTab(activeMainTab || 'homepage');
 
   document.getElementById('celebrateMasteryBtn')?.addEventListener('click', () => {
     triggerMasteryCelebration();
@@ -3369,6 +4059,21 @@ document.addEventListener('DOMContentLoaded', () => {
   // Workspace buttons
   document.getElementById('executeCodeBtn')?.addEventListener('click', executeVirtualKernel);
   document.getElementById('copyCodeBtn')?.addEventListener('click', copyCodeToClipboard);
+
+  // Workspace Layout Switcher (Side-by-Side Split vs Stacked View)
+  const toggleLayoutBtn = document.getElementById('toggleIdeLayoutBtn');
+  const ideGrid = document.querySelector('.split-ide-grid');
+  toggleLayoutBtn?.addEventListener('click', () => {
+    if (ideGrid) {
+      const isStacked = ideGrid.classList.toggle('stacked-layout');
+      const icon = document.getElementById('layoutToggleIcon');
+      const text = document.getElementById('layoutToggleText');
+      if (icon) icon.setAttribute('data-lucide', isStacked ? 'rows-2' : 'columns-2');
+      if (text) text.textContent = isStacked ? 'Stacked' : 'Split';
+      if (window.lucide) lucide.createIcons();
+      showToast(isStacked ? "Switched to Full-Width Stacked Layout" : "Switched to Side-by-Side Split Layout");
+    }
+  });
 
   // ==========================================
   // VIVA VOCE & ACADEMIC PREPARATION ENGINE
@@ -3658,6 +4363,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // Global Keyboard Shortcuts
   window.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') {
+      document.body.classList.remove('sidebar-mobile-open');
       closeLabRecordModal();
       closeAiExplainerModal();
       closeShortcutsModal();
@@ -3690,6 +4396,10 @@ document.addEventListener('DOMContentLoaded', () => {
         openLabRecordModal();
       }
     }
+    if ((e.ctrlKey || e.metaKey) && e.key === '\\') {
+      e.preventDefault();
+      document.getElementById('sidebarCollapseBtn')?.click();
+    }
     if (e.key === '?' && !['INPUT', 'TEXTAREA'].includes(document.activeElement?.tagName)) {
       e.preventDefault();
       openShortcutsModal();
@@ -3705,9 +4415,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // Modal triggers: Add Experiment
-  document.getElementById('openAddExperimentModalBtn')?.addEventListener('click', () => openAddExperimentModal());
-  document.getElementById('emptyStateAddBtn')?.addEventListener('click', () => openAddExperimentModal());
+  // Modal triggers: Add Experiment (Removed per user request)
   document.getElementById('closeAddExpModalBtn')?.addEventListener('click', closeAddExperimentModal);
   document.getElementById('cancelAddExpBtn')?.addEventListener('click', closeAddExperimentModal);
   document.getElementById('experimentForm')?.addEventListener('submit', handleExperimentFormSubmit);
@@ -3768,11 +4476,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
   document.getElementById('closeProfilePortfolioModalBtn')?.addEventListener('click', closePortfolioModal);
   document.getElementById('closePortfolioModalBottomBtn')?.addEventListener('click', closePortfolioModal);
-  
-  document.getElementById('editFromPortfolioBtn')?.addEventListener('click', () => {
-    closePortfolioModal();
-    openProfileModal();
-  });
 
   document.getElementById('copyGithubLinkBtn')?.addEventListener('click', () => {
     navigator.clipboard.writeText(profile.githubUrl || 'https://github.com/pradyumna-devi').then(() => {
@@ -3780,9 +4483,9 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  document.getElementById('copyLinkedinLinkBtn')?.addEventListener('click', () => {
-    navigator.clipboard.writeText(profile.linkedinUrl || 'https://linkedin.com/in/pradyumna-devi').then(() => {
-      showToast("LinkedIn URL copied to clipboard!");
+  document.getElementById('copyLeetcodeLinkBtn')?.addEventListener('click', () => {
+    navigator.clipboard.writeText(profile.leetcodeUrl || 'https://leetcode.com/pradyumna_devi').then(() => {
+      showToast("LeetCode URL copied to clipboard!");
     });
   });
 
@@ -3794,10 +4497,6 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('downloadResumeBtn')?.addEventListener('click', downloadAcademicResume);
   document.getElementById('downloadResumeFromViewerBtn')?.addEventListener('click', downloadAcademicResume);
   document.getElementById('printResumeBtn')?.addEventListener('click', () => window.print());
-  document.getElementById('editProfileFromResumeBtn')?.addEventListener('click', () => {
-    closeResumeViewerModal();
-    openProfileModal();
-  });
 
   document.getElementById('uploadPortfolioResumeInput')?.addEventListener('change', (e) => {
     const file = e.target.files[0];
@@ -3832,11 +4531,150 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   // ==========================================
-  // HOMEPAGE MAIN TABS (MODULES | LAB EXPERIMENTS | TOOLS)
+  // PRIMARY PORTAL NAVIGATION TABS (6 OPTIONS)
   // ==========================================
+  document.getElementById('mainTabHome')?.addEventListener('click', () => switchMainTab('homepage'));
   document.getElementById('mainTabModules')?.addEventListener('click', () => switchMainTab('modules'));
-  document.getElementById('mainTabExperiments')?.addEventListener('click', () => switchMainTab('experiments'));
+  document.getElementById('mainTabExperiments')?.addEventListener('click', () => switchMainTab('lab'));
   document.getElementById('mainTabTools')?.addEventListener('click', () => switchMainTab('tools'));
+  document.getElementById('mainTabResources')?.addEventListener('click', () => switchMainTab('resources'));
+  document.getElementById('mainTabProjects')?.addEventListener('click', () => switchMainTab('projects'));
+
+  // ==========================================
+  // SIDEBAR SYSTEM: 6 OPTIONS, COLLAPSE & DRAWER
+  // ==========================================
+  function closeMobileSidebar() {
+    document.body.classList.remove('sidebar-mobile-open');
+  }
+
+  function toggleSidebarCollapse() {
+    const isCollapsed = document.body.classList.toggle('sidebar-collapsed');
+    try {
+      localStorage.setItem('mbu_sidebar_collapsed', isCollapsed ? '1' : '0');
+    } catch (e) {}
+    playSound('click');
+    showToast(isCollapsed ? "Sidebar collapsed into compact icon rail" : "Sidebar expanded");
+    lucide.createIcons();
+  }
+
+  // Restore saved sidebar collapse preference
+  try {
+    if (localStorage.getItem('mbu_sidebar_collapsed') === '1') {
+      document.body.classList.add('sidebar-collapsed');
+    }
+  } catch (e) {}
+
+  // Sidebar collapse toggle button
+  document.getElementById('sidebarCollapseBtn')?.addEventListener('click', (e) => {
+    e.stopPropagation();
+    toggleSidebarCollapse();
+  });
+
+  // Sidebar toggle from header (works seamlessly on desktop & mobile)
+  document.getElementById('sidebarMobileToggleBtn')?.addEventListener('click', (e) => {
+    e.stopPropagation();
+    if (window.innerWidth <= 992) {
+      document.body.classList.toggle('sidebar-mobile-open');
+    } else {
+      toggleSidebarCollapse();
+    }
+    playSound('click');
+  });
+
+  // Backdrop click closes mobile drawer
+  document.getElementById('sidebarBackdrop')?.addEventListener('click', closeMobileSidebar);
+
+  // Sidebar Brand Link (return to homepage)
+  document.getElementById('sidebarBrandHomeBtn')?.addEventListener('click', () => {
+    if (activeView !== 'grid') switchView('grid');
+    switchMainTab('homepage');
+    closeMobileSidebar();
+  });
+
+  // Sidebar Nav Items (all 6 options: Homepage, Modules, Lab, Tools, Resources, Projects)
+  document.querySelectorAll('.sidebar-nav-item').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const tab = btn.dataset.tab;
+      if (tab) {
+        if (activeView !== 'grid') switchView('grid');
+        switchMainTab(tab);
+        playSound('click');
+        closeMobileSidebar();
+      }
+    });
+  });
+
+  // Sidebar Core Experiments Quick Shortcuts (Exp 6, 7, 8, 9, 10)
+  document.querySelectorAll('[data-quick-exp]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const expId = btn.dataset.quickExp;
+      switchView('overview', expId);
+      playSound('click');
+      closeMobileSidebar();
+      showToast(`Opened Experiment ${expId.replace('exp-', '')} workspace`);
+    });
+  });
+
+  // Sidebar Quick Tools Mini Cards
+  document.getElementById('sidebarToolReplBtn')?.addEventListener('click', () => {
+    if (activeView !== 'grid') switchView('grid');
+    switchMainTab('tools');
+    setTimeout(() => {
+      document.querySelector('[data-tool="scratchpad"]')?.click();
+    }, 50);
+    closeMobileSidebar();
+  });
+
+  document.getElementById('sidebarToolCsvBtn')?.addEventListener('click', () => {
+    if (activeView !== 'grid') switchView('grid');
+    switchMainTab('tools');
+    setTimeout(() => {
+      document.querySelector('[data-tool="dataset"]')?.click();
+    }, 50);
+    closeMobileSidebar();
+  });
+
+  document.getElementById('sidebarToolCalcBtn')?.addEventListener('click', () => {
+    if (activeView !== 'grid') switchView('grid');
+    switchMainTab('tools');
+    setTimeout(() => {
+      document.querySelector('[data-tool="metrics"]')?.click();
+    }, 50);
+    closeMobileSidebar();
+  });
+
+  document.getElementById('sidebarToolCheatsheetsBtn')?.addEventListener('click', () => {
+    if (activeView !== 'grid') switchView('grid');
+    switchMainTab('tools');
+    setTimeout(() => {
+      document.querySelector('[data-tool="cheatsheets"]')?.click();
+    }, 50);
+    closeMobileSidebar();
+  });
+
+  // Sidebar Student Card & Portfolio Quick Open
+  document.getElementById('sidebarStudentCard')?.addEventListener('click', () => {
+    openPortfolioModal();
+    closeMobileSidebar();
+  });
+  document.getElementById('sidebarPortfolioQuickBtn')?.addEventListener('click', (e) => {
+    e.stopPropagation();
+    openPortfolioModal();
+    closeMobileSidebar();
+  });
+  document.getElementById('openSubmitProjectModalBtn')?.addEventListener('click', openSubmitProjectModal);
+  document.getElementById('closeSubmitProjectModalBtn')?.addEventListener('click', closeSubmitProjectModal);
+  document.getElementById('cancelSubmitProjectBtn')?.addEventListener('click', closeSubmitProjectModal);
+  document.getElementById('submitProjectForm')?.addEventListener('submit', handleProjectFormSubmit);
+  document.getElementById('closeProjectDetailsModalBtn')?.addEventListener('click', closeProjectDetailsModal);
+  document.getElementById('resetProjectsBtn')?.addEventListener('click', () => {
+    if (confirm("Reset projects to official MBU capstones?")) {
+      projects = JSON.parse(JSON.stringify(INITIAL_PROJECTS));
+      saveProjects();
+      renderProjects();
+      showToast("Reset projects to default capstones!");
+    }
+  });
 
   // ==========================================
   // INTERACTIVE CODE EDITOR CONTROLS & SHORTCUTS
@@ -4055,12 +4893,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
   document.getElementById('evaluateAdfBtn')?.addEventListener('click', evaluateAdfStationarity);
 
-  // Profile modal submission
-  document.getElementById('editProfileTriggerBtn')?.addEventListener('click', (e) => {
-    e.stopPropagation();
-    openProfileModal();
+  // Profile card widget click: Opens Student Portfolio & Academic Credentials
+  document.getElementById('profileCardWidget')?.addEventListener('click', () => {
+    openPortfolioModal();
   });
-  document.getElementById('profileCardWidget')?.addEventListener('click', openProfileModal);
   document.getElementById('closeProfileModalBtn')?.addEventListener('click', closeProfileModal);
   document.getElementById('cancelProfileBtn')?.addEventListener('click', closeProfileModal);
   document.getElementById('profileForm')?.addEventListener('submit', (e) => {
@@ -4092,8 +4928,6 @@ document.addEventListener('DOMContentLoaded', () => {
   // ==========================================
   // MODULES CRUD & PDF ATTACHMENTS LISTENERS
   // ==========================================
-  document.getElementById('openAddModuleModalBtn')?.addEventListener('click', () => openModuleModal());
-  document.getElementById('headerAddModuleBtn')?.addEventListener('click', () => openModuleModal());
   document.getElementById('resetModulesBtn')?.addEventListener('click', resetModulesToDefaults);
   document.getElementById('closeModuleFormModalBtn')?.addEventListener('click', closeModuleModal);
   document.getElementById('cancelModuleFormBtn')?.addEventListener('click', closeModuleModal);
