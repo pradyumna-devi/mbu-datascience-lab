@@ -4,12 +4,12 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/png" href="/mbu-logo.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Data Science Digital Library | Interactive Computational Laboratory &amp; Virtual Kernel</title>
+    <title>NEURAL LAB | MBU Data Science Digital Library &amp; Computational Research Studio</title>
     
-    <!-- Modern Google Fonts -->
+    <!-- Modern Google Fonts: Inter, Space Grotesk, Outfit, Plus Jakarta Sans, JetBrains Mono -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com">
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&family=Outfit:wght@300;400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
     
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
@@ -37,6 +37,9 @@
     <!-- Subtle Cybernetic Laboratory Grid Background -->
     <div class="cyber-bg-grid" aria-hidden="true"></div>
 
+    <!-- Desktop Cursor-Following Ambient Light Glow -->
+    <div class="cursor-ambient-glow" aria-hidden="true"></div>
+
     <!-- Backdrop for mobile sidebar drawer -->
     <div class="sidebar-backdrop" id="sidebarBackdrop" title="Close sidebar navigation"></div>
 
@@ -55,7 +58,7 @@
           </div>
           <div class="sidebar-brand-text">
             <span class="sidebar-brand-eyebrow">MOHAN BABU UNIV</span>
-            <span class="sidebar-brand-title">Digital Library</span>
+            <span class="sidebar-brand-title">NEURAL LAB</span>
           </div>
         </div>
         <button class="sidebar-toggle-btn" id="sidebarCollapseBtn" title="Collapse / Expand Sidebar (Ctrl+\)" type="button" aria-label="Collapse sidebar">
@@ -156,29 +159,39 @@
             <span class="sidebar-group-tag">Curriculum</span>
           </div>
           <div class="sidebar-quick-exps-list">
-            <button class="sidebar-sub-item" data-quick-exp="exp-6" type="button" title="Launch Exp 6: NumPy & Multi-Dimensional Array Operations">
+            <button class="sidebar-sub-item" data-quick-exp="exp-4" type="button" title="Launch Exp 4: Data Wrangling &amp; Hierarchical Indexing">
+              <span class="sidebar-sub-num">04</span>
+              <span class="sidebar-sub-label">Data Wrangling</span>
+              <i data-lucide="arrow-up-right" class="sub-arrow"></i>
+            </button>
+            <button class="sidebar-sub-item" data-quick-exp="exp-5" type="button" title="Launch Exp 5: Data Visualization with Matplotlib &amp; Seaborn">
+              <span class="sidebar-sub-num">05</span>
+              <span class="sidebar-sub-label">Data Visualization</span>
+              <i data-lucide="arrow-up-right" class="sub-arrow"></i>
+            </button>
+            <button class="sidebar-sub-item" data-quick-exp="exp-6" type="button" title="Launch Exp 6: Time Series Analysis">
               <span class="sidebar-sub-num">06</span>
-              <span class="sidebar-sub-label">NumPy &amp; Multi-D Arrays</span>
+              <span class="sidebar-sub-label">Time Series Analysis</span>
               <i data-lucide="arrow-up-right" class="sub-arrow"></i>
             </button>
-            <button class="sidebar-sub-item" data-quick-exp="exp-7" type="button" title="Launch Exp 7: Automated Web Scraping & Tabular Extraction">
+            <button class="sidebar-sub-item" data-quick-exp="exp-7" type="button" title="Launch Exp 7: Data Aggregation &amp; Group Operations">
               <span class="sidebar-sub-num">07</span>
-              <span class="sidebar-sub-label">Web Scraping &amp; Extraction</span>
+              <span class="sidebar-sub-label">Data Aggregation</span>
               <i data-lucide="arrow-up-right" class="sub-arrow"></i>
             </button>
-            <button class="sidebar-sub-item" data-quick-exp="exp-8" type="button" title="Launch Exp 8: Data Wrangling, Cleaning & Multi-Indexing">
+            <button class="sidebar-sub-item" data-quick-exp="exp-8" type="button" title="Launch Exp 8: Web Scraping using Beautiful Soup &amp; Text Analytics">
               <span class="sidebar-sub-num">08</span>
-              <span class="sidebar-sub-label">Data Wrangling &amp; Cleaning</span>
+              <span class="sidebar-sub-label">Web Scraping &amp; Text Analytics</span>
               <i data-lucide="arrow-up-right" class="sub-arrow"></i>
             </button>
-            <button class="sidebar-sub-item" data-quick-exp="exp-9" type="button" title="Launch Exp 9: Exploratory Visualization & Multi-Panel Subplots">
+            <button class="sidebar-sub-item" data-quick-exp="exp-9" type="button" title="Launch Exp 9: Case Study: Customer Personality Analysis">
               <span class="sidebar-sub-num">09</span>
-              <span class="sidebar-sub-label">Exploratory Visualizations</span>
+              <span class="sidebar-sub-label">Customer Personality</span>
               <i data-lucide="arrow-up-right" class="sub-arrow"></i>
             </button>
-            <button class="sidebar-sub-item" data-quick-exp="exp-10" type="button" title="Launch Exp 10: Time Series Analysis & ARIMA Forecasting">
+            <button class="sidebar-sub-item" data-quick-exp="exp-10" type="button" title="Launch Exp 10: Case Study: Text Emotion Detection">
               <span class="sidebar-sub-num">10</span>
-              <span class="sidebar-sub-label">Time Series &amp; ARIMA Models</span>
+              <span class="sidebar-sub-label">Text Emotion Detection</span>
               <i data-lucide="arrow-up-right" class="sub-arrow"></i>
             </button>
           </div>
@@ -226,7 +239,7 @@
         <!-- Student Mini Profile Card -->
         <div class="sidebar-student-card" id="sidebarStudentCard" title="View Student Portfolio & Academic Credentials">
           <div class="sidebar-student-avatar">
-            <img src="./student-profile.jpg" alt="Student Avatar" id="sidebarStudentAvatarImg" />
+            <img src="/student-profile.jpg" onerror="if(window.__STUDENT_AVATAR_B64)this.src=window.__STUDENT_AVATAR_B64;" alt="Student Avatar" id="sidebarStudentAvatarImg" />
             <span class="sidebar-online-dot"></span>
           </div>
           <div class="sidebar-student-meta">
@@ -264,11 +277,11 @@
               </div>
               <div class="brand-meta-group">
                 <div class="portal-eyebrow-tag">
-                  <span class="eyebrow-accent">COMPUTATIONAL ENVIRONMENT</span>
+                  <span class="eyebrow-accent"><i data-lucide="brain-circuit" style="width: 12px; height: 12px; display: inline-block; vertical-align: -1px; margin-right: 3px;"></i>NEURAL LAB</span>
                   <span class="eyebrow-divider">&bull;</span>
-                  <span class="eyebrow-affil">Interactive Computational Studio</span>
+                  <span class="eyebrow-affil">MOHAN BABU UNIVERSITY &bull; COMPUTATIONAL ENVIRONMENT</span>
                 </div>
-                <h1 class="portal-title"><span class="ds-brand-highlight">DATA SCIENCE</span> <span class="ds-title-sub">DIGITAL LIBRARY</span></h1>
+                <h1 class="portal-title"><span class="ds-brand-highlight">NEURAL LAB</span> <span class="ds-title-sub">DATA SCIENCE LIBRARY</span></h1>
                 <div class="brand-status-chip" id="navbarKernelStatusChip" title="Python 3.12 WebAssembly Virtual Kernel">
                   <span class="status-pulse-dot" id="kernelStatusDot"></span>
                   <span id="kernelStatusText">Python 3.12 WASM Engine &bull; Active</span>
@@ -286,13 +299,14 @@
                 <div class="profile-card" id="profileCardWidget" title="View Student Portfolio, Resume &amp; Academic Credentials">
                   <div class="profile-badge-header">
                     <div class="avatar-container" id="avatarContainer">
-                      <img id="userAvatarImg" src="./student-profile.jpg" alt="M. Pradyumna Devi" />
+                      <img id="userAvatarImg" src="/student-profile.jpg" onerror="if(window.__STUDENT_AVATAR_B64)this.src=window.__STUDENT_AVATAR_B64;" alt="M. Pradyumna Devi" />
                       <span class="status-indicator-dot" title="Kernel Connected"></span>
                     </div>
 
                     <div class="profile-main-meta">
                       <div class="profile-name-row">
                         <span class="profile-name" id="profileNameDisplay">M. Pradyumna Devi</span>
+                        <span class="verified-scholar-chip" title="Verified Data Science Scholar"><i data-lucide="badge-check"></i></span>
                       </div>
                       <div class="profile-chip" id="profileIdDisplay">Roll: 24102A030078</div>
                     </div>
@@ -418,17 +432,26 @@
         <section class="view-panel active" id="homepageOverviewView">
           <!-- Hero Section -->
           <div class="homepage-hero-card">
+            <!-- Decorative Neural Coordinate & Analytical Grid Accents -->
+            <div class="hero-coord-badge top-left">COORD [13.6288° N, 79.4192° E] &bull; NODE #01</div>
+            <div class="hero-coord-badge top-right">SYSTEM: WASM-AST-v3.12 &bull; 64-BIT COMPUTE</div>
+
             <div class="hero-left-col">
               <div class="hero-eyebrow">
                 <span class="badge-portal-school"><i data-lucide="graduation-cap"></i> MOHAN BABU UNIVERSITY</span>
-                <span class="badge-portal-dept"><i data-lucide="binary"></i> DEPARTMENT OF DATA SCIENCE</span>
+                <span class="badge-portal-dept"><i data-lucide="brain-circuit"></i> B.TECH DATA SCIENCE &amp; AI</span>
+                <span class="badge-portal-vision"><span class="pulse-beacon-dot"></span> LIVE WASM KERNEL</span>
               </div>
-              <h2 class="hero-main-title">
-                Interactive Computational <span class="text-gradient-cyan">Data Science Digital Library</span> &amp; Research Portal
-              </h2>
+              <h1 class="hero-main-title">
+                DATA SCIENCE <span class="text-gradient-cyan">SUBJECT LAB &amp; DIGITAL LIBRARY</span>
+              </h1>
+              <div class="hero-tagline-sub" style="font-family: 'Space Grotesk', sans-serif; font-size: 13.5px; font-weight: 600; color: #42E8F5; margin-bottom: 10px; letter-spacing: 0.3px;">
+                MBU Department of Data Science &bull; Academic Laboratory Coursework &amp; Research Workspace
+              </div>
               <p class="hero-description">
-                A browser-native computational research studio powered by client-side <strong>Python 3.12 WebAssembly</strong>. Master multi-dimensional matrix operations, automated web extraction, statistical wrangling, exploratory data visualizations, and temporal analytics with zero latency.
+                Interactive computational environment for executing university data science practical experiments, generating official lab record observation sheets, and mastering curriculum syllabus tracks in client-side Python 3.12 WebAssembly.
               </p>
+
               <div class="hero-cta-group">
                 <button class="btn-hero-primary" id="heroExploreLabBtn">
                   <i data-lucide="flask-conical"></i>
@@ -439,18 +462,13 @@
                   <i data-lucide="terminal"></i>
                   <span>Launch Python REPL</span>
                 </button>
-                <button class="btn-hero-ghost" id="heroViewModulesBtn">
-                  <i data-lucide="layers"></i>
-                  <span>Modules</span>
-                </button>
-                <button class="btn-hero-ghost" id="heroViewResourcesBtn">
-                  <i data-lucide="book-marked"></i>
-                  <span>Resources</span>
-                </button>
-                <button class="btn-hero-ghost" id="heroViewProjectsBtn">
-                  <i data-lucide="folder-git-2"></i>
-                  <span>Projects</span>
-                </button>
+              </div>
+
+              <div class="hero-quick-shortcuts">
+                <span class="shortcuts-label">COURSE TRACKS:</span>
+                <button class="hero-quick-chip" id="heroViewModulesBtn" type="button"><i data-lucide="layers" style="width: 12px; height: 12px; display: inline-block; vertical-align: middle;"></i> Syllabus Modules</button>
+                <button class="hero-quick-chip" id="heroViewResourcesBtn" type="button"><i data-lucide="database" style="width: 12px; height: 12px; display: inline-block; vertical-align: middle;"></i> Datasets</button>
+                <button class="hero-quick-chip" id="heroViewProjectsBtn" type="button"><i data-lucide="folder-git-2" style="width: 12px; height: 12px; display: inline-block; vertical-align: middle;"></i> Projects</button>
               </div>
             </div>
 
@@ -459,10 +477,114 @@
                 <div class="telemetry-card-header">
                   <div class="pulse-indicator-badge">
                     <span class="live-dot-green"></span>
-                    <span>Virtual Kernel Telemetry</span>
+                    <span>Neural Tensor Topology</span>
                   </div>
                   <span class="runtime-badge-code">CPython 3.12 WASM</span>
                 </div>
+
+                <!-- Refined Technical Neural Network Visualization -->
+                <div class="neural-viz-container" title="Connected Neural Data Nodes & Real-Time WASM Synaptic Streams">
+                  <svg class="neural-network-svg" viewBox="0 0 380 140" preserveAspectRatio="xMidYMid meet">
+                    <defs>
+                      <linearGradient id="synapseCyanGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stop-color="#42D9F5" stop-opacity="0.8"/>
+                        <stop offset="100%" stop-color="#8B7CFF" stop-opacity="0.3"/>
+                      </linearGradient>
+                      <linearGradient id="synapseVioletGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stop-color="#8B7CFF" stop-opacity="0.8"/>
+                        <stop offset="100%" stop-color="#42D9F5" stop-opacity="0.2"/>
+                      </linearGradient>
+                      <filter id="nodeGlow" x="-30%" y="-30%" width="160%" height="160%">
+                        <feGaussianBlur stdDeviation="3" result="blur" />
+                        <feComposite in="SourceGraphic" in2="blur" operator="over" />
+                      </filter>
+                    </defs>
+
+                    <!-- Synaptic Connection Vectors (Layer 1 to Layer 2 to Output) -->
+                    <g class="synapse-group" stroke-width="1.2">
+                      <line x1="45" y1="30" x2="145" y2="25" stroke="url(#synapseCyanGrad)" opacity="0.6" stroke-dasharray="3,3" />
+                      <line x1="45" y1="30" x2="145" y2="60" stroke="url(#synapseCyanGrad)" opacity="0.4" />
+                      <line x1="45" y1="30" x2="145" y2="95" stroke="url(#synapseCyanGrad)" opacity="0.3" />
+                      <line x1="45" y1="70" x2="145" y2="25" stroke="url(#synapseCyanGrad)" opacity="0.5" />
+                      <line x1="45" y1="70" x2="145" y2="60" stroke="url(#synapseCyanGrad)" opacity="0.8" />
+                      <line x1="45" y1="70" x2="145" y2="95" stroke="url(#synapseCyanGrad)" opacity="0.5" />
+                      <line x1="45" y1="70" x2="145" y2="125" stroke="url(#synapseCyanGrad)" opacity="0.4" />
+                      <line x1="45" y1="110" x2="145" y2="60" stroke="url(#synapseCyanGrad)" opacity="0.4" />
+                      <line x1="45" y1="110" x2="145" y2="95" stroke="url(#synapseCyanGrad)" opacity="0.7" />
+                      <line x1="45" y1="110" x2="145" y2="125" stroke="url(#synapseCyanGrad)" opacity="0.6" stroke-dasharray="3,3" />
+
+                      <line x1="145" y1="25" x2="245" y2="38" stroke="url(#synapseVioletGrad)" opacity="0.6" />
+                      <line x1="145" y1="25" x2="245" y2="72" stroke="url(#synapseVioletGrad)" opacity="0.4" />
+                      <line x1="145" y1="60" x2="245" y2="38" stroke="url(#synapseVioletGrad)" opacity="0.7" />
+                      <line x1="145" y1="60" x2="245" y2="72" stroke="url(#synapseVioletGrad)" opacity="0.8" />
+                      <line x1="145" y1="60" x2="245" y2="108" stroke="url(#synapseVioletGrad)" opacity="0.4" />
+                      <line x1="145" y1="95" x2="245" y2="72" stroke="url(#synapseVioletGrad)" opacity="0.7" />
+                      <line x1="145" y1="95" x2="245" y2="108" stroke="url(#synapseVioletGrad)" opacity="0.8" />
+                      <line x1="145" y1="125" x2="245" y2="108" stroke="url(#synapseVioletGrad)" opacity="0.6" />
+
+                      <line x1="245" y1="38" x2="335" y2="70" stroke="#42D9F5" opacity="0.65" />
+                      <line x1="245" y1="72" x2="335" y2="70" stroke="#42D9F5" opacity="0.95" stroke-width="1.8" />
+                      <line x1="245" y1="108" x2="335" y2="70" stroke="#42D9F5" opacity="0.65" />
+                    </g>
+
+                    <!-- Input Layer Nodes -->
+                    <g class="nodes-input">
+                      <circle cx="45" cy="30" r="7" fill="#0D1424" stroke="#42D9F5" stroke-width="2" filter="url(#nodeGlow)" />
+                      <circle cx="45" cy="30" r="3" fill="#42D9F5" />
+                      <text x="45" y="16" fill="#A1AEC2" font-size="9" font-family="'JetBrains Mono', monospace" text-anchor="middle">x₁</text>
+
+                      <circle cx="45" cy="70" r="7" fill="#0D1424" stroke="#42D9F5" stroke-width="2" filter="url(#nodeGlow)" />
+                      <circle cx="45" cy="70" r="3" fill="#42D9F5" />
+                      <text x="45" y="56" fill="#A1AEC2" font-size="9" font-family="'JetBrains Mono', monospace" text-anchor="middle">x₂</text>
+
+                      <circle cx="45" cy="110" r="7" fill="#0D1424" stroke="#42D9F5" stroke-width="2" filter="url(#nodeGlow)" />
+                      <circle cx="45" cy="110" r="3" fill="#42D9F5" />
+                      <text x="45" y="96" fill="#A1AEC2" font-size="9" font-family="'JetBrains Mono', monospace" text-anchor="middle">x₃</text>
+                    </g>
+
+                    <!-- Hidden Layer 1 Nodes -->
+                    <g class="nodes-hidden-1">
+                      <circle cx="145" cy="25" r="7" fill="#0D1424" stroke="#8B7CFF" stroke-width="2" filter="url(#nodeGlow)" />
+                      <circle cx="145" cy="25" r="3" fill="#8B7CFF" />
+                      <circle cx="145" cy="60" r="8" fill="#0D1424" stroke="#8B7CFF" stroke-width="2.2" filter="url(#nodeGlow)" />
+                      <circle cx="145" cy="60" r="3.5" fill="#8B7CFF" />
+                      <circle cx="145" cy="95" r="7" fill="#0D1424" stroke="#8B7CFF" stroke-width="2" filter="url(#nodeGlow)" />
+                      <circle cx="145" cy="95" r="3" fill="#8B7CFF" />
+                      <circle cx="145" cy="125" r="6" fill="#0D1424" stroke="#8B7CFF" stroke-width="1.8" />
+                      <circle cx="145" cy="125" r="2.5" fill="#8B7CFF" />
+                    </g>
+
+                    <!-- Hidden Layer 2 Nodes -->
+                    <g class="nodes-hidden-2">
+                      <circle cx="245" cy="38" r="7.5" fill="#0D1424" stroke="#6366F1" stroke-width="2" filter="url(#nodeGlow)" />
+                      <circle cx="245" cy="38" r="3.5" fill="#6366F1" />
+                      <circle cx="245" cy="72" r="8.5" fill="#0D1424" stroke="#42D9F5" stroke-width="2.5" filter="url(#nodeGlow)" />
+                      <circle cx="245" cy="72" r="4" fill="#42D9F5" />
+                      <circle cx="245" cy="108" r="7.5" fill="#0D1424" stroke="#6366F1" stroke-width="2" filter="url(#nodeGlow)" />
+                      <circle cx="245" cy="108" r="3.5" fill="#6366F1" />
+                    </g>
+
+                    <!-- Output Node (ŷ) -->
+                    <g class="nodes-output">
+                      <circle cx="335" cy="70" r="10" fill="#0D1424" stroke="#42D9F5" stroke-width="2.5" filter="url(#nodeGlow)" />
+                      <circle cx="335" cy="70" r="4.5" fill="#42D9F5" />
+                      <text x="335" y="96" fill="#42D9F5" font-size="10" font-weight="bold" font-family="'JetBrains Mono', monospace" text-anchor="middle">ŷ (Infer)</text>
+                    </g>
+
+                    <!-- Active Dynamic Synaptic Particle Bursts -->
+                    <circle cx="85" cy="42" r="2" fill="#42D9F5" class="neural-pulse-particle particle-1" />
+                    <circle cx="195" cy="55" r="2" fill="#8B7CFF" class="neural-pulse-particle particle-2" />
+                    <circle cx="290" cy="71" r="2.2" fill="#42D9F5" class="neural-pulse-particle particle-3" />
+                  </svg>
+
+                  <!-- Holographic Overlay Chips -->
+                  <div class="viz-overlay-telemetry">
+                    <span class="telemetry-chip">LATENCY: &lt; 2.4ms</span>
+                    <span class="telemetry-chip">WEIGHTS: 1,024-DIM</span>
+                    <span class="telemetry-chip">CONFIDENCE: 99.8%</span>
+                  </div>
+                </div>
+
                 <div class="hero-stats-grid">
                   <div class="hero-stat-box">
                     <div class="stat-number text-cyan">5</div>
@@ -470,34 +592,24 @@
                     <div class="stat-sub">19 Executable Scripts</div>
                   </div>
                   <div class="hero-stat-box">
-                    <div class="stat-number text-indigo">2</div>
-                    <div class="stat-label">Academic Modules</div>
-                    <div class="stat-sub">Syllabus PDF &amp; Study Deck</div>
+                    <div class="stat-number text-indigo">4</div>
+                    <div class="stat-label">Course Modules</div>
+                    <div class="stat-sub">Syllabus PDF &amp; Study Decks</div>
                   </div>
                   <div class="hero-stat-box">
                     <div class="stat-number text-emerald">4</div>
-                    <div class="stat-label">Developer Utilities</div>
+                    <div class="stat-label">Subject Tools</div>
                     <div class="stat-sub">REPL, CSV &amp; Calculators</div>
                   </div>
                   <div class="hero-stat-box">
-                    <div class="stat-number text-amber">1</div>
-                    <div class="stat-label">Automation Project</div>
-                    <div class="stat-sub">n8n Telegram Bot</div>
+                    <div class="stat-number text-amber">6+</div>
+                    <div class="stat-label">Benchmark Datasets</div>
+                    <div class="stat-sub">Iris, Titanic &amp; Time Series</div>
                   </div>
                 </div>
 
-                <div class="hero-student-meta-strip">
-                  <div class="student-avatar-mini">
-                    <img src="./student-profile.jpg" alt="Mudimela Pradyumna Devi" />
-                  </div>
-                  <div class="student-meta-info">
-                    <strong>Mudimela Pradyumna Devi</strong>
-                    <span>Roll: 24102A030078 &bull; CGPA: 9.76/10.0</span>
-                  </div>
-                  <button class="btn-mini-profile-jump" id="heroOpenProfileBtn" title="View Student Portfolio">
-                    <i data-lucide="user-check"></i>
-                  </button>
-                </div>
+                <!-- Preserved button for script event listener compatibility -->
+                <button id="heroOpenProfileBtn" style="display: none;" aria-hidden="true"></button>
               </div>
             </div>
           </div>
@@ -505,109 +617,109 @@
           <!-- Section: 5 Pillars Directory Cards -->
           <div class="homepage-section-header">
             <div>
-              <h3 class="homepage-section-title"><i data-lucide="compass" class="text-cyan"></i> Digital Library Ecosystem Navigation</h3>
-              <p class="homepage-section-sub">Explore the comprehensive features of the Data Science Digital Library portal.</p>
+              <h3 class="homepage-section-title"><i data-lucide="graduation-cap" class="text-cyan"></i> Academic Curriculum &amp; Laboratory Divisions</h3>
+              <p class="homepage-section-sub">Coursework curriculum units, practical laboratory experiments, benchmark datasets, and examination resources.</p>
             </div>
           </div>
 
           <div class="homepage-pillars-grid">
             <!-- Pillar 1: Modules -->
             <div class="pillar-card pillar-modules" data-jump-tab="modules">
+              <div class="pillar-watermark">01</div>
               <div class="pillar-icon-wrap">
                 <i data-lucide="layers"></i>
               </div>
               <div class="pillar-content">
-                <div class="pillar-eyebrow">CURRICULUM &amp; SYLLABUS</div>
-                <h4 class="pillar-title">Academic Modules</h4>
-                <p class="pillar-desc">Core syllabus tracks across Vector Calculus, Exploratory Data Wrangling, and Statistical Thinking with dynamic PDF generation and study flipcards.</p>
+                <div class="pillar-eyebrow">DIVISION 01 // SYLLABUS &amp; CURRICULUM</div>
+                <h4 class="pillar-title">Academic Modules &amp; Syllabus</h4>
+                <p class="pillar-desc">Core coursework tracks across Vector Calculus and Exploratory Data Analysis with syllabus PDF downloads.</p>
                 <div class="pillar-badges">
-                  <span class="pillar-chip"><i data-lucide="book-open"></i> 2 Core Tracks</span>
+                  <span class="pillar-chip"><i data-lucide="book-open"></i> 4 Core Units</span>
                   <span class="pillar-chip"><i data-lucide="file-text"></i> PDF Manuals</span>
-                  <span class="pillar-chip"><i data-lucide="sparkles"></i> Study Decks</span>
                 </div>
               </div>
               <div class="pillar-action">
-                <span class="btn-pillar-link">Open Modules <i data-lucide="arrow-right"></i></span>
+                <span class="btn-pillar-link">Open Division <i data-lucide="arrow-right"></i></span>
               </div>
             </div>
 
             <!-- Pillar 2: Lab Experiments -->
             <div class="pillar-card pillar-lab" data-jump-tab="lab">
+              <div class="pillar-watermark">02</div>
               <div class="pillar-icon-wrap">
                 <i data-lucide="flask-conical"></i>
               </div>
               <div class="pillar-content">
-                <div class="pillar-eyebrow">INTERACTIVE PRACTICALS</div>
-                <h4 class="pillar-title">Lab Experiments</h4>
-                <p class="pillar-desc">Execute Experiments 6 through 10 in Python 3.12 WASM: Multi-dimensional array operations, web extraction, data imputation, and ADF tests.</p>
+                <div class="pillar-eyebrow">DIVISION 02 // LAB PRACTICALS</div>
+                <h4 class="pillar-title">Practical Lab Experiments</h4>
+                <p class="pillar-desc">Execute Experiments 6 through 10 with live Matplotlib plots, unit tests, and automated lab record sheets.</p>
                 <div class="pillar-badges">
                   <span class="pillar-chip"><i data-lucide="code-2"></i> 5 Labs (19 Tasks)</span>
-                  <span class="pillar-chip"><i data-lucide="line-chart"></i> Matplotlib Plots</span>
-                  <span class="pillar-chip"><i data-lucide="help-circle"></i> Viva Voce</span>
+                  <span class="pillar-chip"><i data-lucide="file-check"></i> Lab Records</span>
                 </div>
               </div>
               <div class="pillar-action">
-                <span class="btn-pillar-link">Launch Lab <i data-lucide="arrow-right"></i></span>
+                <span class="btn-pillar-link">Open Division <i data-lucide="arrow-right"></i></span>
               </div>
             </div>
 
             <!-- Pillar 3: Tools -->
             <div class="pillar-card pillar-tools" data-jump-tab="tools">
+              <div class="pillar-watermark">03</div>
               <div class="pillar-icon-wrap">
                 <i data-lucide="wrench"></i>
               </div>
               <div class="pillar-content">
-                <div class="pillar-eyebrow">DEVELOPER UTILITIES</div>
-                <h4 class="pillar-title">Data Science Tools</h4>
-                <p class="pillar-desc">Interactive Python REPL scratchpad with sample snippets, CSV Dataset Inspector with summary telemetry, and ML Metric Calculators.</p>
+                <div class="pillar-eyebrow">DIVISION 03 // SUBJECT TOOLS</div>
+                <h4 class="pillar-title">Laboratory Developer Utilities</h4>
+                <p class="pillar-desc">Interactive Python REPL scratchpad, CSV dataset profiler, and ML classification metric calculators.</p>
                 <div class="pillar-badges">
                   <span class="pillar-chip"><i data-lucide="terminal"></i> Python REPL</span>
-                  <span class="pillar-chip"><i data-lucide="file-spreadsheet"></i> CSV Inspector</span>
-                  <span class="pillar-chip"><i data-lucide="calculator"></i> Metric Calc</span>
+                  <span class="pillar-chip"><i data-lucide="file-spreadsheet"></i> CSV Profiler</span>
                 </div>
               </div>
               <div class="pillar-action">
-                <span class="btn-pillar-link">Open Tools <i data-lucide="arrow-right"></i></span>
+                <span class="btn-pillar-link">Open Division <i data-lucide="arrow-right"></i></span>
               </div>
             </div>
 
             <!-- Pillar 4: Resources -->
             <div class="pillar-card pillar-resources" data-jump-tab="resources">
+              <div class="pillar-watermark">04</div>
               <div class="pillar-icon-wrap">
                 <i data-lucide="book-marked"></i>
               </div>
               <div class="pillar-content">
-                <div class="pillar-eyebrow">KNOWLEDGE BASE</div>
-                <h4 class="pillar-title">Resources &amp; Datasets</h4>
-                <p class="pillar-desc">Benchmark datasets (Iris, Titanic, Equities, Wine), official documentation, recommended textbooks, and rapid-copy Python syntax snippets.</p>
+                <div class="pillar-eyebrow">DIVISION 04 // SUBJECT LIBRARY</div>
+                <h4 class="pillar-title">Datasets &amp; Knowledge Base</h4>
+                <p class="pillar-desc">Standard benchmark datasets (Iris, Titanic, Equities), official documentation, and academic textbooks.</p>
                 <div class="pillar-badges">
                   <span class="pillar-chip"><i data-lucide="database"></i> 6 Datasets</span>
-                  <span class="pillar-chip"><i data-lucide="globe"></i> Official Docs</span>
-                  <span class="pillar-chip"><i data-lucide="download"></i> Lab Manual</span>
+                  <span class="pillar-chip"><i data-lucide="book"></i> Textbooks</span>
                 </div>
               </div>
               <div class="pillar-action">
-                <span class="btn-pillar-link">Browse Resources <i data-lucide="arrow-right"></i></span>
+                <span class="btn-pillar-link">Open Division <i data-lucide="arrow-right"></i></span>
               </div>
             </div>
 
             <!-- Pillar 5: Projects -->
             <div class="pillar-card pillar-projects" data-jump-tab="projects">
+              <div class="pillar-watermark">05</div>
               <div class="pillar-icon-wrap">
                 <i data-lucide="folder-git-2"></i>
               </div>
               <div class="pillar-content">
-                <div class="pillar-eyebrow">RESEARCH &amp; CAPSTONES</div>
-                <h4 class="pillar-title">Capstone Projects</h4>
-                <p class="pillar-desc">Production-grade data science pipelines: Algorithmic stock trading, churn prediction, epidemiological curves, NLP sentiment mining, and AQI sensors.</p>
+                <div class="pillar-eyebrow">DIVISION 05 // APPLIED PROJECTS</div>
+                <h4 class="pillar-title">Capstone &amp; Automation Projects</h4>
+                <p class="pillar-desc">Autonomous data science pipelines, algorithmic trading models, and n8n Telegram automation bot.</p>
                 <div class="pillar-badges">
-                  <span class="pillar-chip"><i data-lucide="cpu"></i> 6 Ready Projects</span>
-                  <span class="pillar-chip"><i data-lucide="play"></i> 1-Click REPL Run</span>
-                  <span class="pillar-chip"><i data-lucide="plus-circle"></i> Submit Projects</span>
+                  <span class="pillar-chip"><i data-lucide="cpu"></i> Data Pipelines</span>
+                  <span class="pillar-chip"><i data-lucide="play"></i> 1-Click Run</span>
                 </div>
               </div>
               <div class="pillar-action">
-                <span class="btn-pillar-link">Explore Projects <i data-lucide="arrow-right"></i></span>
+                <span class="btn-pillar-link">Open Division <i data-lucide="arrow-right"></i></span>
               </div>
             </div>
           </div>
@@ -637,6 +749,16 @@
             <div>
               <h2 class="view-heading"><i data-lucide="flask-conical" class="text-cyan"></i> Data Science Laboratory Modules &amp; Code Notebooks</h2>
               <p class="view-subheading">Select any experiment to view library modules, or click sub-task letters (A, B, C, D) to jump directly into the laboratory workspace.</p>
+            </div>
+            <div class="header-search-wrap">
+              <div class="search-input-box">
+                <i data-lucide="search" class="search-icon"></i>
+                <input type="text" id="experimentSearchInput" placeholder="Filter experiments (Pandas, ADF, etc.)..." autocomplete="off" />
+                <button type="button" id="clearSearchBtn" class="clear-search-btn" style="display: none;" title="Clear search">&times;</button>
+              </div>
+              <button type="button" id="searchSubmitBtn" class="btn-search-submit" title="Search experiments">
+                <i data-lucide="arrow-right"></i>
+              </button>
             </div>
             <div class="active-query-indicator" id="activeQueryNotice" style="display: none;">
               Showing results for: <span id="activeQueryText"></span>
@@ -993,14 +1115,7 @@ Ready to execute scripts. Choose a template or write Python code on the left and
               <h2 class="view-heading"><i data-lucide="folder-git-2" class="text-emerald"></i> Data Science &amp; Automation Projects</h2>
               <p class="view-subheading">Event-driven workflows, Telegram automation bot, and computational pipelines.</p>
             </div>
-            <div class="projects-header-actions">
-              <button class="btn-primary" id="openSubmitProjectModalBtn">
-                <i data-lucide="plus-circle"></i> + Submit Project
-              </button>
-              <button class="btn-ghost-sm" id="resetProjectsBtn" title="Reset projects to official MBU defaults">
-                <i data-lucide="rotate-ccw"></i> Reset
-              </button>
-            </div>
+
           </div>
 
           <!-- Project Domain Filter Strip -->
@@ -1067,7 +1182,7 @@ Ready to execute scripts. Choose a template or write Python code on the left and
                 <span class="exp-badge" id="overviewExpBadge">Experiment - 6</span>
                 <span class="category-tag-pill" id="overviewCategoryBadge">Time Series</span>
                 <a class="overview-github-link-pill" id="overviewGithubLinkBtn" href="https://github.com/pradyumna-devi/mbu-datascience-lab" target="_blank" rel="noopener noreferrer" title="View Experiment Source Code on GitHub">
-                  <i data-lucide="github"></i>
+                  <svg style="width: 13px; height: 13px; display: inline-block; vertical-align: middle;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"></path><path d="M9 18c-4.51 2-5-2-7-2"></path></svg>
                   <span>GitHub Repository</span>
                   <i data-lucide="external-link" style="width: 11px; height: 11px;"></i>
                 </a>
@@ -1095,9 +1210,6 @@ Ready to execute scripts. Choose a template or write Python code on the left and
               <div class="overview-quick-action">
                 <button class="btn-primary" id="overviewStartFirstSubTaskBtn">
                   <i data-lucide="play"></i> Start Sub-Task A
-                </button>
-                <button class="btn-secondary" id="overviewEditExpBtn">
-                  <i data-lucide="edit"></i> Edit Experiment
                 </button>
               </div>
             </div>
@@ -1170,7 +1282,7 @@ Ready to execute scripts. Choose a template or write Python code on the left and
                       <i data-lucide="sparkles"></i> AI Explainer
                     </button>
                     <a class="btn-tool" id="workspaceGithubBtn" href="https://github.com/pradyumna-devi/mbu-datascience-lab" target="_blank" rel="noopener noreferrer" title="View this Python script on GitHub">
-                      <i data-lucide="github"></i> GitHub
+                      <svg style="width: 13px; height: 13px; display: inline-block; vertical-align: middle;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"></path><path d="M9 18c-4.51 2-5-2-7-2"></path></svg> GitHub
                     </a>
                     <button class="btn-tool text-teal" id="saveWorkspaceCodeBtn" title="Save your edited code to laboratory storage (Ctrl + S)">
                       <i data-lucide="save"></i> Save Code
@@ -1348,6 +1460,25 @@ Ready to execute scripts. Choose a template or write Python code on the left and
 
           </div>
 
+          <!-- Workspace Bottom Navigation Flow Bar (Smooth Task Transition) -->
+          <div class="workspace-bottom-flow-bar" id="workspaceBottomFlowBar">
+            <button type="button" class="btn-ws-flow prev" id="wsBottomPrevBtn" title="Navigate to Previous Laboratory Sub-Task">
+              <i data-lucide="chevron-left"></i>
+              <span id="wsBottomPrevLabel">Previous Sub-Task</span>
+            </button>
+            <div class="ws-flow-center-meta">
+              <span class="ws-flow-badge" id="wsBottomProgressBadge">Sub-Task A of 4</span>
+              <button type="button" class="btn-ws-flow-overview" id="wsBottomOverviewBtn" title="Back to Experiment Overview">
+                <i data-lucide="layout-grid"></i>
+                <span>Experiment Overview</span>
+              </button>
+            </div>
+            <button type="button" class="btn-ws-flow next" id="wsBottomNextBtn" title="Advance to Next Laboratory Sub-Task">
+              <span id="wsBottomNextLabel">Next Sub-Task</span>
+              <i data-lucide="chevron-right"></i>
+            </button>
+          </div>
+
         </section>
 
       </main>
@@ -1359,8 +1490,8 @@ Ready to execute scripts. Choose a template or write Python code on the left and
             <div class="footer-brand-wrap">
               <img src="/mbu-logo.png" alt="Mohan Babu University Logo" class="mbu-official-footer-logo" />
               <div>
-                <div class="footer-lab-name">DATA SCIENCE DIGITAL LIBRARY</div>
-                <div class="footer-ds-meta">Interactive Computational Environment &bull; Python 3.12 WebAssembly Vector Engine</div>
+                <div class="footer-lab-name">NEURAL LAB &bull; DATA SCIENCE DIGITAL LIBRARY</div>
+                <div class="footer-ds-meta">Interactive Computational Research Studio &bull; Python 3.12 WebAssembly Vector Engine</div>
                 <div class="footer-univ-sub">Academic Program: B.Tech Data Science &bull; School of Computing, Mohan Babu University</div>
               </div>
             </div>
@@ -1389,8 +1520,8 @@ Ready to execute scripts. Choose a template or write Python code on the left and
 
   <!-- ================= MODALS ================= -->
 
-    <!-- Modal 1: Add / Edit Experiment Modal -->
-    <div class="modal-overlay" id="addExperimentModal" style="display: none;">
+    <!-- Modal 1: Add / Edit Experiment Modal (User editing disabled) -->
+    <div class="modal-overlay" id="addExperimentModal" style="display: none !important;" aria-hidden="true">
       <div class="modal-card modal-lg">
         <div class="modal-header">
           <div class="modal-title-wrap">
@@ -1475,8 +1606,8 @@ Ready to execute scripts. Choose a template or write Python code on the left and
       </div>
     </div>
 
-    <!-- Modal 2: Edit Profile Modal -->
-    <div class="modal-overlay" id="editProfileModal" style="display: none;">
+    <!-- Modal 2: Edit Profile Modal (User editing disabled) -->
+    <div class="modal-overlay" id="editProfileModal" style="display: none !important;" aria-hidden="true">
       <div class="modal-card modal-md">
         <div class="modal-header">
           <div class="modal-title-wrap">
@@ -1612,7 +1743,7 @@ Ready to execute scripts. Choose a template or write Python code on the left and
           <!-- Profile Identity Header (Photo & Name) -->
           <div class="portfolio-hero-section">
             <div class="portfolio-avatar-wrap">
-              <img id="portfolioAvatarImg" src="./student-profile.jpg" alt="Student Profile" />
+              <img id="portfolioAvatarImg" src="/student-profile.jpg" onerror="if(window.__STUDENT_AVATAR_B64)this.src=window.__STUDENT_AVATAR_B64;" alt="Student Profile" />
             </div>
             <div class="portfolio-hero-info">
               <div class="portfolio-hero-top">
@@ -1897,8 +2028,8 @@ Ready to execute scripts. Choose a template or write Python code on the left and
       </div>
     </div>
 
-    <!-- Modal 5: Add / Edit Academic Module with Manual PDF Upload -->
-    <div class="modal-overlay" id="moduleFormModal" style="display: none;">
+    <!-- Modal 5: Add / Edit Academic Module (User editing disabled) -->
+    <div class="modal-overlay" id="moduleFormModal" style="display: none !important;" aria-hidden="true">
       <div class="modal-card modal-lg">
         <div class="modal-header">
           <div class="modal-title-wrap">
@@ -2280,8 +2411,8 @@ Ready to execute scripts. Choose a template or write Python code on the left and
       </div>
     </div>
 
-    <!-- Modal: Submit New Capstone Project -->
-    <div class="modal-overlay" id="submitProjectModal" style="display: none;">
+    <!-- Modal: Submit New Capstone Project (User editing disabled) -->
+    <div class="modal-overlay" id="submitProjectModal" style="display: none !important;" aria-hidden="true">
       <div class="modal-card modal-md">
         <div class="modal-header">
           <div class="modal-title-wrap">

@@ -213,11 +213,11 @@ function getThemeCanvasColors(theme) {
     };
   } else {
     return {
-      particle1: 'rgba(56, 189, 248,',
-      particle2: 'rgba(99, 102, 241,',
-      line: '56, 189, 248',
-      spark: '56, 189, 248',
-      mouseLine: '99, 102, 241'
+      particle1: 'rgba(66, 232, 245,',
+      particle2: 'rgba(139, 92, 246,',
+      line: '66, 232, 245',
+      spark: '66, 232, 245',
+      mouseLine: '139, 92, 246'
     };
   }
 }
@@ -566,3 +566,41 @@ export function initFloatingCyberDock(callbacks = {}) {
 
   if (window.lucide) lucide.createIcons();
 }
+
+// -------------------------------------------------------------------------
+// 7. SCROLL-TRIGGERED REVEALS & CINEMATIC MOTION
+// -------------------------------------------------------------------------
+export function initScrollReveal() {
+  if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    document.querySelectorAll('.homepage-section-header, .homepage-pillars-grid, .home-quick-exps-grid, .experiment-card, .module-card, .project-card, .dataset-resource-card, .lab-mastery-banner, .app-footer').forEach(el => {
+      el.classList.add('is-revealed');
+    });
+    return;
+  }
+
+  const observer = new IntersectionObserver((entries, obs) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('is-revealed');
+        obs.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.08, rootMargin: '0px 0px -20px 0px' });
+
+  const targets = document.querySelectorAll(
+    '.homepage-section-header, .homepage-pillars-grid, .home-quick-exps-grid, .experiment-card, .module-card, .project-card, .dataset-resource-card, .lab-mastery-banner, .app-footer, .homepage-roadmap-card, .tool-panel-content'
+  );
+
+  targets.forEach(el => {
+    el.classList.add('reveal-on-scroll');
+    observer.observe(el);
+  });
+}
+
+export function initCinematicEntrance() {
+  const heroCard = document.querySelector('.homepage-hero-card');
+  if (heroCard) {
+    heroCard.classList.add('hero-cinematic-enter');
+  }
+}
+

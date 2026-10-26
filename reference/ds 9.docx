@@ -1,0 +1,372 @@
+DATA SCIENCE - 22DS102006
+
+9. Case Study: Customer Personality Analysis
+
+This use case involves analyzing customer segments based on purchasing behavior using clustering.
+
+
+import pandas as pd
+import seaborn as sns
+import matplotlib.pyplot as plt
+from sklearn.cluster import KMeans
+
+# Load dataset
+url = "https://raw.githubusercontent.com/selva86/datasets/master/Mall_Customers.csv"
+df = pd.read_csv(url)
+
+# Select features for clustering
+X = df[['Annual Income (k$)', 'Spending Score (1-100)']]
+
+# Apply KMeans clustering
+kmeans = KMeans(n_clusters=5, random_state=0)
+df['Cluster'] = kmeans.fit_predict(X)
+
+# Plot the clusters
+sns.scatterplot(data=df, x='Annual Income (k$)', y='Spending Score (1-100)', hue='Cluster', palette='tab10')
+plt.title("Customer Segments")
+plt.xlabel("Annual Income (k$)")
+plt.ylabel("Spending Score")
+plt.show()
+
+Case Study 3: Customer Personality Analysis
+
+Use Case: Customer Personality Analysis is a detailed analysis of a company's ideal customers. It helps a business to better understand its customers and makes it easier for them to modify products according to the specific needs, behaviours and concerns of different types of customers.
+
+You have to do an analysis which should help a business to modify its product based on its target customers from different types of customer segments. For example, instead of spending money to market a new product to every customer in the company's database, a company can analyze which customer segment is most likely to buy the product and then market the product only on that particular segment
+
+Case Study : Customer Personality Analysis
+
+1. Aim
+
+To analyze customer data and identify different customer segments based on their income, age, spending habits, purchasing behavior, and preferences. The goal is to help a business target the right customers, improve products, and increase sales while reducing marketing costs.
+
+2. Problem Statement
+
+Companies often spend a large amount of money promoting products to all customers, even though not every customer is interested in buying them.
+
+Customer Personality Analysis uses data analysis and machine learning techniques to divide customers into different groups. Businesses can then understand the characteristics of each group and design suitable marketing strategies and products.
+
+3. Solution / Methodology
+
+The solution can be implemented using Python, Pandas, Matplotlib, Seaborn, and the K-Means clustering algorithm.
+
+Step 1: Collect the dataset
+
+Use a customer personality dataset containing information such as:
+
+Customer age and income
+
+Number of children and teenagers in the household
+
+Amount spent on different product categories
+
+Number of purchases made through different channels
+
+Website visits and campaign responses
+
+Customer complaints and purchase recency
+
+Step 2: Data preprocessing
+
+Clean the dataset before performing the analysis.
+
+Remove duplicate records.
+
+Handle missing values.
+
+Convert date columns into appropriate formats.
+
+Identify and handle outliers where necessary.
+
+Select relevant numerical features.
+
+Standardize numerical data so that variables with large values do not dominate the clustering algorithm.
+
+Step 3: Exploratory Data Analysis (EDA)
+
+Analyze the data using graphs and statistical measures to understand customer behavior.
+
+Examples include:
+
+Income distribution among customers.
+
+Spending patterns across product categories.
+
+Relationship between income and spending.
+
+Purchase behavior across different age groups.
+
+Campaign acceptance rates.
+
+Step 4: Customer segmentation using K-Means
+
+K-Means is an unsupervised machine learning algorithm that groups customers with similar characteristics.
+
+The algorithm works as follows:
+
+Choose the number of clusters, \(K\).
+
+Initialize cluster centroids.
+
+Assign each customer to the nearest centroid.
+
+Update the centroids based on the assigned customers.
+
+Repeat until the clusters stabilize.
+
+The appropriate number of clusters can be selected using the Elbow Method and validated using the Silhouette Score.
+
+Step 5: Interpret the customer segments
+
+After clustering, analyze the average income, spending, purchase frequency, and campaign responses of each group.
+
+Possible segments include:
+
+High-value customers
+
+Budget-conscious customers
+
+Occasional buyers
+
+Customers with low engagement
+
+Promotion-sensitive customers
+
+These labels are examples. The actual segments depend on the dataset and the clustering results.
+
+Step 6: Develop marketing strategies
+
+Create a separate strategy for each segment.
+
+Customer segment
+
+Recommended strategy
+
+High-value customers
+
+Premium products, loyalty rewards, exclusive offers
+
+Budget-conscious customers
+
+Affordable products, discounts, value packs
+
+Occasional buyers
+
+Personalized offers and product recommendations
+
+Low-engagement customers
+
+Re-engagement emails and limited-time offers
+
+Promotion-sensitive customers
+
+Targeted coupons and seasonal campaigns
+
+4. Python Implementation
+
+The following code demonstrates customer segmentation using a CSV dataset. It assumes the dataset contains an Income column and product spending columns such as MntWines, MntFruits, MntMeatProducts, MntFishProducts, MntSweetProducts, and MntGoldProds, as found in a commonly used customer personality dataset.
+
+import pandas as pd
+
+import matplotlib.pyplot as plt
+
+import seaborn as sns
+
+from sklearn.preprocessing import StandardScaler
+
+from sklearn.cluster import KMeans
+
+from sklearn.metrics import silhouette_score
+
+# 1. Load the dataset
+
+df = pd.read_csv("marketing_campaign.csv", sep="\t")
+
+# 2. Select customer features
+
+features = [
+
+    "Income",
+
+    "MntWines",
+
+    "MntFruits",
+
+    "MntMeatProducts",
+
+    "MntFishProducts",
+
+    "MntSweetProducts",
+
+    "MntGoldProds"
+
+]
+
+# 3. Clean the data
+
+data = df[features].copy()
+
+data = data.fillna(data.median())
+
+data = data.clip(lower=data.quantile(0.01),
+
+                 upper=data.quantile(0.99), axis=1)
+
+# 4. Standardize features
+
+scaler = StandardScaler()
+
+X = scaler.fit_transform(data)
+
+# 5. Find a suitable number of clusters
+
+inertias = []
+
+scores = []
+
+for k in range(2, 8):
+
+    model = KMeans(
+
+        n_clusters=k,
+
+        random_state=42,
+
+        n_init=10
+
+    )
+
+    labels = model.fit_predict(X)
+
+    inertias.append(model.inertia_)
+
+    scores.append(silhouette_score(X, labels))
+
+plt.plot(range(2, 8), inertias, marker="o")
+
+plt.xlabel("Number of Clusters (K)")
+
+plt.ylabel("Inertia")
+
+plt.title("Elbow Method")
+
+plt.show()
+
+print("Silhouette scores:", dict(zip(range(2, 8), scores)))
+
+# 6. Train the final clustering model
+
+best_k = range(2, 8)[scores.index(max(scores))]
+
+kmeans = KMeans(
+
+    n_clusters=best_k,
+
+    random_state=42,
+
+    n_init=10
+
+)
+
+df["Customer_Segment"] = kmeans.fit_predict(X)
+
+# 7. Analyze each customer segment
+
+summary = df.groupby("Customer_Segment")[features].mean().round(2)
+
+print("\nCustomer Segment Summary:")
+
+print(summary)
+
+# 8. Visualize the segments
+
+sns.scatterplot(
+
+    data=df,
+
+    x="Income",
+
+    y="MntWines",
+
+    hue="Customer_Segment",
+
+    palette="Set2"
+
+)
+
+plt.title("Customer Segments by Income and Wine Spending")
+
+plt.show()
+
+# 9. Save the results
+
+df.to_csv("customer_segments.csv", index=False)
+
+summary.to_csv("segment_summary.csv")
+
+Output:
+
+5. Results and Explanation
+
+The expected output consists of customer groups, their average characteristics, and visualizations showing how they differ.
+
+Example interpretation of results
+
+The following table is illustrative, not the actual output of the Python code.
+
+Segment
+
+Customer characteristics
+
+Business decision
+
+Segment 0
+
+Higher income and higher spending
+
+Promote premium products
+
+Segment 1
+
+Moderate income and moderate spending
+
+Offer bundles and loyalty points
+
+Segment 2
+
+Lower spending and fewer purchases
+
+Provide affordable options and targeted promotions
+
+Segment 3
+
+Higher income but lower spending
+
+Investigate product preferences and improve recommendations
+
+Explanation of the results
+
+1. High-value customers: Customers with high income and high spending may contribute significantly to revenue. Businesses can retain them through loyalty programs and premium product offerings.
+
+2. Budget-conscious customers: Customers with lower spending may respond better to affordable product packages and discounts. The business can focus on value rather than expensive premium features.
+
+3. Occasional customers: Customers who purchase infrequently may benefit from personalized recommendations, reminders, and relevant offers.
+
+4. Under-engaged customers: Customers who have the financial capacity to spend but currently spend less may indicate an opportunity to improve product relevance, communication, or customer experience.
+
+5. Marketing optimization: Instead of sending the same campaign to the entire customer database, the company can target the segment most likely to respond to a particular product offer. Campaign performance should then be measured using conversion rate, revenue, and marketing cost.
+
+6. Evaluation Metrics
+
+The following measures help evaluate the solution:
+
+Silhouette Score: Measures how well-separated the customer clusters are. Higher scores generally indicate better-separated clusters.
+
+Conversion Rate: Percentage of targeted customers who purchase the product.
+
+Customer Acquisition Cost (CAC): Marketing and sales cost associated with acquiring a customer.
+
+Average Order Value (AOV): Average amount spent per order.
+
+Campaign ROI: Measures the financial return generated by marketing campaigns relative to their costs.
+

@@ -5,6 +5,11 @@ import { INITIAL_RESOURCES, INITIAL_PROJECTS } from './resourcesAndProjectsData.
 import { executePythonCode, initPyodideKernel, subscribeKernelStatus } from './pythonRunner.js';
 import { storeModulePdf, getModulePdf, deleteModulePdf, formatFileSize, generateSampleSyllabusPdfDataUrl, generateModuleSyllabusPdfDataUrl, generateCandidateResumePdfDataUrl } from './pdfStorage.js';
 import { MODULES_LEARNING_MATERIAL } from './learningMaterialData.js';
+import { STUDENT_PROFILE_BASE64 } from './assets/studentProfileBase64.js';
+
+if (typeof window !== 'undefined') {
+  window.__STUDENT_AVATAR_B64 = STUDENT_PROFILE_BASE64;
+}
 
 let activePdfBlobUrl = null;
 
@@ -47,6 +52,8 @@ import {
   triggerLaserScanAnimation,
   initFloatingCyberDock,
   initCursorSpotlight,
+  initScrollReveal,
+  initCinematicEntrance,
   playSound
 } from './interactiveEffects.js';
 import {
@@ -64,7 +71,7 @@ const STORAGE_KEYS = {
   MODULES: 'mbu_ds_modules_v4_all_modules',
   PROJECTS: 'mbu_ds_projects_v2',
   THEME: 'mbu_ds_theme_mode',
-  VERSION: 'mbu_ds_data_version_v10_experiments_4_5_6'
+  VERSION: 'mbu_ds_data_version_v11_experiments_4_to_10'
 };
 
 let experiments = loadExperiments();
@@ -89,8 +96,8 @@ let currentTheme = 'dark';
 // -------------------------------------------------------------------------
 const THEMES_LIST = ['dark', 'synthwave', 'matrix', 'nordic', 'light'];
 const THEME_INFO = {
-  dark: { name: 'Cyber Obsidian', icon: '🌌', toast: 'Switched to 🌌 Cyber Obsidian Theme' },
-  obsidian: { name: 'Cyber Obsidian', icon: '🌌', toast: 'Switched to 🌌 Cyber Obsidian Theme' },
+  dark: { name: 'Neural Lab (Obsidian)', icon: '⚡', toast: 'Switched to ⚡ Neural Lab Theme' },
+  obsidian: { name: 'Neural Lab (Obsidian)', icon: '⚡', toast: 'Switched to ⚡ Neural Lab Theme' },
   synthwave: { name: 'Synthwave Neon', icon: '🪐', toast: 'Switched to 🪐 Synthwave Neon Theme' },
   matrix: { name: 'Emerald Matrix AI', icon: '🌿', toast: 'Switched to 🌿 Emerald Matrix AI Theme' },
   nordic: { name: 'Nordic Frost', icon: '🧊', toast: 'Switched to 🧊 Nordic Frost Theme' },
@@ -180,7 +187,7 @@ function loadExperiments() {
     if (!raw) {
       const initial = JSON.parse(JSON.stringify(INITIAL_EXPERIMENTS));
       localStorage.setItem(STORAGE_KEYS.EXPERIMENTS, JSON.stringify(initial));
-      localStorage.setItem(STORAGE_KEYS.VERSION, 'mbu_ds_data_version_v10_experiments_4_5_6');
+      localStorage.setItem(STORAGE_KEYS.VERSION, 'mbu_ds_data_version_v11_experiments_4_to_10');
       return initial;
     }
 
@@ -188,7 +195,7 @@ function loadExperiments() {
     if (!Array.isArray(loaded) || loaded.length === 0) {
       const initial = JSON.parse(JSON.stringify(INITIAL_EXPERIMENTS));
       localStorage.setItem(STORAGE_KEYS.EXPERIMENTS, JSON.stringify(initial));
-      localStorage.setItem(STORAGE_KEYS.VERSION, 'mbu_ds_data_version_v10_experiments_4_5_6');
+      localStorage.setItem(STORAGE_KEYS.VERSION, 'mbu_ds_data_version_v11_experiments_4_to_10');
       return initial;
     }
 
@@ -197,7 +204,7 @@ function loadExperiments() {
 
     // Force-sync official experiments and subtasks
     const currentVersion = localStorage.getItem(STORAGE_KEYS.VERSION);
-    if (currentVersion !== 'mbu_ds_data_version_v10_experiments_4_5_6') {
+    if (currentVersion !== 'mbu_ds_data_version_v11_experiments_4_to_10') {
       INITIAL_EXPERIMENTS.forEach(initialExp => {
         const existingIdx = loaded.findIndex(e => e.id === initialExp.id);
         if (existingIdx !== -1) {
@@ -221,7 +228,7 @@ function loadExperiments() {
           loaded.push(JSON.parse(JSON.stringify(initialExp)));
         }
       });
-      localStorage.setItem(STORAGE_KEYS.VERSION, 'mbu_ds_data_version_v10_experiments_4_5_6');
+      localStorage.setItem(STORAGE_KEYS.VERSION, 'mbu_ds_data_version_v11_experiments_4_to_10');
       localStorage.setItem(STORAGE_KEYS.EXPERIMENTS, JSON.stringify(loaded));
     }
 
@@ -261,6 +268,11 @@ function loadProfile() {
       if (!parsed.githubUrl) parsed.githubUrl = INITIAL_PROFILE.githubUrl;
       if (!parsed.branch) parsed.branch = INITIAL_PROFILE.branch;
       if (!parsed.section) parsed.section = INITIAL_PROFILE.section;
+
+      // Always guarantee authentic student profile photo
+      if (!parsed.avatarUrl || parsed.avatarUrl === './student-profile.jpg' || parsed.avatarUrl === '/student-profile.jpg' || parsed.avatarUrl.length < 50) {
+        parsed.avatarUrl = STUDENT_PROFILE_BASE64;
+      }
       return { ...INITIAL_PROFILE, ...parsed };
     }
     // Also check older profile keys
@@ -278,6 +290,9 @@ function loadProfile() {
         if (!oldParsed.githubUrl) oldParsed.githubUrl = INITIAL_PROFILE.githubUrl;
         if (!oldParsed.branch) oldParsed.branch = INITIAL_PROFILE.branch;
         if (!oldParsed.section) oldParsed.section = INITIAL_PROFILE.section;
+        if (!oldParsed.avatarUrl || oldParsed.avatarUrl === './student-profile.jpg' || oldParsed.avatarUrl === '/student-profile.jpg' || oldParsed.avatarUrl.length < 50) {
+          oldParsed.avatarUrl = STUDENT_PROFILE_BASE64;
+        }
         return { ...INITIAL_PROFILE, ...oldParsed };
       }
     }
@@ -453,7 +468,12 @@ function renderProfile() {
   if (sectionEl) sectionEl.textContent = profile.section;
   if (facultyEl) facultyEl.textContent = profile.faculty;
   if (designationEl) designationEl.textContent = profile.designation;
-  if (avatarEl && profile.avatarUrl) avatarEl.src = normalizeAssetUrl(profile.avatarUrl);
+  
+  const verifiedAvatarSrc = (profile.avatarUrl && profile.avatarUrl.length > 50) ? profile.avatarUrl : STUDENT_PROFILE_BASE64;
+  if (avatarEl) {
+    avatarEl.src = verifiedAvatarSrc;
+    avatarEl.onerror = () => { avatarEl.src = STUDENT_PROFILE_BASE64; };
+  }
 
   // Portfolio Modal elements
   const portAvatar = document.getElementById('portfolioAvatarImg');
@@ -467,7 +487,10 @@ function renderProfile() {
   const portEmailDisplay = document.getElementById('portfolioEmailDisplay');
   const portResumeFile = document.getElementById('portfolioResumeFileName');
   
-  if (portAvatar && profile.avatarUrl) portAvatar.src = normalizeAssetUrl(profile.avatarUrl);
+  if (portAvatar) {
+    portAvatar.src = verifiedAvatarSrc;
+    portAvatar.onerror = () => { portAvatar.src = STUDENT_PROFILE_BASE64; };
+  }
   if (portName) portName.textContent = profile.name || "Mudimela Pradyumna Devi";
   if (portRoll) portRoll.textContent = profile.id || "24102A030078";
   if (portDept) portDept.textContent = profile.branch || "Computer Science and Engineering (Data Science)";
@@ -530,7 +553,10 @@ function renderProfile() {
   const sbAvatar = document.getElementById('sidebarStudentAvatarImg');
   if (sbName) sbName.textContent = profile.name || "M. Pradyumna Devi";
   if (sbRoll) sbRoll.textContent = `Roll: ${profile.id || '24102A030078'}`;
-  if (sbAvatar && profile.avatarUrl) sbAvatar.src = normalizeAssetUrl(profile.avatarUrl);
+  if (sbAvatar) {
+    sbAvatar.src = verifiedAvatarSrc;
+    sbAvatar.onerror = () => { sbAvatar.src = STUDENT_PROFILE_BASE64; };
+  }
 
   const sbLabBadge = document.getElementById('sidebarLabBadge');
   if (sbLabBadge) sbLabBadge.textContent = `${experiments.length} Labs`;
@@ -559,6 +585,8 @@ function handleAvatarFileUpload(file) {
 }
 
 function openProfileModal() {
+  // User profile editing disabled per portal policy
+  return;
   document.getElementById('formProfileName').value = profile.name || '';
   document.getElementById('formProfileId').value = profile.id || '';
   const branchInput = document.getElementById('formProfileBranch');
@@ -719,6 +747,9 @@ function switchMainTab(tabName) {
 
   window.scrollTo({ top: 0, behavior: 'smooth' });
   lucide.createIcons();
+  setTimeout(() => {
+    initScrollReveal();
+  }, 60);
 }
 
 // ==========================================
@@ -785,6 +816,9 @@ function switchView(viewName, expId = null, subTaskLetter = null) {
   }
 
   lucide.createIcons();
+  setTimeout(() => {
+    initScrollReveal();
+  }, 60);
 }
 
 // ==========================================
@@ -904,7 +938,7 @@ function renderExperimentsGrid() {
 
         <div class="footer-right-actions">
           <a class="btn-card-github" href="${exp.githubUrl || 'https://github.com/pradyumna-devi/mbu-datascience-lab'}" target="_blank" rel="noopener noreferrer" title="View Experiment Source Code on GitHub" onclick="event.stopPropagation();">
-            <i data-lucide="github"></i>
+            <svg style="width: 13px; height: 13px; display: inline-block; vertical-align: middle;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"></path><path d="M9 18c-4.51 2-5-2-7-2"></path></svg>
             <span>GitHub</span>
           </a>
 
@@ -917,15 +951,6 @@ function renderExperimentsGrid() {
             <span>Launch Lab</span>
             <i data-lucide="arrow-right"></i>
           </button>
-
-          <div class="card-more-actions">
-            <button class="card-action-icon-btn" data-action="edit" data-exp-id="${exp.id}" title="Edit Experiment">
-              <i data-lucide="edit-2"></i>
-            </button>
-            <button class="card-action-icon-btn delete" data-action="delete" data-exp-id="${exp.id}" title="Delete Experiment">
-              <i data-lucide="trash-2"></i>
-            </button>
-          </div>
         </div>
       </div>
     `;
@@ -1033,7 +1058,7 @@ function renderExperimentOverview(exp) {
           ${st.duration || '10:00'}
         </span>
         <a class="btn-subtask-github" href="${st.githubUrl || exp.githubUrl || 'https://github.com/pradyumna-devi/mbu-datascience-lab'}" target="_blank" rel="noopener noreferrer" title="View Python Script on GitHub" onclick="event.stopPropagation();">
-          <i data-lucide="github"></i>
+          <svg style="width: 12px; height: 12px; display: inline-block; vertical-align: middle;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"></path><path d="M9 18c-4.51 2-5-2-7-2"></path></svg>
           <span>Code</span>
         </a>
         <button class="btn-open-workspace" title="Open Lab Execution Workspace">
@@ -1163,6 +1188,42 @@ function renderSubTaskWorkspace(exp, subTask) {
 
   // Visual Output & Charts
   renderChartOrImage(subTask);
+
+  // Update Workspace Bottom Flow Bar
+  const subTasks = exp.subTasks || [];
+  const currentIndex = subTasks.findIndex(st => st.letter === subTask.letter);
+  const prevTask = currentIndex > 0 ? subTasks[currentIndex - 1] : null;
+  const nextTask = currentIndex < subTasks.length - 1 ? subTasks[currentIndex + 1] : null;
+
+  const prevBtn = document.getElementById('wsBottomPrevBtn');
+  const nextBtn = document.getElementById('wsBottomNextBtn');
+  const progressBadge = document.getElementById('wsBottomProgressBadge');
+  const prevLabel = document.getElementById('wsBottomPrevLabel');
+  const nextLabel = document.getElementById('wsBottomNextLabel');
+
+  if (prevBtn) {
+    if (prevTask) {
+      prevBtn.style.display = 'inline-flex';
+      if (prevLabel) prevLabel.textContent = `Previous: ${prevTask.codeId || prevTask.letter}`;
+      prevBtn.onclick = () => switchView('workspace', exp.id, prevTask.letter);
+    } else {
+      prevBtn.style.display = 'none';
+    }
+  }
+
+  if (nextBtn) {
+    if (nextTask) {
+      nextBtn.style.display = 'inline-flex';
+      if (nextLabel) nextLabel.textContent = `Next: ${nextTask.codeId || nextTask.letter}`;
+      nextBtn.onclick = () => switchView('workspace', exp.id, nextTask.letter);
+    } else {
+      nextBtn.style.display = 'none';
+    }
+  }
+
+  if (progressBadge) {
+    progressBadge.textContent = `Task ${currentIndex + 1} of ${subTasks.length} • Sub-Task ${subTask.codeId || subTask.letter}`;
+  }
 
   lucide.createIcons();
 }
@@ -1498,13 +1559,9 @@ function renderModules() {
           <i data-lucide="layers" style="width: 32px; height: 32px; color: var(--accent-indigo);"></i>
         </div>
         <h3 class="empty-state-title" style="margin-bottom: 8px;">No Academic Modules Configured</h3>
-        <p style="color: var(--text-muted); margin-bottom: 20px;">Add custom curriculum modules and upload syllabus PDF documents to populate your department library.</p>
-        <button class="btn-primary" id="emptyAddModuleBtn">
-          <i data-lucide="plus-circle"></i> + Add First Module
-        </button>
+        <p style="color: var(--text-muted); margin-bottom: 8px;">Curriculum modules and syllabus records are synchronized with university academic records.</p>
       </div>
     `;
-    document.getElementById('emptyAddModuleBtn')?.addEventListener('click', () => openModuleModal());
     lucide.createIcons();
     return;
   }
@@ -1573,10 +1630,6 @@ function renderModules() {
             <button class="btn-view-flipcards" data-action="view-flipcards" data-id="${mod.id}" title="Interactive 3D Study Flip Cards">
               <i data-lucide="layers"></i>
               <span>Flip Cards</span>
-            </button>
-            <button class="btn-attach-pdf-trigger" data-action="upload-pdf-card" data-id="${mod.id}" title="Upload Syllabus PDF">
-              <i data-lucide="upload-cloud"></i>
-              <span>+ Upload PDF</span>
             </button>
           </div>
         </div>
@@ -1665,6 +1718,8 @@ function renderModules() {
 }
 
 function openModuleModal(editId = null, focusPdf = false) {
+  // User module editing disabled per portal policy
+  return;
   const modal = document.getElementById('moduleFormModal');
   const heading = document.getElementById('moduleModalHeading');
   const icon = document.getElementById('moduleModalIcon');
@@ -1896,6 +1951,8 @@ async function handleModuleFormSubmit(e) {
 }
 
 async function handleDeleteModule(moduleId) {
+  // User module deletion disabled per portal policy
+  return;
   const mod = modules.find(m => m.id === moduleId);
   if (!mod) return;
 
@@ -3485,6 +3542,8 @@ function closeProjectDetailsModal() {
 }
 
 function openSubmitProjectModal() {
+  // User project submission disabled per portal policy
+  return;
   const modal = document.getElementById('submitProjectModal');
   if (modal) {
     document.getElementById('submitProjectForm')?.reset();
@@ -3546,6 +3605,8 @@ function handleProjectFormSubmit(e) {
 let formSubTasksState = [];
 
 function openAddExperimentModal(editId = null) {
+  // User experiment editing disabled per portal policy
+  return;
   const modal = document.getElementById('addExperimentModal');
   const heading = document.getElementById('expModalHeading');
   const icon = document.getElementById('expModalIcon');
@@ -3892,6 +3953,8 @@ document.addEventListener('DOMContentLoaded', () => {
   renderModules();
   init3DCardTilt();
   initCursorSpotlight();
+  initScrollReveal();
+  initCinematicEntrance();
   switchMainTab(activeMainTab || 'homepage');
 
   document.getElementById('celebrateMasteryBtn')?.addEventListener('click', () => {
@@ -4017,33 +4080,14 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
       }
 
-      // Edit action
-      const editBtn = e.target.closest('[data-action="edit"]');
-      if (editBtn) {
-        const expId = editBtn.dataset.expId;
-        openAddExperimentModal(expId);
-        return;
-      }
-
-      // Delete action
-      const deleteBtn = e.target.closest('[data-action="delete"]');
-      if (deleteBtn) {
-        const expId = deleteBtn.dataset.expId;
-        const exp = experiments.find(x => x.id === expId);
-        if (confirm(`Are you sure you want to delete Experiment ${exp ? exp.number : ''}?`)) {
-          experiments = experiments.filter(x => x.id !== expId);
-          saveExperiments();
-          renderExperimentsGrid();
-          showToast("Experiment removed from curriculum");
-        }
-        return;
-      }
+      // Edit & Delete actions removed for user
     });
   }
 
   // Navigation Buttons
   document.getElementById('overviewBackToGridBtn')?.addEventListener('click', () => switchView('grid'));
   document.getElementById('workspaceBackToOverviewBtn')?.addEventListener('click', () => switchView('overview', currentExpId));
+  document.getElementById('wsBottomOverviewBtn')?.addEventListener('click', () => switchView('overview', currentExpId));
   
   document.getElementById('overviewStartFirstSubTaskBtn')?.addEventListener('click', () => {
     const exp = experiments.find(e => e.id === currentExpId);
@@ -4052,9 +4096,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  document.getElementById('overviewEditExpBtn')?.addEventListener('click', () => {
-    openAddExperimentModal(currentExpId);
-  });
+  // Overview Edit Experiment button removed per user policy
 
   // Workspace buttons
   document.getElementById('executeCodeBtn')?.addEventListener('click', executeVirtualKernel);

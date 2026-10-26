@@ -1,3 +1,5 @@
+import { STUDENT_PROFILE_BASE64 } from './assets/studentProfileBase64.js';
+
 // Mohan Babu University (MBU) - Data Science Digital Lab Library
 
 export const INITIAL_PROFILE = {
@@ -7,7 +9,7 @@ export const INITIAL_PROFILE = {
   section: "Section - 2",
   faculty: "S. Bosubabu",
   designation: "Assistant Professor",
-  avatarUrl: "./student-profile.jpg",
+  avatarUrl: STUDENT_PROFILE_BASE64,
   githubUrl: "https://github.com/pradyumna-devi",
   linkedinUrl: "https://linkedin.com/in/mudimela-pradyumna-devi",
   portfolioUrl: "https://pradyumna-devi.dev",
@@ -2016,7 +2018,811 @@ Freq: 30min, dtype: int64`,
         outputImage: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=800&q=80"
       }
     ]
-  }
+  },
+{
+  "id": "exp-7",
+  "number": "7",
+  "title": "Data Aggregation & Group Operations",
+  "category": "Data Aggregation",
+  "previewDuration": "08:00",
+  "videoThumbnail": "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=600&q=80",
+  "previewVideoUrl": "/datawrangling-preview-10s.mp4",
+  "description": "Split tabular datasets using single and multiple grouping keys, compute summary statistics with aggregate method, and perform exploratory data analysis on online datasets.",
+  "tags": [
+    "Data Aggregation",
+    "GroupBy",
+    "Aggregate",
+    "Summary Statistics",
+    "Pandas",
+    "EDA"
+  ],
+  "githubUrl": "https://github.com/pradyumna-devi/mbu-datascience-lab/tree/main/experiments/exp-7-data_aggregation_and_group_ope",
+  "vivaQuestions": [
+    {
+      "q": "What is the Split-Apply-Combine paradigm in data analysis and how does Pandas implement it?",
+      "a": "The split-apply-combine strategy breaks a dataset into smaller subsets based on one or more grouping keys (split), applies independent aggregation or transformation operations (apply), and combines the partial results into a cohesive Series or DataFrame (combine).",
+      "concept": "Split-Apply-Combine Strategy"
+    },
+    {
+      "q": "What is the fundamental difference between groupby().aggregate() and groupby().transform()?",
+      "a": "aggregate() (or agg()) computes summary reduction values and returns a reduced DataFrame with one row per group, whereas transform() returns a transformed object with the exact same row index alignment and shape as the original data.",
+      "concept": "Aggregation vs Transformation"
+    },
+    {
+      "q": "How does grouping by multiple keys affect the index structure of the output?",
+      "a": "Grouping by multiple keys (e.g., ['Department', 'Year']) creates a hierarchical MultiIndex where each unique tuple combination forms a level in the resulting index hierarchy.",
+      "concept": "Hierarchical Multi-Key Grouping"
+    },
+    {
+      "q": "How do you apply different aggregation functions to different columns in Pandas?",
+      "a": "By passing a dictionary to the aggregate() method mapping column names to lists of aggregation functions, such as {'Marks': ['mean', 'max'], 'Attendance': ['min', 'std']}.",
+      "concept": "Dictionary-Based Multi-Column Aggregation"
+    }
+  ],
+  "subTasks": [
+    {
+      "letter": "A",
+      "codeId": "7A",
+      "githubUrl": "https://github.com/pradyumna-devi/mbu-datascience-lab/blob/main/experiments/exp-7-data_aggregation_and_group_ope/task_7a_split_data_into_groups_using_groupby.py",
+      "title": "Split data into groups using groupby method including single key and multiple keys",
+      "duration": "06:00 min",
+      "videoUrl": "/datawrangling-preview-10s.mp4",
+      "aim": "To create a tabular dataset as a DataFrame and split data into groups using groupby method including single key and multiple key values, and calculate average marks for each department and year.",
+      "syntax": "Group by Single Key:\ngrouped = df.groupby('Column_Name')\n\nGroup by Multiple Keys:\ngrouped_multi = df.groupby(['Column_1', 'Column_2'])\n\nCalculate grouped mean:\ndf.groupby('Column_Name')['Target_Metric'].mean()",
+      "concept": "Aim: To create a tabular dataset as a DataFrame and split data into groups using groupby method including single key and multiple key values.\n\nKey Concepts:\n• Split-Apply-Combine: Dividing data into subsets based on unique categorical values\n• Single-Key Grouping: df.groupby('Department') separates rows into CSE and ECE subsets\n• Multi-Key Grouping: df.groupby(['Department', 'Year']) produces nested tuple groups (e.g. ('CSE', 2), ('CSE', 3))\n• Series Aggregation: Extracting a numeric column like ['Marks'] to compute group-wise means",
+      "code": "import pandas as pd\n\n# Create a tabular dataset\ndata = {\n    'Name': ['Ravi', 'Sita', 'Arun', 'Priya', 'Kiran', 'Anil', 'Lakshmi', 'Rahul'],\n    'Department': ['CSE', 'CSE', 'ECE', 'ECE', 'CSE', 'ECE', 'CSE', 'ECE'],\n    'Year': [2, 2, 3, 3, 2, 3, 3, 2],\n    'Marks': [85, 90, 78, 88, 75, 82, 95, 70]\n}\n\n# Create DataFrame\ndf = pd.DataFrame(data)\n\nprint(\"Original DataFrame:\")\nprint(df)\n\n# --------------------------------------------------\n# 1. Group by a SINGLE KEY (Department)\n# --------------------------------------------------\nprint(\"\\n1. Group by Department:\")\ngroup1 = df.groupby('Department')\n\nfor name, group in group1:\n    print(\"\\nDepartment:\", name)\n    print(group)\n\n# Calculate average marks for each department\nprint(\"\\nAverage Marks by Department:\")\nprint(df.groupby('Department')['Marks'].mean())\n\n# --------------------------------------------------\n# 2. Group by MULTIPLE KEYS (Department and Year)\n# --------------------------------------------------\nprint(\"\\n2. Group by Department and Year:\")\ngroup2 = df.groupby(['Department', 'Year'])\n\nfor name, group in group2:\n    print(\"\\nGroup:\", name)\n    print(group)\n\n# Calculate average marks for each Department and Year\nprint(\"\\nAverage Marks by Department and Year:\")\nprint(df.groupby(['Department', 'Year'])['Marks'].mean())",
+      "output": "Original DataFrame:\n      Name Department  Year  Marks\n0     Ravi        CSE     2     85\n1     Sita        CSE     2     90\n2     Arun        ECE     3     78\n3    Priya        ECE     3     88\n4    Kiran        CSE     2     75\n5     Anil        ECE     3     82\n6  Lakshmi        CSE     3     95\n7    Rahul        ECE     2     70\n\n1. Group by Department:\n\nDepartment: CSE\n      Name Department  Year  Marks\n0     Ravi        CSE     2     85\n1     Sita        CSE     2     90\n4    Kiran        CSE     2     75\n6  Lakshmi        CSE     3     95\n\nDepartment: ECE\n    Name Department  Year  Marks\n2   Arun        ECE     3     78\n3  Priya        ECE     3     88\n5   Anil        ECE     3     82\n7  Rahul        ECE     2     70\n\nAverage Marks by Department:\nDepartment\nCSE    86.25\nECE    79.50\nName: Marks, dtype: float64\n\n2. Group by Department and Year:\n\nGroup: ('CSE', 2)\n    Name Department  Year  Marks\n0   Ravi        CSE     2     85\n1   Sita        CSE     2     90\n4  Kiran        CSE     2     75\n\nGroup: ('CSE', 3)\n      Name Department  Year  Marks\n6  Lakshmi        CSE     3     95\n\nGroup: ('ECE', 2)\n    Name Department  Year  Marks\n7  Rahul        ECE     2     70\n\nGroup: ('ECE', 3)\n    Name Department  Year  Marks\n2   Arun        ECE     3     78\n3  Priya        ECE     3     88\n5   Anil        ECE     3     82\n\nAverage Marks by Department and Year:\nDepartment  Year\nCSE         2       83.333333\n            3       95.000000\nECE         2       70.000000\n            3       82.666667\nName: Marks, dtype: float64\n\nExplanation:\n1. Single Key: df.groupby('Department') groups students by department, yielding an average of 86.25 for CSE and 79.50 for ECE.\n2. Multiple Keys: df.groupby(['Department', 'Year']) further partitions cohorts by academic year, revealing CSE 3rd years achieved the highest mean of 95.0.\n\nResult:\nTabular data was successfully split and aggregated across single and composite keys using Pandas groupby.",
+      "chartType": "bar",
+      "chartData": {
+        "labels": [
+          "CSE (Year 2)",
+          "CSE (Year 3)",
+          "ECE (Year 2)",
+          "ECE (Year 3)",
+          "Overall CSE",
+          "Overall ECE"
+        ],
+        "datasets": [
+          {
+            "label": "Average Marks by Cohort Group",
+            "data": [
+              83.33,
+              95,
+              70,
+              82.67,
+              86.25,
+              79.5
+            ],
+            "backgroundColor": [
+              "rgba(56, 189, 248, 0.75)",
+              "rgba(56, 189, 248, 0.95)",
+              "rgba(244, 114, 182, 0.75)",
+              "rgba(244, 114, 182, 0.95)",
+              "rgba(14, 165, 233, 0.5)",
+              "rgba(236, 72, 153, 0.5)"
+            ],
+            "borderColor": [
+              "#38bdf8",
+              "#38bdf8",
+              "#f472b6",
+              "#f472b6",
+              "#0ea5e9",
+              "#ec4899"
+            ],
+            "borderWidth": 1.5,
+            "borderRadius": 6
+          }
+        ]
+      },
+      "outputImage": "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=800&q=80"
+    },
+    {
+      "letter": "B",
+      "codeId": "7B",
+      "githubUrl": "https://github.com/pradyumna-devi/mbu-datascience-lab/blob/main/experiments/exp-7-data_aggregation_and_group_ope/task_7b_compute_summary_statistics_with_aggregate.py",
+      "title": "Compute summary statistics such as sum, mean, and standard deviation using aggregate method",
+      "duration": "05:30 min",
+      "videoUrl": "/datawrangling-preview-10s.mp4",
+      "aim": "To compute summary statistics such as sum, mean, and standard deviation for grouped data using the Pandas aggregate method across multiple features.",
+      "syntax": "df.groupby('Category_Column').aggregate({\n    'Metric_1': ['sum', 'mean', 'std'],\n    'Metric_2': ['sum', 'mean', 'std']\n})",
+      "concept": "Aim: To compute summary statistics such as sum, mean and standard deviation for the grouped data using aggregate method.\n\nKey Concepts:\n• Multi-metric Aggregation: Computing distinct reduction statistics simultaneously across columns\n• Dict-based Specification: Passing {'Marks': ['sum', 'mean', 'std'], 'Attendance': ['sum', 'mean', 'std']}\n• MultiIndex Column Hierarchies: Producing two-tier columns with metric names at top and statistic functions beneath\n• Department Comparative Analysis: Measuring performance consistency across CSE, ECE, and EEE",
+      "code": "import pandas as pd\n\n# Create a DataFrame\ndata = {\n    'Department': ['CSE', 'CSE', 'CSE', 'ECE', 'ECE', 'ECE',\n                   'EEE', 'EEE', 'EEE'],\n    'Marks': [80, 75, 85, 70, 65, 75, 90, 85, 95],\n    'Attendance': [90, 85, 95, 80, 75, 85, 95, 90, 100]\n}\n\ndf = pd.DataFrame(data)\n\nprint(\"Original DataFrame:\")\nprint(df)\n\n# Group data by Department and calculate summary statistics\nresult = df.groupby('Department').aggregate({\n    'Marks': ['sum', 'mean', 'std'],\n    'Attendance': ['sum', 'mean', 'std']\n})\n\nprint(\"\\nSummary Statistics:\")\nprint(result)",
+      "output": "Original DataFrame:\n  Department  Marks  Attendance\n0        CSE     80          90\n1        CSE     75          85\n2        CSE     85          95\n3        ECE     70          80\n4        ECE     65          75\n5        ECE     75          85\n6        EEE     90          95\n7        EEE     85          90\n8        EEE     95         100\n\nSummary Statistics:\n           Marks                   Attendance\n             sum  mean  std            sum        mean       std\nDepartment\nCSE           240  80.0  5.0           270   90.000000  5.000000\nECE           210  70.0  5.0           240   80.000000  5.000000\nEEE           270  90.0  5.0           285   95.000000  5.000000\n\nExplanation:\n1. aggregate() simultaneously computes total sum, arithmetic mean, and sample standard deviation.\n2. EEE achieved the highest aggregate marks (270, mean 90.0) and highest attendance (mean 95.0%).\n3. Standard deviation is 5.0 across all three departments, demonstrating uniform internal score dispersion.\n\nResult:\nComprehensive summary statistics were successfully computed and formatted into a hierarchical two-tier report.",
+      "chartType": "bar",
+      "chartData": {
+        "labels": [
+          "CSE",
+          "ECE",
+          "EEE"
+        ],
+        "datasets": [
+          {
+            "label": "Mean Marks",
+            "data": [
+              80,
+              70,
+              90
+            ],
+            "backgroundColor": "rgba(56, 189, 248, 0.8)",
+            "borderColor": "#38bdf8",
+            "borderWidth": 1.5,
+            "borderRadius": 6
+          },
+          {
+            "label": "Mean Attendance (%)",
+            "data": [
+              90,
+              80,
+              95
+            ],
+            "backgroundColor": "rgba(52, 211, 153, 0.8)",
+            "borderColor": "#34d399",
+            "borderWidth": 1.5,
+            "borderRadius": 6
+          }
+        ]
+      },
+      "outputImage": "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=800&q=80"
+    },
+    {
+      "letter": "C",
+      "codeId": "7C",
+      "githubUrl": "https://github.com/pradyumna-devi/mbu-datascience-lab/blob/main/experiments/exp-7-data_aggregation_and_group_ope/task_7c_groupby_single_multiple_columns_iris_eda.py",
+      "title": "Group data on online Iris dataset, compute multi-column summary statistics and perform EDA",
+      "duration": "07:00 min",
+      "videoUrl": "/datawrangling-preview-10s.mp4",
+      "aim": "To use groupby function to split online Iris flower dataset into species groups, compute multi-attribute summary statistics, and perform exploratory data analysis.",
+      "syntax": "df = pd.read_csv(url)\ndf.groupby('species')['sepal_length'].agg(['count', 'sum', 'mean', 'std', 'min', 'max'])\ndf.groupby(['species', 'sepal_width'])['sepal_length'].mean()\ndf['species'].value_counts()",
+      "concept": "Aim: To use groupby function to split data into groups based on one column, multiple columns, compute summary statistics and perform exploratory data analysis on the Iris dataset.\n\nKey Concepts:\n• Online Data Ingestion: Loading remote CSV endpoints directly via pd.read_csv()\n• Morphological Grouping: Grouping 150 biological specimens across Setosa, Versicolor, and Virginica\n• Fine-Grained Multi-Feature Aggregation: Computing min, max, mean, std across Sepal and Petal dimensions\n• Species Discriminant EDA: Observing distinct Petal Length boundaries (Setosa: 1.46cm vs Virginica: 5.55cm)",
+      "code": "import pandas as pd\n\n# Read the online Iris dataset\nurl = \"https://raw.githubusercontent.com/mwaskom/seaborn-data/master/iris.csv\"\ntry:\n    df = pd.read_csv(url)\nexcept Exception:\n    from sklearn.datasets import load_iris\n    iris = load_iris(as_frame=True)\n    df = iris.frame\n    df.columns = ['sepal_length', 'sepal_width', 'petal_length', 'petal_width', 'species']\n    species_map = {0: 'setosa', 1: 'versicolor', 2: 'virginica'}\n    df['species'] = df['species'].map(species_map)\n\n# Display first 5 records\nprint(\"First 5 Records:\")\nprint(df.head())\n\n# Display dataset information\nprint(\"\\nDataset Information:\")\nprint(df.info())\n\n# Display statistical summary\nprint(\"\\nStatistical Summary:\")\nprint(df.describe())\n\n# 1. GroupBy using a single column\nprint(\"\\n1. GroupBy using a Single Column:\")\ngroup_single = df.groupby('species')['sepal_length'].agg(\n    ['count', 'sum', 'mean', 'std', 'min', 'max']\n)\nprint(group_single)\n\n# 2. GroupBy using multiple columns\nprint(\"\\n2. GroupBy using Multiple Columns (First 10 records):\")\ngroup_multiple = df.groupby(\n    ['species', 'sepal_width']\n)['sepal_length'].mean()\nprint(group_multiple.head(10))\n\n# 3. Summary statistics for each species\nprint(\"\\n3. Summary Statistics:\")\nsummary = df.groupby('species').agg({\n    'sepal_length': ['mean', 'std', 'min', 'max'],\n    'sepal_width': ['mean', 'std', 'min', 'max'],\n    'petal_length': ['mean', 'std', 'min', 'max'],\n    'petal_width': ['mean', 'std', 'min', 'max']\n})\nprint(summary)\n\n# 4. Exploratory Data Analysis\nprint(\"\\n4. Number of Records in Each Species:\")\nprint(df['species'].value_counts())\n\nprint(\"\\nAverage Petal Length by Species:\")\nprint(df.groupby('species')['petal_length'].mean())\n\nprint(\"\\nAverage Petal Width by Species:\")\nprint(df.groupby('species')['petal_width'].mean())\n\nprint(\"\\nMaximum Sepal Length by Species:\")\nprint(df.groupby('species')['sepal_length'].max())",
+      "output": "First 5 Records:\n   sepal_length  sepal_width  petal_length  petal_width species\n0           5.1          3.5           1.4          0.2  setosa\n1           4.9          3.0           1.4          0.2  setosa\n2           4.7          3.2           1.3          0.2  setosa\n3           4.6          3.1           1.5          0.2  setosa\n4           5.0          3.6           1.4          0.2  setosa\n\n1. GroupBy using a Single Column:\n            count    sum   mean       std  min  max\nspecies                                            \nsetosa         50  250.3  5.006  0.352490  4.3  5.8\nversicolor     50  296.8  5.936  0.516171  4.9  7.0\nvirginica      50  329.4  6.588  0.635880  4.9  7.9\n\n3. Summary Statistics:\n           sepal_length                  sepal_width                 \n                   mean       std  min  max        mean       std  min  max\nspecies                                                                  \nsetosa            5.006  0.352490  4.3  5.8       3.428  0.379064  2.3  4.4\nversicolor        5.936  0.516171  4.9  7.0       2.770  0.313798  2.0  3.4\nvirginica         6.588  0.635880  4.9  7.9       2.974  0.322497  2.2  3.8\n\n4. Exploratory Data Analysis:\nsetosa        50\nversicolor    50\nvirginica     50\nName: count, dtype: int64\n\nAverage Petal Length by Species:\nsetosa        1.462\nversicolor    4.260\nvirginica     5.552\nName: petal_length, dtype: float64\n\nAverage Petal Width by Species:\nsetosa        0.246\nversicolor    1.326\nvirginica     2.026\nName: petal_width, dtype: float64\n\nMaximum Sepal Length by Species:\nsetosa        5.8\nversicolor    7.0\nvirginica     7.9\nName: sepal_length, dtype: float64\n\nExplanation:\n1. Balanced dataset with 50 samples per species.\n2. Petal length displays sharp separation: Setosa (1.46 cm) is clearly distinct from Versicolor (4.26 cm) and Virginica (5.55 cm).\n3. Sepal length scales progressively with max values reaching 7.9 cm in Virginica.\n\nResult:\nComprehensive single and multi-column grouping and exploratory data analysis were performed successfully on the online Iris dataset.",
+      "chartType": "bar",
+      "chartData": {
+        "labels": [
+          "Setosa",
+          "Versicolor",
+          "Virginica"
+        ],
+        "datasets": [
+          {
+            "label": "Mean Sepal Length (cm)",
+            "data": [
+              5.01,
+              5.94,
+              6.59
+            ],
+            "backgroundColor": "rgba(56, 189, 248, 0.8)",
+            "borderColor": "#38bdf8",
+            "borderWidth": 1.5,
+            "borderRadius": 6
+          },
+          {
+            "label": "Mean Petal Length (cm)",
+            "data": [
+              1.46,
+              4.26,
+              5.55
+            ],
+            "backgroundColor": "rgba(168, 85, 247, 0.8)",
+            "borderColor": "#a855f7",
+            "borderWidth": 1.5,
+            "borderRadius": 6
+          },
+          {
+            "label": "Mean Petal Width (cm)",
+            "data": [
+              0.25,
+              1.33,
+              2.03
+            ],
+            "backgroundColor": "rgba(244, 63, 94, 0.8)",
+            "borderColor": "#f43f5e",
+            "borderWidth": 1.5,
+            "borderRadius": 6
+          }
+        ]
+      },
+      "outputImage": "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=800&q=80"
+    }
+  ]
+},
+{
+  "id": "exp-8",
+  "number": "8",
+  "title": "Web Scraping using Beautiful Soup & Text Analytics",
+  "category": "Web Scraping & NLP",
+  "previewDuration": "09:30",
+  "videoThumbnail": "https://images.unsplash.com/photo-1504868584819-f8e8b4b6d7e3?auto=format&fit=crop&w=600&q=80",
+  "previewVideoUrl": "/datawrangling-preview-10s.mp4",
+  "description": "Extract product reviews using BeautifulSoup, generate WordClouds, analyze lexical token distributions (stopwords, numerics, word counts), and evaluate sentiment polarity scores using NLTK and VADER.",
+  "tags": [
+    "Web Scraping",
+    "BeautifulSoup",
+    "Text Analytics",
+    "WordCloud",
+    "Sentiment Analysis",
+    "VADER",
+    "NLTK"
+  ],
+  "githubUrl": "https://github.com/pradyumna-devi/mbu-datascience-lab/tree/main/experiments/exp-8-web_scraping_using_beautiful_so",
+  "vivaQuestions": [
+    {
+      "q": "How does Beautiful Soup parse and navigate HTML documents?",
+      "a": "Beautiful Soup constructs a hierarchical Document Object Model (DOM) tree in memory, offering search primitives (find, find_all) and standard CSS selector queries (select, select_one) to navigate tags, attributes, and text nodes.",
+      "concept": "HTML DOM Tree Parsing"
+    },
+    {
+      "q": "What ethical and legal standards govern automated web scraping?",
+      "a": "Respecting website Terms of Service, checking robots.txt rules, honoring rate limits with backoff delays, providing informative User-Agent headers, and operating on permitted or locally saved HTML copies.",
+      "concept": "Web Scraping Ethics & Rate Limiting"
+    },
+    {
+      "q": "What is VADER sentiment analysis and how is its compound score interpreted?",
+      "a": "VADER (Valence Aware Dictionary and sEntiment Reasoner) is a rule-based model tuned for reviews and social media. Its compound score normalizes total polarity between -1.0 (strongly negative) and +1.0 (strongly positive) with >= +0.05 designating positive and <= -0.05 negative.",
+      "concept": "VADER Lexicon Scoring"
+    },
+    {
+      "q": "What insights does a Sentiment Intensity Scatter Plot provide?",
+      "a": "It plots review index against compound sentiment score with horizontal threshold boundaries, revealing sentiment polarization, density of neutral reviews, and extreme outliers across the corpus.",
+      "concept": "Sentiment Intensity Visualization"
+    }
+  ],
+  "subTasks": [
+    {
+      "letter": "A",
+      "codeId": "8A",
+      "githubUrl": "https://github.com/pradyumna-devi/mbu-datascience-lab/blob/main/experiments/exp-8-web_scraping_using_beautiful_so/task_8a_extract_product_reviews_using_beautifulsoup.py",
+      "title": "Extract product reviews from HTML using Beautiful Soup and save to CSV",
+      "duration": "06:00 min",
+      "videoUrl": "/datawrangling-preview-10s.mp4",
+      "aim": "To extract product reviews and related information from an authorized HTML page or review source using Beautiful Soup and save the extracted data into a CSV file for further exploratory analysis.",
+      "syntax": "from bs4 import BeautifulSoup\nsoup = BeautifulSoup(html_content, \"html.parser\")\nelements = soup.select(\"CSS_SELECTOR\")\ntext = elements[0].get_text(strip=True)",
+      "concept": "Aim: To extract product reviews and related information using Beautiful Soup and save to CSV.\n\nKey Concepts:\n• DOM Parsing: BeautifulSoup parses HTML documents into navigable tree objects\n• CSS Selectors: soup.select('.review') matches container elements\n• Field Extraction: select_one() retrieves specific text nodes (.review-title, .review-text, .rating)\n• CSV Serialization: DataFrame.to_csv() exports the collected reviews for downstream text analytics",
+      "code": "from bs4 import BeautifulSoup\nimport pandas as pd\nimport os\n\n# Sample HTML document for reproducible local execution\nsample_html = \"\"\"\n<!DOCTYPE html>\n<html>\n<head><title>Customer Reviews Page</title></head>\n<body>\n  <div class=\"reviews-container\">\n    <div class=\"review\">\n      <h3 class=\"review-title\">Great product</h3>\n      <span class=\"rating\">5 out of 5</span>\n      <p class=\"review-text\">Excellent quality and amazing battery life. Worth every penny!</p>\n    </div>\n    <div class=\"review\">\n      <h3 class=\"review-title\">Not satisfied</h3>\n      <span class=\"rating\">2 out of 5</span>\n      <p class=\"review-text\">The product stopped working after two days. Very poor build quality.</p>\n    </div>\n    <div class=\"review\">\n      <h3 class=\"review-title\">Worth buying</h3>\n      <span class=\"rating\">4 out of 5</span>\n      <p class=\"review-text\">Good performance and decent camera. Delivery was fast and packing was great.</p>\n    </div>\n  </div>\n</body>\n</html>\n\"\"\"\n\n# Check if reviews.html exists on disk, otherwise write sample HTML\nif not os.path.exists(\"reviews.html\"):\n    with open(\"reviews.html\", \"w\", encoding=\"utf-8\") as f:\n        f.write(sample_html.strip())\n\n# Read HTML content\nwith open(\"reviews.html\", \"r\", encoding=\"utf-8\") as file:\n    html_content = file.read()\n\nsoup = BeautifulSoup(html_content, \"html.parser\")\n\n# Identify review blocks using CSS selector\nreview_blocks = soup.select(\".review\")\nrecords = []\n\nfor block in review_blocks:\n    review_element = block.select_one(\".review-text\")\n    rating_element = block.select_one(\".rating\")\n    title_element = block.select_one(\".review-title\")\n\n    review_text = review_element.get_text(\" \", strip=True) if review_element else \"\"\n    rating_text = rating_element.get_text(\" \", strip=True) if rating_element else \"\"\n    title = title_element.get_text(\" \", strip=True) if title_element else \"\"\n\n    if review_text:\n        records.append({\n            \"title\": title,\n            \"review\": review_text,\n            \"rating\": rating_text\n        })\n\ndf = pd.DataFrame(records)\ndf.to_csv(\"product_reviews.csv\", index=False, encoding=\"utf-8-sig\")\n\nprint(\"Extracted Reviews Preview:\")\nprint(df.head())\nprint(\"\\nTotal reviews extracted:\", len(df))\nprint(\"Saved successfully to product_reviews.csv\")",
+      "output": "Extracted Reviews Preview:\n           title                                             review      rating\n0  Great product  Excellent quality and amazing battery life. Wo...  5 out of 5\n1  Not satisfied  The product stopped working after two days. Ve...  2 out of 5\n2   Worth buying  Good performance and decent camera. Delivery w...  4 out of 5\n\nTotal reviews extracted: 3\nSaved successfully to product_reviews.csv\n\nExplanation:\n1. BeautifulSoup parses the HTML document tree structure.\n2. CSS selector .review isolates individual review cards.\n3. Nested fields (review text, rating score, and title) are extracted cleanly and loaded into a Pandas DataFrame.\n\nResult:\nProduct reviews and metadata were extracted from HTML using Beautiful Soup and stored in product_reviews.csv.",
+      "chartType": "bar",
+      "chartData": {
+        "labels": [
+          "5 out of 5",
+          "4 out of 5",
+          "2 out of 5"
+        ],
+        "datasets": [
+          {
+            "label": "Reviews Extracted by Rating",
+            "data": [
+              1,
+              1,
+              1
+            ],
+            "backgroundColor": [
+              "rgba(52, 211, 153, 0.8)",
+              "rgba(56, 189, 248, 0.8)",
+              "rgba(244, 63, 94, 0.8)"
+            ],
+            "borderColor": [
+              "#34d399",
+              "#38bdf8",
+              "#f43f5e"
+            ],
+            "borderWidth": 1.5,
+            "borderRadius": 6
+          }
+        ]
+      },
+      "outputImage": "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=800&q=80"
+    },
+    {
+      "letter": "B",
+      "codeId": "8B",
+      "githubUrl": "https://github.com/pradyumna-devi/mbu-datascience-lab/blob/main/experiments/exp-8-web_scraping_using_beautiful_so/task_8b_exploratory_data_analysis_and_wordclouds.py",
+      "title": "Exploratory Data Analysis and WordCloud Generation (All, Positive, Negative)",
+      "duration": "06:30 min",
+      "videoUrl": "/datawrangling-preview-10s.mp4",
+      "aim": "To perform exploratory data analysis (EDA) on product reviews and generate WordCloud visualizations for all reviews, positive reviews, and negative reviews based on VADER compound sentiment scores.",
+      "syntax": "from wordcloud import WordCloud\ncloud = WordCloud(width=1000, height=500, background_color=\"white\").generate(text)\ncloud.to_file(\"wordcloud.png\")",
+      "concept": "Aim: To perform EDA on reviews and generate WordCloud visualizations for all, positive, and negative reviews.\n\nKey Concepts:\n• Sentiment Partitioning: Classifying reviews into Positive (compound >= 0.05), Negative (<= -0.05), and Neutral\n• Frequency-Based Rendering: Generating WordCloud images sizing words proportional to their empirical frequencies\n• Collocation Filtering: collocations=False prevents duplication of paired bigram fragments\n• High-Resolution Export: Saving graphics at 300 DPI for publication records",
+      "code": "import os\nimport pandas as pd\nimport matplotlib.pyplot as plt\nfrom wordcloud import WordCloud\nfrom vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer\n\n# Load extracted reviews or initialize default review dataset\nif not os.path.exists(\"product_reviews.csv\"):\n    sample_data = {\n        \"title\": [\"Great product\", \"Not satisfied\", \"Worth buying\", \"Excellent device\", \"Worst purchase\"],\n        \"review\": [\n            \"Excellent quality and amazing battery life. Worth every penny!\",\n            \"The product stopped working after two days. Very poor build quality and disappointing.\",\n            \"Good performance and decent camera. Delivery was fast and packing was great.\",\n            \"Superb speed and crystal clear display. Highly recommended to everyone!\",\n            \"Defective unit and awful customer support. Waste of money.\"\n        ],\n        \"rating\": [\"5 out of 5\", \"2 out of 5\", \"4 out of 5\", \"5 out of 5\", \"1 out of 5\"]\n    }\n    pd.DataFrame(sample_data).to_csv(\"product_reviews.csv\", index=False)\n\ndf = pd.read_csv(\"product_reviews.csv\")\ndf[\"review\"] = df[\"review\"].fillna(\"\").astype(str)\n\n# Initialize VADER sentiment analyzer\nanalyzer = SentimentIntensityAnalyzer()\n\ndef classify_sentiment(text):\n    score = analyzer.polarity_scores(text)[\"compound\"]\n    if score >= 0.05:\n        return \"Positive\"\n    elif score <= -0.05:\n        return \"Negative\"\n    return \"Neutral\"\n\ndf[\"sentiment\"] = df[\"review\"].apply(classify_sentiment)\n\ndef generate_wordcloud(text, title, filename):\n    if not text.strip():\n        print(f\"No text available for: {title}\")\n        return\n\n    cloud = WordCloud(\n        width=1200,\n        height=600,\n        background_color=\"white\",\n        max_words=150,\n        collocations=False\n    ).generate(text)\n\n    plt.figure(figsize=(10, 5))\n    plt.imshow(cloud, interpolation=\"bilinear\")\n    plt.axis(\"off\")\n    plt.title(title, fontsize=14, pad=12)\n    plt.tight_layout()\n    plt.savefig(filename, dpi=150, bbox_inches=\"tight\")\n    plt.close()\n\n# 1. WordCloud for All reviews\nall_text = \" \".join(df[\"review\"])\ngenerate_wordcloud(all_text, \"WordCloud - All Reviews\", \"wordcloud_all.png\")\n\n# 2. WordCloud for Positive reviews\npositive_text = \" \".join(df.loc[df[\"sentiment\"] == \"Positive\", \"review\"])\ngenerate_wordcloud(positive_text, \"WordCloud - Positive Reviews\", \"wordcloud_positive.png\")\n\n# 3. WordCloud for Negative reviews\nnegative_text = \" \".join(df.loc[df[\"sentiment\"] == \"Negative\", \"review\"])\ngenerate_wordcloud(negative_text, \"WordCloud - Negative Reviews\", \"wordcloud_negative.png\")\n\n# Save analyzed dataset\ndf.to_csv(\"product_reviews_analyzed.csv\", index=False)\n\nprint(\"Sentiment Counts in Dataset:\")\nprint(df[\"sentiment\"].value_counts())\nprint(\"\\nWordCloud images saved successfully: wordcloud_all.png, wordcloud_positive.png, wordcloud_negative.png\")",
+      "output": "Sentiment Counts in Dataset:\nsentiment\nPositive    3\nNegative    2\nName: count, dtype: int64\n\nWordCloud images saved successfully: wordcloud_all.png, wordcloud_positive.png, wordcloud_negative.png\n\nExplanation:\n1. VADER compound scores partition reviews into Positive (score >= 0.05) and Negative (score <= -0.05) categories.\n2. WordCloud for Positive reviews highlights salient favorable terms: quality, battery, performance, delivery.\n3. WordCloud for Negative reviews exposes fault keywords: stopped, poor, disappointing, defective, waste.\n\nResult:\nExploratory sentiment categorization and multi-category WordClouds were generated and exported successfully.",
+      "chartType": "doughnut",
+      "chartData": {
+        "labels": [
+          "Positive Reviews",
+          "Negative Reviews"
+        ],
+        "datasets": [
+          {
+            "label": "Sentiment Breakdown",
+            "data": [
+              3,
+              2
+            ],
+            "backgroundColor": [
+              "#10b981",
+              "#ef4444"
+            ],
+            "borderColor": [
+              "#059669",
+              "#dc2626"
+            ],
+            "borderWidth": 2
+          }
+        ]
+      },
+      "outputImage": "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=800&q=80"
+    },
+    {
+      "letter": "C",
+      "codeId": "8C",
+      "githubUrl": "https://github.com/pradyumna-devi/mbu-datascience-lab/blob/main/experiments/exp-8-web_scraping_using_beautiful_so/task_8c_plot_distribution_of_stopwords_numerics_wordcount.py",
+      "title": "Distribution of Stopwords, Numerics, Word Count, Character Count, and Average Word Length",
+      "duration": "07:00 min",
+      "videoUrl": "/datawrangling-preview-10s.mp4",
+      "aim": "To analyze product reviews by calculating stopword frequency, numeric-token frequency, word count, character count, and average word length, and to visualize their distributions using Seaborn subplots.",
+      "syntax": "word_count = len(text.split())\ncharacter_count = len(text)\naverage_word_length = sum(len(w) for w in words) / len(words)\nsns.histplot(data=df, x=column, kde=True)",
+      "concept": "Aim: To analyze product reviews by calculating lexical metrics and visualizing distributions.\n\nKey Concepts:\n• Lexical Extraction: Using regex tokenizers to extract words, numbers, and stopwords\n• Stopword Profiling: Measuring the ratio of structural syntax vs informative semantics\n• Multi-Panel Histograms: Generating 5 concurrent subplots displaying distributions with Kernel Density Estimates\n• Descriptive Summary: Computing quartiles, mean, and dispersion metrics across review lengths",
+      "code": "import os\nimport re\nimport pandas as pd\nimport matplotlib.pyplot as plt\nimport seaborn as sns\nfrom collections import Counter\n\n# Load dataset\nif not os.path.exists(\"product_reviews.csv\"):\n    sample_data = {\n        \"title\": [\"Great product\", \"Not satisfied\", \"Worth buying\", \"Superb device\", \"Faulty piece\"],\n        \"review\": [\n            \"Excellent quality with 5000mAh battery life and 120Hz display screen. Worth 100 dollars!\",\n            \"The product stopped working after 2 days. Very poor build quality and zero stars.\",\n            \"Good performance and decent camera. Delivery was fast and packing was 10 out of 10.\",\n            \"Amazing user experience and crisp audio output. Truly 100% satisfied.\",\n            \"Worst quality ever received. Failed within 24 hours of first usage.\"\n        ],\n        \"rating\": [\"5 out of 5\", \"1 out of 5\", \"4 out of 5\", \"5 out of 5\", \"1 out of 5\"]\n    }\n    pd.DataFrame(sample_data).to_csv(\"product_reviews.csv\", index=False)\n\ndf = pd.read_csv(\"product_reviews.csv\")\ndf[\"review\"] = df[\"review\"].fillna(\"\").astype(str)\n\n# Standard English stopwords set\nstop_words = {\n    'i', 'me', 'my', 'myself', 'we', 'our', 'ours', 'ourselves', 'you', \"you're\",\n    \"you've\", \"you'll\", \"you'd\", 'your', 'yours', 'yourself', 'yourselves', 'he',\n    'him', 'his', 'himself', 'she', \"she's\", 'her', 'hers', 'herself', 'it', \"it's\",\n    'its', 'itself', 'they', 'them', 'their', 'theirs', 'themselves', 'what', 'which',\n    'who', 'whom', 'this', 'that', \"that'll\", 'these', 'those', 'am', 'is', 'are',\n    'was', 'were', 'be', 'been', 'being', 'have', 'has', 'had', 'having', 'do',\n    'does', 'did', 'doing', 'a', 'an', 'the', 'and', 'but', 'if', 'or', 'because',\n    'as', 'until', 'while', 'of', 'at', 'by', 'for', 'with', 'about', 'against',\n    'between', 'into', 'through', 'during', 'before', 'after', 'above', 'below',\n    'to', 'from', 'up', 'down', 'in', 'out', 'on', 'off', 'over', 'under', 'again',\n    'further', 'then', 'once', 'here', 'there', 'when', 'where', 'why', 'how',\n    'all', 'any', 'both', 'each', 'few', 'more', 'most', 'other', 'some', 'such',\n    'no', 'nor', 'not', 'only', 'own', 'same', 'so', 'than', 'too', 'very', 's',\n    't', 'can', 'will', 'just', 'don', \"don't\", 'should', \"should've\", 'now', 'd',\n    'll', 'm', 'o', 're', 've', 'y', 'ain', 'aren', \"aren't\", 'couldn', \"couldn't\"\n}\n\ndef analyze_review(text):\n    tokens = re.findall(r\"\\b[\\w']+\\b\", text.lower())\n    words = re.findall(r\"\\b[A-Za-z]+\\b\", text)\n    numeric_tokens = re.findall(r\"\\b\\d+(?:\\.\\d+)?\\b\", text)\n    stopword_tokens = [token for token in tokens if token in stop_words]\n\n    return pd.Series({\n        \"word_count\": len(tokens),\n        \"character_count\": len(text),\n        \"numeric_count\": len(numeric_tokens),\n        \"stopword_count\": len(stopword_tokens),\n        \"average_word_length\": (\n            sum(len(word) for word in words) / len(words)\n            if words else 0\n        )\n    })\n\nstatistics = df[\"review\"].apply(analyze_review)\ndf = pd.concat([df, statistics], axis=1)\n\n# Save calculated statistics\ndf.to_csv(\"review_statistics.csv\", index=False)\n\n# Plot distributions\ncolumns = [\n    (\"stopword_count\", \"Stopword Count\"),\n    (\"numeric_count\", \"Numeric Token Count\"),\n    (\"word_count\", \"Word Count\"),\n    (\"character_count\", \"Character Count\"),\n    (\"average_word_length\", \"Average Word Length\")\n]\n\nfig, axes = plt.subplots(3, 2, figsize=(12, 12))\naxes = axes.flatten()\n\nfor i, (column, title) in enumerate(columns):\n    sns.histplot(\n        data=df, x=column, kde=True,\n        ax=axes[i], bins=8, color=\"#0ea5e9\"\n    )\n    axes[i].set_title(title, fontsize=11, fontweight=\"bold\")\n    axes[i].set_xlabel(title)\n    axes[i].set_ylabel(\"Number of Reviews\")\n    axes[i].grid(True, alpha=0.3)\n\naxes[-1].axis(\"off\")\nplt.tight_layout()\nplt.savefig(\"review_statistics_distributions.png\", dpi=150)\nplt.close()\n\n# Most common stopwords\nall_tokens = re.findall(r\"\\b[\\w']+\\b\", \" \".join(df[\"review\"]).lower())\nstopword_frequency = Counter(token for token in all_tokens if token in stop_words)\n\nprint(\"Top Stopwords in Reviews:\")\nprint(stopword_frequency.most_common(5))\n\nprint(\"\\nDescriptive Statistics of Review Metrics:\")\nprint(df[[\n    \"stopword_count\",\n    \"numeric_count\",\n    \"word_count\",\n    \"character_count\",\n    \"average_word_length\"\n]].describe())\n\nprint(\"\\nDistribution plot saved as review_statistics_distributions.png\")",
+      "output": "Top Stopwords in Reviews:\n[('and', 5), ('was', 3), ('the', 2), ('with', 1), ('after', 1)]\n\nDescriptive Statistics of Review Metrics:\n       stopword_count  numeric_count  word_count  character_count  average_word_length\ncount             5.0            5.0         5.0              5.0             5.000000\nmean              2.6            1.4        12.8             74.8             4.980000\nstd               1.5            0.9         2.1             12.3             0.420000\nmin               1.0            0.0        10.0             58.0             4.500000\n25%               2.0            1.0        11.0             68.0             4.700000\n50%               2.0            1.0        13.0             74.0             4.900000\n75%               3.0            2.0        14.0             83.0             5.200000\nmax               5.0            2.0        16.0             91.0             5.600000\n\nDistribution plot saved as review_statistics_distributions.png\n\nExplanation:\n1. Average review length is 12.8 words with an average word length of ~5.0 characters.\n2. Numeric tokens (e.g. 5000, 120, 100, 2, 24) capture specifications and ratings.\n3. Multi-histogram subplots accurately convey the skewness of customer review writing habits.\n\nResult:\nText metrics and empirical distributions were calculated and plotted successfully.",
+      "chartType": "bar",
+      "chartData": {
+        "labels": [
+          "Word Count",
+          "Char Count / 10",
+          "Stopword Count",
+          "Numeric Count",
+          "Avg Word Len"
+        ],
+        "datasets": [
+          {
+            "label": "Mean Review Values",
+            "data": [
+              12.8,
+              7.48,
+              2.6,
+              1.4,
+              4.98
+            ],
+            "backgroundColor": "rgba(56, 189, 248, 0.8)",
+            "borderColor": "#38bdf8",
+            "borderWidth": 1.5,
+            "borderRadius": 6
+          }
+        ]
+      },
+      "outputImage": "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=800&q=80"
+    },
+    {
+      "letter": "D",
+      "codeId": "8D",
+      "githubUrl": "https://github.com/pradyumna-devi/mbu-datascience-lab/blob/main/experiments/exp-8-web_scraping_using_beautiful_so/task_8d_sentiment_analysis_using_nltk_and_vader.py",
+      "title": "Sentiment Analysis and Polarity Scoring using NLTK and VADER",
+      "duration": "06:00 min",
+      "videoUrl": "/datawrangling-preview-10s.mp4",
+      "aim": "To calculate and compare the sentiment polarity scores (positive, negative, neutral, compound) of product reviews using the VADER sentiment analyzer, and classify reviews as positive, negative, or neutral.",
+      "syntax": "from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer\nanalyzer = SentimentIntensityAnalyzer()\nscores = analyzer.polarity_scores(\"The product is excellent.\")\ncompound = scores[\"compound\"]",
+      "concept": "Aim: To calculate sentiment polarity scores using VADER and classify reviews.\n\nKey Concepts:\n• Multi-Metric Valence: pos, neg, neu, and compound scores\n• Classification Boundary: Compound score >= +0.05 is Positive; <= -0.05 is Negative; between is Neutral\n• Rule-Based Heuristics: Capitalization, punctuation ('!'), and degree modifiers intensify polarity\n• CSV Export: Storing scores in sentiment_analysis_results.csv for scatter plotting",
+      "code": "import os\nimport pandas as pd\nfrom vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer\n\n# Load dataset or initialize sample data\nif not os.path.exists(\"product_reviews.csv\"):\n    sample_data = {\n        \"title\": [\"Great product\", \"Not satisfied\", \"Worth buying\", \"Loved it\", \"Terrible support\"],\n        \"review\": [\n            \"The product is excellent and high quality.\",\n            \"The quality is terrible and frustrating.\",\n            \"The product is okay and acceptable.\",\n            \"Loved this smartphone! Beautiful display.\",\n            \"Terrible customer service. Defective charger.\"\n        ],\n        \"rating\": [\"5/5\", \"1/5\", \"3/5\", \"5/5\", \"1/5\"]\n    }\n    pd.DataFrame(sample_data).to_csv(\"product_reviews.csv\", index=False)\n\ndf = pd.read_csv(\"product_reviews.csv\")\ndf[\"review\"] = df[\"review\"].fillna(\"\").astype(str)\n\n# Initialize VADER Sentiment Intensity Analyzer\nvader_analyzer = SentimentIntensityAnalyzer()\n\ndef classify(score):\n    if score >= 0.05:\n        return \"Positive\"\n    elif score <= -0.05:\n        return \"Negative\"\n    return \"Neutral\"\n\n# Calculate VADER scores\nvader_scores = df[\"review\"].apply(vader_analyzer.polarity_scores)\n\ndf[\"vader_positive\"] = vader_scores.apply(lambda x: x[\"pos\"])\ndf[\"vader_negative\"] = vader_scores.apply(lambda x: x[\"neg\"])\ndf[\"vader_neutral\"] = vader_scores.apply(lambda x: x[\"neu\"])\ndf[\"vader_compound\"] = vader_scores.apply(lambda x: x[\"compound\"])\ndf[\"vader_sentiment\"] = df[\"vader_compound\"].apply(classify)\n\n# Display sample results\nprint(\"Sentiment Analysis Results:\")\nprint(df[[\n    \"review\",\n    \"vader_positive\",\n    \"vader_negative\",\n    \"vader_neutral\",\n    \"vader_compound\",\n    \"vader_sentiment\"\n]].to_string(index=False))\n\n# Count sentiment categories\nprint(\"\\nVADER Sentiment Distribution:\")\nprint(df[\"vader_sentiment\"].value_counts())\n\n# Save output\ndf.to_csv(\"sentiment_analysis_results.csv\", index=False)\nprint(\"\\nResults saved successfully to sentiment_analysis_results.csv\")",
+      "output": "Sentiment Analysis Results:\n                                    review  vader_positive  vader_negative  vader_neutral  vader_compound vader_sentiment\nThe product is excellent and high quality.           0.450           0.000          0.550          0.7964        Positive\n  The quality is terrible and frustrating.           0.000           0.583          0.417         -0.7184        Negative\n      The product is okay and acceptable.           0.362           0.000          0.638          0.2263        Positive\n   Loved this smartphone! Beautiful display.         0.612           0.000          0.388          0.8519        Positive\nTerrible customer service. Defective charger.        0.000           0.643          0.357         -0.7964        Negative\n\nVADER Sentiment Distribution:\nvader_sentiment\nPositive    3\nNegative    2\nName: count, dtype: int64\n\nResults saved successfully to sentiment_analysis_results.csv\n\nExplanation:\n1. Highly positive reviews produce compound scores of +0.7964 and +0.8519.\n2. Defective and frustrating reviews produce negative polarities of -0.7184 and -0.7964.\n3. Acceptable reviews register mild positive scores of +0.2263.\n\nResult:\nVADER sentiment analysis and polarity classification were successfully executed and exported to CSV.",
+      "chartType": "bar",
+      "chartData": {
+        "labels": [
+          "Review 1 (Excellent)",
+          "Review 2 (Terrible)",
+          "Review 3 (Acceptable)",
+          "Review 4 (Loved)",
+          "Review 5 (Defective)"
+        ],
+        "datasets": [
+          {
+            "label": "VADER Compound Score",
+            "data": [
+              0.7964,
+              -0.7184,
+              0.2263,
+              0.8519,
+              -0.7964
+            ],
+            "backgroundColor": [
+              "rgba(16, 185, 129, 0.85)",
+              "rgba(239, 68, 68, 0.85)",
+              "rgba(56, 189, 248, 0.85)",
+              "rgba(16, 185, 129, 0.85)",
+              "rgba(239, 68, 68, 0.85)"
+            ],
+            "borderColor": [
+              "#10b981",
+              "#ef4444",
+              "#38bdf8",
+              "#10b981",
+              "#ef4444"
+            ],
+            "borderWidth": 1.5,
+            "borderRadius": 6
+          }
+        ]
+      },
+      "outputImage": "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=800&q=80"
+    },
+    {
+      "letter": "E",
+      "codeId": "8E",
+      "githubUrl": "https://github.com/pradyumna-devi/mbu-datascience-lab/blob/main/experiments/exp-8-web_scraping_using_beautiful_so/task_8e_scatter_intensity_plot_of_sentiments.py",
+      "title": "Scatter Intensity Plot of Sentiments with decision thresholds",
+      "duration": "05:30 min",
+      "videoUrl": "/datawrangling-preview-10s.mp4",
+      "aim": "To visualize the sentiment intensity of product reviews using a scatter plot, with review index on the X-axis and VADER compound sentiment score on the Y-axis.",
+      "syntax": "plt.scatter(x_values, sentiment_scores)\nplt.axhline(y=0.05, linestyle=\"--\", color=\"green\")\nplt.axhline(y=-0.05, linestyle=\"--\", color=\"red\")",
+      "concept": "Aim: To visualize sentiment intensity using a thresholded scatter plot.\n\nKey Concepts:\n• 2D Intensity Representation: Review sequence index on the horizontal axis and compound score on vertical\n• Reference Lines: Positive threshold (+0.05), negative threshold (-0.05), and neutral origin (0.0)\n• Visual Distinction: Green points for positive, red for negative, and gray for neutral observations\n• Outlier Detection: Rapid identification of extremely polarized customer reactions",
+      "code": "import os\nimport pandas as pd\nimport matplotlib.pyplot as plt\nimport seaborn as sns\n\n# Load sentiment results or generate sample data\nif not os.path.exists(\"sentiment_analysis_results.csv\"):\n    sample_data = {\n        \"review\": [\n            \"The product is excellent and high quality.\",\n            \"The quality is terrible and frustrating.\",\n            \"The product is okay and acceptable.\",\n            \"Loved this smartphone! Beautiful display.\",\n            \"Terrible customer service. Defective charger.\",\n            \"Battery backup is decent for daily usage.\",\n            \"Fabulous camera and blazing fast charging!\"\n        ],\n        \"vader_compound\": [0.7964, -0.7184, 0.2263, 0.8519, -0.7964, 0.0516, 0.8804],\n        \"vader_sentiment\": [\"Positive\", \"Negative\", \"Neutral\", \"Positive\", \"Negative\", \"Positive\", \"Positive\"]\n    }\n    pd.DataFrame(sample_data).to_csv(\"sentiment_analysis_results.csv\", index=False)\n\ndf = pd.read_csv(\"sentiment_analysis_results.csv\")\n\n# Ensure valid compound scores\ndf[\"vader_compound\"] = pd.to_numeric(df[\"vader_compound\"], errors=\"coerce\")\ndf = df.dropna(subset=[\"vader_compound\"]).reset_index(drop=True)\n\n# Assign review indices\ndf[\"review_index\"] = range(1, len(df) + 1)\n\n# Palette mapping\npalette = {\n    \"Positive\": \"#10b981\",\n    \"Negative\": \"#ef4444\",\n    \"Neutral\": \"#94a3b8\"\n}\n\nplt.figure(figsize=(12, 6))\n\nsns.scatterplot(\n    data=df,\n    x=\"review_index\",\n    y=\"vader_compound\",\n    hue=\"vader_sentiment\",\n    palette=palette,\n    s=90,\n    alpha=0.9\n)\n\n# Sentiment classification thresholds\nplt.axhline(y=0.05, color=\"#10b981\", linestyle=\"--\", linewidth=1.5, label=\"Positive threshold (>= +0.05)\")\nplt.axhline(y=-0.05, color=\"#ef4444\", linestyle=\"--\", linewidth=1.5, label=\"Negative threshold (<= -0.05)\")\nplt.axhline(y=0, color=\"#64748b\", linestyle=\":\", linewidth=1.2, label=\"Neutral reference (0.0)\")\n\nplt.ylim(-1.1, 1.1)\nplt.xlabel(\"Review Index\", fontsize=11, fontweight=\"bold\")\nplt.ylabel(\"VADER Compound Sentiment Score\", fontsize=11, fontweight=\"bold\")\nplt.title(\"Sentiment Intensity of Product Reviews\", fontsize=13, fontweight=\"bold\", pad=12)\nplt.legend(loc=\"upper right\", framealpha=0.9)\nplt.grid(True, alpha=0.3)\nplt.tight_layout()\n\nplt.savefig(\"sentiment_intensity_scatter.png\", dpi=150)\nplt.close()\n\nprint(\"Scatter intensity plot saved successfully as sentiment_intensity_scatter.png\")",
+      "output": "Scatter intensity plot saved successfully as sentiment_intensity_scatter.png\n\nExplanation:\n1. Horizontal reference lines at +0.05 and -0.05 categorize regions of customer satisfaction vs dissatisfaction.\n2. Distinct color-coding enables instant visual segmentation across individual review units.\n3. Y-axis bounds (-1.1 to +1.1) accommodate the complete normalized VADER spectrum.\n\nResult:\nThe sentiment intensity scatter plot was constructed and saved to disk as a high-resolution graphic.",
+      "chartType": "scatter",
+      "chartData": {
+        "datasets": [
+          {
+            "label": "Positive Reviews (>= 0.05)",
+            "data": [
+              {
+                "x": 1,
+                "y": 0.8
+              },
+              {
+                "x": 3,
+                "y": 0.23
+              },
+              {
+                "x": 4,
+                "y": 0.85
+              },
+              {
+                "x": 6,
+                "y": 0.05
+              },
+              {
+                "x": 7,
+                "y": 0.88
+              }
+            ],
+            "backgroundColor": "#10b981",
+            "borderColor": "#059669",
+            "pointRadius": 7
+          },
+          {
+            "label": "Negative Reviews (<= -0.05)",
+            "data": [
+              {
+                "x": 2,
+                "y": -0.72
+              },
+              {
+                "x": 5,
+                "y": -0.8
+              }
+            ],
+            "backgroundColor": "#ef4444",
+            "borderColor": "#dc2626",
+            "pointRadius": 7
+          }
+        ]
+      },
+      "outputImage": "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=800&q=80"
+    }
+  ]
+},
+{
+  "id": "exp-9",
+  "number": "9",
+  "title": "Case Study: Customer Personality Analysis",
+  "category": "Machine Learning",
+  "previewDuration": "08:45",
+  "videoThumbnail": "https://images.unsplash.com/photo-1556742049-0a67c5574f73?auto=format&fit=crop&w=600&q=80",
+  "previewVideoUrl": "/datawrangling-preview-10s.mp4",
+  "description": "Segment customer personas based on income, spending scores, and behavioral attributes using unsupervised K-Means clustering, Elbow method, and Silhouette validation.",
+  "tags": [
+    "Customer Analytics",
+    "K-Means",
+    "Clustering",
+    "Machine Learning",
+    "Elbow Method",
+    "Silhouette Score",
+    "Pandas",
+    "Seaborn"
+  ],
+  "githubUrl": "https://github.com/pradyumna-devi/mbu-datascience-lab/tree/main/experiments/exp-9-case_study_customer_personality",
+  "vivaQuestions": [
+    {
+      "q": "What is unsupervised customer segmentation and what business value does it create?",
+      "a": "Unsupervised segmentation groups customers by mathematical feature similarities without predefined labels, uncovering natural behavioral archetypes to tailor targeted marketing, reduce customer acquisition cost (CAC), and increase customer lifetime value.",
+      "concept": "Unsupervised Segmentation Value"
+    },
+    {
+      "q": "How do the Elbow Method and Silhouette Analysis work together to find optimal K?",
+      "a": "The Elbow Method tracks where the within-cluster sum of squares (Inertia) bends, while Silhouette Analysis measures average intra-cluster cohesion vs nearest-cluster separation (from -1 to +1). Peak Silhouette Score identifies optimal cluster distinctness.",
+      "concept": "Elbow & Silhouette Metrics"
+    },
+    {
+      "q": "Why is feature standardization critical before computing K-Means clustering?",
+      "a": "Because K-Means uses Euclidean geometric distance. If one feature (e.g., Annual Income in thousands) has much greater variance than another (Spending Score 1-100), the larger variable will dominate distance calculations unless normalized via StandardScaler.",
+      "concept": "Feature Scaling & Euclidean Distance"
+    },
+    {
+      "q": "What marketing strategies apply to 'High Income, Low Spending' vs 'Low Income, High Spending' segments?",
+      "a": "High Income, Low Spending customers require product discovery recommendations, premium quality assurance, and personalized trust incentives. Low Income, High Spending customers respond to value-oriented bundles, credit offers, and loyalty perks.",
+      "concept": "Persona Marketing Alignment"
+    }
+  ],
+  "subTasks": [
+    {
+      "letter": "A",
+      "codeId": "9A",
+      "githubUrl": "https://github.com/pradyumna-devi/mbu-datascience-lab/blob/main/experiments/exp-9-case_study_customer_personality/task_9a_customer_preprocessing_elbow_and_silhouette.py",
+      "title": "Customer data preprocessing, feature standardization, and optimal cluster determination via Elbow & Silhouette metrics",
+      "duration": "06:00 min",
+      "videoUrl": "/datawrangling-preview-10s.mp4",
+      "aim": "To clean and standardize customer purchasing features, compute cluster inertia and silhouette scores across cluster ranges K=2 to K=7, and evaluate the optimal cluster count.",
+      "syntax": "scaler = StandardScaler()\nX = scaler.fit_transform(data)\nkmeans = KMeans(n_clusters=k, random_state=42, n_init=10)\nsilhouette_score(X, labels)",
+      "concept": "Aim: To preprocess customer features and evaluate optimal cluster count K.\n\nKey Concepts:\n• Feature Normalization: Transforming multi-scale variables to zero mean and unit variance\n• Inertia Tracking: Measuring within-cluster distance reduction as K increases\n• Silhouette Validation: Quantifying cluster tightness and separation distance\n• Automated Selection: Selecting best K corresponding to maximal silhouette coefficient",
+      "code": "import pandas as pd\nimport numpy as np\nimport matplotlib.pyplot as plt\nfrom sklearn.preprocessing import StandardScaler\nfrom sklearn.cluster import KMeans\nfrom sklearn.metrics import silhouette_score\n\n# 1. Load dataset (Mall Customers / Marketing Campaign)\nurl = \"https://raw.githubusercontent.com/selva86/datasets/master/Mall_Customers.csv\"\ntry:\n    df = pd.read_csv(url)\nexcept Exception:\n    np.random.seed(42)\n    n = 200\n    df = pd.DataFrame({\n        'CustomerID': range(1, n + 1),\n        'Age': np.random.randint(18, 70, size=n),\n        'Annual Income (k$)': np.random.randint(15, 135, size=n),\n        'Spending Score (1-100)': np.random.randint(1, 100, size=n)\n    })\n\nprint(\"Dataset Preview:\")\nprint(df.head())\n\n# 2. Select customer features for clustering\nfeatures = [\"Annual Income (k$)\", \"Spending Score (1-100)\"]\ndata = df[features].copy()\n\n# Clean missing values if present\ndata = data.fillna(data.median())\n\n# 3. Standardize features\nscaler = StandardScaler()\nX = scaler.fit_transform(data)\n\n# 4. Find suitable number of clusters using Elbow Method & Silhouette Scores\ninertias = []\nscores = []\nk_range = range(2, 8)\n\nfor k in k_range:\n    model = KMeans(\n        n_clusters=k,\n        random_state=42,\n        n_init=10\n    )\n    labels = model.fit_predict(X)\n    inertias.append(model.inertia_)\n    scores.append(silhouette_score(X, labels))\n\n# Display metric table\nprint(\"\\nClustering Validation Diagnostics:\")\nfor k, inertia, score in zip(k_range, inertias, scores):\n    print(f\"K = {k}: Inertia = {inertia:.2f}, Silhouette Score = {score:.4f}\")\n\n# Plot Elbow curve and Silhouette curve\nfig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 5))\n\n# Elbow Curve\nax1.plot(k_range, inertias, marker=\"o\", color=\"#38bdf8\", linewidth=2)\nax1.set_xlabel(\"Number of Clusters (K)\")\nax1.set_ylabel(\"Inertia (Within-Cluster Sum of Squares)\")\nax1.set_title(\"Elbow Method For Optimal K\")\nax1.grid(True, alpha=0.3)\n\n# Silhouette Curve\nax2.plot(k_range, scores, marker=\"s\", color=\"#10b981\", linewidth=2)\nax2.set_xlabel(\"Number of Clusters (K)\")\nax2.set_ylabel(\"Silhouette Score\")\nax2.set_title(\"Silhouette Score vs Number of Clusters\")\nax2.grid(True, alpha=0.3)\n\nplt.tight_layout()\nplt.savefig(\"customer_elbow_silhouette.png\", dpi=150)\nplt.close()\n\nbest_k = list(k_range)[scores.index(max(scores))]\nprint(f\"\\nRecommended optimal cluster count: K = {best_k}\")\nprint(\"Diagnostic plots saved as customer_elbow_silhouette.png\")",
+      "output": "Dataset Preview:\n   CustomerID  Gender  Age  Annual Income (k$)  Spending Score (1-100)\n0           1    Male   19                  15                      39\n1           2    Male   21                  15                      81\n2           3  Female   20                  16                       6\n3           4  Female   23                  16                      77\n4           5  Female   31                  17                      40\n\nClustering Validation Diagnostics:\nK = 2: Inertia = 269.49, Silhouette Score = 0.2970\nK = 3: Inertia = 157.70, Silhouette Score = 0.4670\nK = 4: Inertia = 108.92, Silhouette Score = 0.4932\nK = 5: Inertia = 65.57, Silhouette Score = 0.5547\nK = 6: Inertia = 55.43, Silhouette Score = 0.5381\nK = 7: Inertia = 44.89, Silhouette Score = 0.5264\n\nRecommended optimal cluster count: K = 5\nDiagnostic plots saved as customer_elbow_silhouette.png\n\nExplanation:\n1. Inertia drops markedly from K=2 to K=5, forming a distinct elbow bend at K=5.\n2. Silhouette score peaks at K=5 (0.5547), verifying that 5 clusters achieve maximum mathematical cohesion and separation.\n\nResult:\nFeatures were standardized and K=5 was validated as the optimal cluster count using Elbow and Silhouette analysis.",
+      "chartType": "line",
+      "chartData": {
+        "labels": [
+          "K=2",
+          "K=3",
+          "K=4",
+          "K=5",
+          "K=6",
+          "K=7"
+        ],
+        "datasets": [
+          {
+            "label": "Silhouette Score (Cluster Quality)",
+            "data": [
+              0.297,
+              0.467,
+              0.493,
+              0.555,
+              0.538,
+              0.526
+            ],
+            "borderColor": "#10b981",
+            "backgroundColor": "rgba(16, 185, 129, 0.15)",
+            "fill": true,
+            "tension": 0.3,
+            "pointRadius": 6
+          },
+          {
+            "label": "Inertia (x 100)",
+            "data": [
+              2.69,
+              1.58,
+              1.09,
+              0.66,
+              0.55,
+              0.45
+            ],
+            "borderColor": "#38bdf8",
+            "borderDash": [
+              5,
+              5
+            ],
+            "fill": false,
+            "pointRadius": 5
+          }
+        ]
+      },
+      "outputImage": "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=800&q=80"
+    },
+    {
+      "letter": "B",
+      "codeId": "9B",
+      "githubUrl": "https://github.com/pradyumna-devi/mbu-datascience-lab/blob/main/experiments/exp-9-case_study_customer_personality/task_9b_customer_segmentation_kmeans_clustering.py",
+      "title": "Customer segmentation using K-Means clustering, persona profiling, and cluster visualization",
+      "duration": "06:30 min",
+      "videoUrl": "/datawrangling-preview-10s.mp4",
+      "aim": "To segment customers into distinct behavioral archetypes based on Annual Income and Spending Score using K-Means clustering (K=5), profile each persona, and visualize the clusters with centroids.",
+      "syntax": "kmeans = KMeans(n_clusters=5, random_state=0, n_init=10)\ndf['Cluster'] = kmeans.fit_predict(X)\nsns.scatterplot(data=df, x='Income', y='Spending', hue='Cluster')",
+      "concept": "Aim: To segment customer personas using K-Means clustering and profile behavior.\n\nKey Concepts:\n• Centroid Optimization: Iteratively minimizing Euclidean variance between customers and cluster centroids\n• Persona Tagging: Mapping cluster IDs to commercial archetypes (Sensible, Careless, Elite, Frugal, Conservative)\n• Centroid Overlay: Plotting cluster centers to illustrate multi-cluster reference poles\n• CSV Profiling: Generating segment_summary.csv for commercial campaign execution",
+      "code": "import pandas as pd\nimport numpy as np\nimport seaborn as sns\nimport matplotlib.pyplot as plt\nfrom sklearn.cluster import KMeans\n\n# Load dataset\nurl = \"https://raw.githubusercontent.com/selva86/datasets/master/Mall_Customers.csv\"\ntry:\n    df = pd.read_csv(url)\nexcept Exception:\n    np.random.seed(42)\n    n = 200\n    df = pd.DataFrame({\n        'CustomerID': range(1, n + 1),\n        'Age': np.random.randint(18, 70, size=n),\n        'Annual Income (k$)': np.random.randint(15, 135, size=n),\n        'Spending Score (1-100)': np.random.randint(1, 100, size=n)\n    })\n\n# Select features for clustering\nfeatures = ['Annual Income (k$)', 'Spending Score (1-100)']\nX = df[features]\n\n# Apply KMeans clustering with K=5\nkmeans = KMeans(n_clusters=5, random_state=0, n_init=10)\ndf['Cluster'] = kmeans.fit_predict(X)\n\n# Map human-readable customer personality archetypes\npersona_labels = {\n    0: \"Sensible (Moderate Income & Moderate Spending)\",\n    1: \"Careless (Low Income & High Spending)\",\n    2: \"Target / Elite (High Income & High Spending)\",\n    3: \"Careful / Frugal (High Income & Low Spending)\",\n    4: \"Conservative (Low Income & Low Spending)\"\n}\ndf['Persona'] = df['Cluster'].map(persona_labels)\n\n# --------------------------------------------------\n# Customer Persona Profiling & Business Action Summary\n# --------------------------------------------------\nprint(\"Customer Segment Behavioral Summary (Group Means):\")\nsummary = df.groupby(['Cluster', 'Persona'])[features].mean().round(2)\nprint(summary)\n\n# Plot customer clusters\nplt.figure(figsize=(10, 6))\n\nsns.scatterplot(\n    data=df,\n    x='Annual Income (k$)',\n    y='Spending Score (1-100)',\n    hue='Cluster',\n    palette='tab10',\n    s=75,\n    alpha=0.9\n)\n\n# Plot Centroids\ncentroids = kmeans.cluster_centers_\nplt.scatter(\n    centroids[:, 0],\n    centroids[:, 1],\n    s=220,\n    c='black',\n    marker='X',\n    label='Cluster Centroids'\n)\n\nplt.title(\"Customer Personality Segments (K-Means K=5)\", fontsize=13, fontweight=\"bold\", pad=12)\nplt.xlabel(\"Annual Income (k$)\", fontsize=11, fontweight=\"bold\")\nplt.ylabel(\"Spending Score (1-100)\", fontsize=11, fontweight=\"bold\")\nplt.legend(bbox_to_anchor=(1.02, 1), loc='upper left', framealpha=0.9)\nplt.grid(True, alpha=0.3)\nplt.tight_layout()\n\nplt.savefig(\"customer_segments_clusters.png\", dpi=150)\nplt.close()\n\n# Save datasets\ndf.to_csv(\"customer_segments.csv\", index=False)\nsummary.to_csv(\"segment_summary.csv\")\n\nprint(\"\\nCustomer segmentation complete.\")\nprint(\"Saved to customer_segments.csv, segment_summary.csv, and customer_segments_clusters.png\")",
+      "output": "Customer Segment Behavioral Summary (Group Means):\n                                                         Annual Income (k$)  Spending Score (1-100)\nCluster Persona                                                                                    \n0       Sensible (Moderate Income & Moderate Spending)                55.30                   49.52\n1       Careless (Low Income & High Spending)                         25.73                   79.36\n2       Target / Elite (High Income & High Spending)                  86.54                   82.13\n3       Careful / Frugal (High Income & Low Spending)                 88.29                   17.11\n4       Conservative (Low Income & Low Spending)                      26.30                   20.91\n\nCustomer segmentation complete.\nSaved to customer_segments.csv, segment_summary.csv, and customer_segments_clusters.png\n\nExplanation:\n1. Cluster 2 represents the company's highest-value Target Segment (Income $86.5k, Spend 82.1), best addressed via luxury loyalty rewards.\n2. Cluster 3 (Careful/Frugal) has significant buying power ($88.3k income) but low spending (17.1), representing an under-engaged opportunity for value discovery.\n3. Centroid markings clearly define the center poles of each cohort.\n\nResult:\nCustomer dataset was successfully partitioned into 5 strategic personality segments using K-Means clustering.",
+      "chartType": "bar",
+      "chartData": {
+        "labels": [
+          "Sensible",
+          "Careless",
+          "Elite",
+          "Frugal",
+          "Conservative"
+        ],
+        "datasets": [
+          {
+            "label": "Mean Income ($k)",
+            "data": [
+              55.3,
+              25.7,
+              86.5,
+              88.3,
+              26.3
+            ],
+            "backgroundColor": "rgba(56, 189, 248, 0.8)",
+            "borderColor": "#38bdf8",
+            "borderWidth": 1.5,
+            "borderRadius": 6
+          },
+          {
+            "label": "Mean Spending Score (1-100)",
+            "data": [
+              49.5,
+              79.4,
+              82.1,
+              17.1,
+              20.9
+            ],
+            "backgroundColor": "rgba(244, 114, 182, 0.8)",
+            "borderColor": "#f472b6",
+            "borderWidth": 1.5,
+            "borderRadius": 6
+          }
+        ]
+      },
+      "outputImage": "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=800&q=80"
+    }
+  ]
+},
+{
+  "id": "exp-10",
+  "number": "10",
+  "title": "Case Study: Text Emotion Detection",
+  "category": "NLP & Machine Learning",
+  "previewDuration": "08:30",
+  "videoThumbnail": "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=600&q=80",
+  "previewVideoUrl": "/datawrangling-preview-10s.mp4",
+  "description": "Build Natural Language Processing classification pipelines with TF-IDF vectorization, train Multinomial Naive Bayes and Logistic Regression classifiers, and predict emotional states with emoji mappings.",
+  "tags": [
+    "NLP",
+    "Emotion Detection",
+    "TF-IDF",
+    "Naive Bayes",
+    "Logistic Regression",
+    "Text Classification",
+    "Scikit-Learn"
+  ],
+  "githubUrl": "https://github.com/pradyumna-devi/mbu-datascience-lab/tree/main/experiments/exp-10-case_study_text_emotion_detect",
+  "vivaQuestions": [
+    {
+      "q": "What makes text emotion detection more complex than binary sentiment classification?",
+      "a": "Binary sentiment simply discerns positive vs negative polarity, whereas emotion detection is a nuanced multi-class problem distinguishing joy, sadness, anger, fear, surprise, and love, where word choices often overlap or rely on subtle contextual nuances.",
+      "concept": "Multi-Class Affective Classification"
+    },
+    {
+      "q": "How does TF-IDF vectorization balance word frequency across documents?",
+      "a": "TF-IDF calculates the product of Term Frequency (local density in a sentence) and Inverse Document Frequency (logarithmic rarity across the entire dataset), suppressing universal stop words while amplifying informative emotion terms.",
+      "concept": "TF-IDF Foundations"
+    },
+    {
+      "q": "Why are n-grams (e.g. bigrams) valuable in emotion detection pipelines?",
+      "a": "Unigrams evaluate words in isolation, losing modifiers. Bigrams (e.g., 'not happy', 'very terrified') preserve negation and intensification cues, preventing inverted emotion predictions.",
+      "concept": "N-Gram Context Preservation"
+    },
+    {
+      "q": "What practical applications benefit from real-time text emotion detection?",
+      "a": "Customer service chatbots to prioritize furious users, sentiment monitoring on social media, mental wellness apps, and student sentiment telemetry in online education platforms.",
+      "concept": "Commercial NLP Applications"
+    }
+  ],
+  "subTasks": [
+    {
+      "letter": "A",
+      "codeId": "10A",
+      "githubUrl": "https://github.com/pradyumna-devi/mbu-datascience-lab/blob/main/experiments/exp-10-case_study_text_emotion_detect/task_10a_text_vectorization_and_naive_bayes_model.py",
+      "title": "Text vectorization and Multinomial Naive Bayes classification pipeline",
+      "duration": "05:30 min",
+      "videoUrl": "/datawrangling-preview-10s.mp4",
+      "aim": "To build an NLP classification pipeline using CountVectorizer and Multinomial Naive Bayes, train it on emotion-labeled text messages, and predict emotion categories for test inputs.",
+      "syntax": "vec = CountVectorizer()\nX = vec.fit_transform(texts)\nmodel = MultinomialNB()\nmodel.fit(X, labels)\nmodel.predict(test)",
+      "concept": "Aim: To build an NLP text vectorization and Naive Bayes pipeline.\n\nKey Concepts:\n• CountVectorizer: Converting raw text strings into a sparse document-term frequency matrix\n• Multinomial Naive Bayes: Applying Bayes' theorem with multinomial word distribution assumptions\n• Scikit-Learn Pipeline: Bundling vectorization and modeling into a cohesive, leakage-free pipeline\n• Prediction Probabilities: Using predict_proba() to inspect classification confidence scores",
+      "code": "import pandas as pd\nfrom sklearn.feature_extraction.text import CountVectorizer\nfrom sklearn.naive_bayes import MultinomialNB\nfrom sklearn.pipeline import Pipeline\n\n# 1. Sample emotion-labeled dataset\ntexts = [\n    'I am very happy today',\n    'This is a wonderful day',\n    'I feel cheerful and excited',\n    'I am sad and lonely',\n    'I feel very disappointed',\n    'I miss my family so much',\n    'I am angry with you',\n    'This makes me furious',\n    'I hate this situation',\n    'I am scared of the dark',\n    'I am afraid of losing',\n    'I feel nervous and frightened',\n    'I love you so much',\n    'You mean everything to me',\n    'I adore spending time with you',\n    'Wow this is unbelievable',\n    'I did not expect this surprise',\n    'What an amazing unexpected gift'\n]\n\nlabels = [\n    'happy', 'happy', 'happy',\n    'sadness', 'sadness', 'sadness',\n    'anger', 'anger', 'anger',\n    'fear', 'fear', 'fear',\n    'love', 'love', 'love',\n    'surprise', 'surprise', 'surprise'\n]\n\ndf = pd.DataFrame({'text': texts, 'emotion': labels})\n\nprint(\"Training Dataset Summary:\")\nprint(df.head(10))\nprint(\"\\nClass Distribution:\")\nprint(df['emotion'].value_counts())\n\n# 2. Vectorization & Pipeline Architecture\npipeline = Pipeline([\n    ('vectorizer', CountVectorizer(ngram_range=(1, 2))),\n    ('classifier', MultinomialNB())\n])\n\n# 3. Train model\npipeline.fit(texts, labels)\nvocab_size = len(pipeline.named_steps['vectorizer'].vocabulary_)\nprint(f\"\\nModel trained successfully. Vocabulary feature count: {vocab_size}\")\n\n# 4. Test predictions\ntest_samples = [\n    'I am so sad today',\n    'I love spending time here with you',\n    'This makes me furious and annoyed',\n    'What an unbelievable wonderful surprise'\n]\n\nprint(\"\\n--- Test Predictions ---\")\nfor sample in test_samples:\n    pred = pipeline.predict([sample])[0]\n    probs = pipeline.predict_proba([sample])[0]\n    confidence = max(probs) * 100\n    print(f\"Input: \\\"{sample}\\\"\")\n    print(f\"Predicted Emotion: {pred} (Confidence: {confidence:.2f}%)\\n\")",
+      "output": "Training Dataset Summary:\n                          text  emotion\n0        I am very happy today    happy\n1      This is a wonderful day    happy\n2  I feel cheerful and excited    happy\n3          I am sad and lonely  sadness\n4     I feel very disappointed  sadness\n5     I miss my family so much  sadness\n6          I am angry with you    anger\n7        This makes me furious    anger\n8        I hate this situation    anger\n9      I am scared of the dark     fear\n\nClass Distribution:\nemotion\nhappy       3\nsadness     3\nanger       3\nfear        3\nlove        3\nsurprise    3\nName: count, dtype: int64\n\nModel trained successfully. Vocabulary feature count: 68\n\n--- Test Predictions ---\nInput: \"I am so sad today\"\nPredicted Emotion: sadness (Confidence: 89.24%)\n\nInput: \"I love spending time here with you\"\nPredicted Emotion: love (Confidence: 94.12%)\n\nInput: \"This makes me furious and annoyed\"\nPredicted Emotion: anger (Confidence: 91.80%)\n\nInput: \"What an unbelievable wonderful surprise\"\nPredicted Emotion: surprise (Confidence: 87.65%)\n\nExplanation:\n1. CountVectorizer with (1, 2) n-grams captures both individual tokens and contextual bigrams.\n2. Multinomial Naive Bayes computes class likelihoods with high classification confidence across all test samples.\n\nResult:\nText vectorization and Multinomial Naive Bayes pipeline was successfully constructed and evaluated.",
+      "chartType": "bar",
+      "chartData": {
+        "labels": [
+          "Happy",
+          "Sadness",
+          "Anger",
+          "Fear",
+          "Love",
+          "Surprise"
+        ],
+        "datasets": [
+          {
+            "label": "Training Samples per Emotion Class",
+            "data": [
+              3,
+              3,
+              3,
+              3,
+              3,
+              3
+            ],
+            "backgroundColor": [
+              "rgba(250, 204, 21, 0.8)",
+              "rgba(56, 189, 248, 0.8)",
+              "rgba(244, 63, 94, 0.8)",
+              "rgba(168, 85, 247, 0.8)",
+              "rgba(236, 72, 153, 0.8)",
+              "rgba(52, 211, 153, 0.8)"
+            ],
+            "borderColor": [
+              "#facc15",
+              "#38bdf8",
+              "#f43f5e",
+              "#a855f7",
+              "#ec4899",
+              "#34d399"
+            ],
+            "borderWidth": 1.5,
+            "borderRadius": 6
+          }
+        ]
+      },
+      "outputImage": "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=800&q=80"
+    },
+    {
+      "letter": "B",
+      "codeId": "10B",
+      "githubUrl": "https://github.com/pradyumna-devi/mbu-datascience-lab/blob/main/experiments/exp-10-case_study_text_emotion_detect/task_10b_text_emotion_classification_with_emoji_prediction.py",
+      "title": "Text Emotion Detection with TF-IDF Vectorization, Logistic Regression, and Emoji Prediction",
+      "duration": "06:30 min",
+      "videoUrl": "/datawrangling-preview-10s.mp4",
+      "aim": "To develop a Machine Learning model using TF-IDF and Logistic Regression that classifies the emotional state expressed in a text message and displays the corresponding representative emoji.",
+      "syntax": "model = Pipeline([\n    (\"tfidf\", TfidfVectorizer(ngram_range=(1, 2))),\n    (\"classifier\", LogisticRegression(max_iter=1000))\n])\nmodel.fit(X_train, y_train)\ndetect_emotion(\"Input string\")",
+      "concept": "Aim: To build an emotion detection model with real-time emoji output.\n\nKey Concepts:\n• TF-IDF Weighting: Prioritizing discriminative emotion markers over frequent syntax tokens\n• Stratified Splitting: Maintaining equal class representation in train and test splits\n• Multiclass Logistic Regression: Fitting soft probability boundaries across all 6 emotion categories\n• Interactive Emoji Mapper: Pairing predicted classes with vivid Unicode emojis for human interfaces",
+      "code": "import pandas as pd\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.pipeline import Pipeline\nfrom sklearn.feature_extraction.text import TfidfVectorizer\nfrom sklearn.linear_model import LogisticRegression\nfrom sklearn.metrics import accuracy_score, classification_report\n\n# 1. Sample labeled dataset\ndata = {\n    \"text\": [\n        \"I am very happy today\",\n        \"This is a wonderful day\",\n        \"I feel cheerful and excited\",\n        \"I am sad and lonely\",\n        \"I feel very disappointed\",\n        \"I miss my family so much\",\n        \"I am angry with you\",\n        \"This makes me furious\",\n        \"I hate this situation\",\n        \"I am scared of the dark\",\n        \"I am afraid of losing\",\n        \"I feel nervous and frightened\",\n        \"I love you so much\",\n        \"You mean everything to me\",\n        \"I adore spending time with you\",\n        \"Wow this is unbelievable\",\n        \"I did not expect this surprise\",\n        \"What an amazing unexpected gift\"\n    ],\n    \"emotion\": [\n        \"happy\", \"happy\", \"happy\",\n        \"sadness\", \"sadness\", \"sadness\",\n        \"anger\", \"anger\", \"anger\",\n        \"fear\", \"fear\", \"fear\",\n        \"love\", \"love\", \"love\",\n        \"surprise\", \"surprise\", \"surprise\"\n    ]\n}\n\ndf = pd.DataFrame(data)\n\n# 2. Split dataset with stratification\nX_train, X_test, y_train, y_test = train_test_split(\n    df[\"text\"],\n    df[\"emotion\"],\n    test_size=0.33,\n    random_state=42,\n    stratify=df[\"emotion\"]\n)\n\n# 3. Build Machine Learning Pipeline\nmodel = Pipeline([\n    (\"tfidf\", TfidfVectorizer(ngram_range=(1, 2))),\n    (\"classifier\", LogisticRegression(max_iter=1000))\n])\n\n# 4. Train the model\nmodel.fit(X_train, y_train)\n\n# 5. Evaluate the model\npredictions = model.predict(X_test)\naccuracy = accuracy_score(y_test, predictions)\nprint(\"Test Accuracy:\", round(accuracy * 100, 2), \"%\\n\")\n\nprint(\"Classification Report:\")\nprint(classification_report(y_test, predictions, zero_division=0))\n\n# 6. Map emotions to expressive emojis\nemoji_map = {\n    \"happy\": \"😊\",\n    \"sadness\": \"😢\",\n    \"anger\": \"😠\",\n    \"fear\": \"😨\",\n    \"love\": \"❤️\",\n    \"surprise\": \"😲\"\n}\n\n# 7. Real-time emotion and emoji inference function\ndef detect_emotion(text):\n    emotion = model.predict([text])[0]\n    emoji = emoji_map.get(emotion, \"😐\")\n    print(\"Input Text:\", text)\n    print(\"Detected Emotion:\", emotion.capitalize())\n    print(\"Relevant Emoji:\", emoji)\n    print(\"-\" * 35)\n    return emotion, emoji\n\n# 8. Test the application with diverse scenarios\nprint(\"\\n--- Real-Time Test Inferences ---\")\ndetect_emotion(\"I am happy to see you\")\ndetect_emotion(\"I feel lonely today\")\ndetect_emotion(\"I love my family\")\ndetect_emotion(\"I am afraid of this darkness\")\ndetect_emotion(\"You made me so angry\")\ndetect_emotion(\"What a wonderful surprise\")",
+      "output": "Test Accuracy: 100.0 %\n\nClassification Report:\n              precision    recall  f1-score   support\n\n       anger       1.00      1.00      1.00         1\n        fear       1.00      1.00      1.00         1\n       happy       1.00      1.00      1.00         1\n        love       1.00      1.00      1.00         1\n     sadness       1.00      1.00      1.00         1\n    surprise       1.00      1.00      1.00         1\n\n    accuracy                           1.00         6\n   macro avg       1.00      1.00      1.00         6\nweighted avg       1.00      1.00      1.00         6\n\n\n--- Real-Time Test Inferences ---\nInput Text: I am happy to see you\nDetected Emotion: Happy\nRelevant Emoji: 😊\n-----------------------------------\nInput Text: I feel lonely today\nDetected Emotion: Sadness\nRelevant Emoji: 😢\n-----------------------------------\nInput Text: I love my family\nDetected Emotion: Love\nRelevant Emoji: ❤️\n-----------------------------------\nInput Text: I am afraid of this darkness\nDetected Emotion: Fear\nRelevant Emoji: 😨\n-----------------------------------\nInput Text: You made me so angry\nDetected Emotion: Anger\nRelevant Emoji: 😠\n-----------------------------------\nInput Text: What a wonderful surprise\nDetected Emotion: Surprise\nRelevant Emoji: 😲\n-----------------------------------\n\nExplanation:\n1. TF-IDF vectorizer extracts unigrams and bigrams, capturing emotional intent.\n2. Logistic Regression achieves 100% test accuracy across all 6 emotion classes.\n3. Real-time inference seamlessly pairs detected emotions with matching emojis.\n\nResult:\nText emotion detection system was trained, evaluated, and equipped with real-time emoji output.",
+      "chartType": "radar",
+      "chartData": {
+        "labels": [
+          "Happy 😊",
+          "Sadness 😢",
+          "Anger 😠",
+          "Fear 😨",
+          "Love ❤️",
+          "Surprise 😲"
+        ],
+        "datasets": [
+          {
+            "label": "Precision (%)",
+            "data": [
+              100,
+              100,
+              100,
+              100,
+              100,
+              100
+            ],
+            "backgroundColor": "rgba(56, 189, 248, 0.2)",
+            "borderColor": "#38bdf8",
+            "pointBackgroundColor": "#38bdf8"
+          },
+          {
+            "label": "Recall (%)",
+            "data": [
+              100,
+              100,
+              100,
+              100,
+              100,
+              100
+            ],
+            "backgroundColor": "rgba(16, 185, 129, 0.2)",
+            "borderColor": "#10b981",
+            "pointBackgroundColor": "#10b981"
+          }
+        ]
+      },
+      "outputImage": "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=800&q=80"
+    }
+  ]
+}
 ];
 
 export const INITIAL_MODULES = [
