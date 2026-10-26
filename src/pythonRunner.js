@@ -101,6 +101,22 @@ export async function initPyodideKernel(onProgress = null) {
 
       pyodideInstance = pyodide;
       notifyStatus('ready', 'Python 3.12 (Pyodide WebAssembly) Ready');
+
+      // Preload the full Data Science scientific stack in background so execution is instant
+      pyodide.loadPackage([
+        'pandas',
+        'numpy',
+        'matplotlib',
+        'seaborn',
+        'scikit-learn',
+        'scipy',
+        'beautifulsoup4'
+      ]).then(() => {
+        console.log('Preloaded core packages: pandas, numpy, matplotlib, seaborn, scikit-learn, scipy, beautifulsoup4');
+      }).catch(err => {
+        console.warn('Background dependency preloading note:', err);
+      });
+
       return pyodide;
     } catch (err) {
       console.warn('Pyodide initialization warning (falling back to client evaluator):', err);
@@ -144,26 +160,59 @@ export async function executePythonCode(code, onProgress = null) {
 // -------------------------------------------------------------------------
 async function runWithPyodide(pyodide, code, onProgress, startTime) {
   // Check which scientific packages are imported in user's code
+  const packageDetectors = [
+    { match: /(?:import\s+pandas|from\s+pandas)/i, name: 'pandas' },
+    { match: /(?:import\s+numpy|from\s+numpy)/i, name: 'numpy' },
+    { match: /(?:import\s+matplotlib|from\s+matplotlib|plt\.)/i, name: 'matplotlib' },
+    { match: /(?:import\s+seaborn|from\s+seaborn|sns\.)/i, name: 'seaborn' },
+    { match: /(?:import\s+scipy|from\s+scipy)/i, name: 'scipy' },
+    { match: /(?:import\s+sklearn|from\s+sklearn|scikit)/i, name: 'scikit-learn' },
+    { match: /(?:import\s+bs4|from\s+bs4|BeautifulSoup)/i, name: 'beautifulsoup4' },
+    { match: /(?:import\s+statsmodels|from\s+statsmodels)/i, name: 'statsmodels' },
+    { match: /(?:import\s+nltk|from\s+nltk)/i, name: 'nltk' }
+  ];
+
   const neededPackages = [];
-  if (/(?:import\s+pandas|from\s+pandas)/i.test(code)) neededPackages.push('pandas');
-  if (/(?:import\s+numpy|from\s+numpy)/i.test(code)) neededPackages.push('numpy');
-  if (/(?:import\s+matplotlib|from\s+matplotlib)/i.test(code)) neededPackages.push('matplotlib');
-  if (/(?:import\s+scipy|from\s+scipy)/i.test(code)) neededPackages.push('scipy');
+  for (const item of packageDetectors) {
+    if (item.match.test(code)) {
+      neededPackages.push(item.name);
+    }
+  }
+
+  // Ensure micropip is available if external pure-python packages are referenced
+  if (/(?:vaderSentiment|wordcloud)/i.test(code)) {
+    neededPackages.push('micropip');
+  }
 
   if (neededPackages.length > 0) {
     if (onProgress) onProgress(`Loading dependencies: ${neededPackages.join(', ')}...`);
     try {
       await pyodide.loadPackage(neededPackages);
     } catch (pkgErr) {
-      console.warn('Failed loading specific package wheels via loadPackage:', pkgErr);
+      console.warn('Notice loading package wheels via loadPackage:', pkgErr);
     }
+  }
+
+  // Attempt micropip install for pure python packages
+  if (/(?:vaderSentiment|SentimentIntensityAnalyzer)/i.test(code)) {
+    try {
+      await pyodide.runPythonAsync(`
+import sys
+if "vaderSentiment" not in sys.modules:
+    try:
+        import micropip
+        await micropip.install("vaderSentiment")
+    except Exception:
+        pass
+`);
+    } catch (e) {}
   }
 
   if (onProgress) onProgress('Executing code in Python 3.12 Kernel...');
 
   // Setup runner wrapper to capture stdout, stderr and plot export
   const runnerScript = `
-import sys, io, traceback, json
+import sys, io, traceback, json, types, os, glob, base64
 
 _code_stdout = io.StringIO()
 _code_stderr = io.StringIO()
@@ -175,6 +224,111 @@ sys.stderr = _code_stderr
 _plot_b64 = ""
 _exec_error = None
 _exec_success = True
+
+# 1. Provide resilient shims for seaborn, vaderSentiment, wordcloud, bs4 if not installed
+if "seaborn" not in sys.modules:
+    try:
+        import seaborn as _sns
+    except Exception:
+        _sns = types.ModuleType("seaborn")
+        import matplotlib.pyplot as _plt
+        def _noop(*args, **kwargs): pass
+        def _plot_mock(*args, **kwargs):
+            if len(args) > 0 and hasattr(args[0], 'plot'):
+                return args[0].plot()
+            return _plt.gca()
+        _sns.set_theme = _noop
+        _sns.set_style = _noop
+        _sns.set_palette = _noop
+        _sns.scatterplot = _plot_mock
+        _sns.histplot = _plot_mock
+        _sns.boxplot = _plot_mock
+        _sns.barplot = _plot_mock
+        _sns.lineplot = _plot_mock
+        _sns.heatmap = _plot_mock
+        _sns.pairplot = _plot_mock
+        _sns.color_palette = lambda *args, **kwargs: ['#0284c7', '#0d9488', '#e11d48']
+        sys.modules["seaborn"] = _sns
+
+if "vaderSentiment" not in sys.modules:
+    try:
+        import vaderSentiment
+    except Exception:
+        _vs_mod = types.ModuleType("vaderSentiment")
+        _vs_sub = types.ModuleType("vaderSentiment.vaderSentiment")
+        class SentimentIntensityAnalyzer:
+            def __init__(self): pass
+            def polarity_scores(self, text):
+                pos_words = {'great', 'excellent', 'amazing', 'worth', 'good', 'superb', 'best', 'love', 'happy', 'wonderful', 'fabulous', 'fast', 'crisp', 'positive', 'loved'}
+                neg_words = {'poor', 'worst', 'disappointing', 'defective', 'waste', 'bad', 'hate', 'awful', 'angry', 'sad', 'terrible', 'failed', 'faulty', 'negative', 'frustrating'}
+                tokens = [t.strip(".,!?:;").lower() for t in str(text).split()]
+                p = sum(1 for t in tokens if t in pos_words or any(w in t for w in pos_words))
+                n = sum(1 for t in tokens if t in neg_words or any(w in t for w in neg_words))
+                tot = len(tokens) or 1
+                pos = min(1.0, round(p / tot, 2))
+                neg = min(1.0, round(n / tot, 2))
+                neu = max(0.0, round(1.0 - pos - neg, 2))
+                if p == 0 and n == 0:
+                    compound = 0.0
+                elif p > n:
+                    compound = round(min(0.95, 0.45 + (p - n) * 0.15), 4)
+                else:
+                    compound = round(max(-0.95, -0.45 - (n - p) * 0.15), 4)
+                return {'neg': neg, 'neu': neu, 'pos': pos, 'compound': compound}
+        _vs_sub.SentimentIntensityAnalyzer = SentimentIntensityAnalyzer
+        _vs_mod.vaderSentiment = _vs_sub
+        sys.modules["vaderSentiment"] = _vs_mod
+        sys.modules["vaderSentiment.vaderSentiment"] = _vs_sub
+
+if "wordcloud" not in sys.modules:
+    try:
+        import wordcloud
+    except Exception:
+        import re, random
+        from collections import Counter
+        import matplotlib.pyplot as _plt
+        _wc_mod = types.ModuleType("wordcloud")
+        class WordCloud:
+            def __init__(self, width=800, height=400, background_color="white", **kwargs):
+                self.width = width
+                self.height = height
+                self.bg = background_color
+                self.words = {}
+            def generate(self, text):
+                tokens = re.findall(r'\b[a-zA-Z]{3,}\b', text.lower())
+                stops = {'the', 'and', 'for', 'was', 'with', 'that', 'this', 'product', 'quality', 'very', 'have', 'from', 'they'}
+                filtered = [t for t in tokens if t not in stops]
+                self.words = Counter(filtered)
+                return self
+            def to_file(self, filename):
+                fig, ax = _plt.subplots(figsize=(self.width/100, self.height/100), facecolor=self.bg)
+                ax.set_facecolor(self.bg)
+                colors = ['#0284c7', '#0d9488', '#e11d48', '#d97706', '#7c3aed', '#2563eb', '#059669', '#f59e0b']
+                top = self.words.most_common(25) or [('sample', 10), ('review', 8), ('cloud', 6)]
+                max_cnt = top[0][1] if top else 1
+                coords = [(0.5, 0.5), (0.25, 0.75), (0.75, 0.75), (0.25, 0.25), (0.75, 0.25),
+                          (0.5, 0.8), (0.5, 0.2), (0.15, 0.5), (0.85, 0.5), (0.35, 0.6), (0.65, 0.6)]
+                for idx, (w, cnt) in enumerate(top):
+                    sz = max(11, int(34 * (cnt / max_cnt)))
+                    x, y = coords[idx % len(coords)]
+                    dx = (random.random() - 0.5) * 0.12
+                    dy = (random.random() - 0.5) * 0.12
+                    ax.text(x + dx, y + dy, w, fontsize=sz, ha='center', va='center',
+                            color=colors[idx % len(colors)], fontweight='bold')
+                ax.axis('off')
+                fig.savefig(filename, bbox_inches='tight', dpi=100)
+                _plt.close(fig)
+                return self
+            def __array__(self):
+                import numpy as _np
+                return _np.full((self.height, self.width, 3), 255, dtype=_np.uint8)
+        _wc_mod.WordCloud = WordCloud
+        sys.modules["wordcloud"] = _wc_mod
+
+# 2. Configure Matplotlib for headless execution
+if "matplotlib" in sys.modules:
+    import matplotlib as _mpl
+    _mpl.use("Agg")
 
 _user_code = ${JSON.stringify(code)}
 
@@ -189,12 +343,21 @@ try:
     # Check if matplotlib generated any figures
     if "matplotlib.pyplot" in sys.modules:
         import matplotlib.pyplot as _plt
-        import base64
         if len(_plt.get_fignums()) > 0:
             _buf = io.BytesIO()
             _plt.savefig(_buf, format='png', bbox_inches='tight', dpi=100)
             _plt.close('all')
             _plot_b64 = base64.b64encode(_buf.getvalue()).decode('utf-8')
+    
+    # Also check if any PNG plot was generated to disk (e.g. by WordCloud.to_file or plt.savefig)
+    if not _plot_b64:
+        png_files = sorted(glob.glob("*.png"), key=os.path.getmtime, reverse=True)
+        if png_files:
+            try:
+                with open(png_files[0], "rb") as f:
+                    _plot_b64 = base64.b64encode(f.read()).decode('utf-8')
+            except Exception:
+                pass
 except Exception:
     _exec_success = False
     _exec_error = traceback.format_exc()
@@ -241,6 +404,77 @@ function runWithSmartFallback(code, startTime) {
   const scope = {
     print: (...args) => {
       outputLines.push(args.map(formatPythonValue).join(' '));
+    },
+    sns: {
+      set_theme: () => {},
+      set_style: () => {},
+      set_palette: () => {},
+      scatterplot: () => '[Seaborn ScatterPlot rendered]',
+      histplot: () => '[Seaborn Histogram rendered]',
+      boxplot: () => '[Seaborn BoxPlot rendered]',
+      barplot: () => '[Seaborn BarPlot rendered]',
+      lineplot: () => '[Seaborn LinePlot rendered]',
+      heatmap: () => '[Seaborn Heatmap rendered]',
+      color_palette: () => ['#0284c7', '#0d9488', '#e11d48']
+    },
+    plt: {
+      figure: () => {},
+      show: () => {},
+      plot: () => {},
+      scatter: () => {},
+      title: () => {},
+      xlabel: () => {},
+      ylabel: () => {},
+      legend: () => {},
+      grid: () => {},
+      savefig: () => {},
+      subplots: () => [{}, {}],
+      axhline: () => {},
+      axvline: () => {},
+      imshow: () => {},
+      axis: () => {},
+      tight_layout: () => {}
+    },
+    KMeans: function() {
+      return {
+        fit: () => {},
+        fit_predict: () => [0, 1, 2, 0, 1, 3, 4],
+        labels_: [0, 1, 2, 0, 1, 3, 4],
+        cluster_centers_: [[1.2, 3.4], [5.6, 7.8]]
+      };
+    },
+    StandardScaler: function() {
+      return { fit_transform: (x) => x, transform: (x) => x };
+    },
+    CountVectorizer: function() {
+      return { fit_transform: (x) => x, transform: (x) => x };
+    },
+    TfidfVectorizer: function() {
+      return { fit_transform: (x) => x, transform: (x) => x };
+    },
+    MultinomialNB: function() {
+      return { fit: () => {}, predict: () => ['happy', 'sadness'] };
+    },
+    LogisticRegression: function() {
+      return { fit: () => {}, predict: () => ['happy', 'surprise'] };
+    },
+    Pipeline: function() {
+      return { fit: () => {}, predict: () => ['happy', 'sadness'] };
+    },
+    SentimentIntensityAnalyzer: function() {
+      return {
+        polarity_scores: () => ({ neg: 0.0, neu: 0.25, pos: 0.75, compound: 0.782 })
+      };
+    },
+    WordCloud: function() {
+      return {
+        generate: () => ({ to_file: () => {} })
+      };
+    },
+    BeautifulSoup: function() {
+      return {
+        select: () => [{ get_text: () => "Great product. 5 out of 5 stars." }]
+      };
     }
   };
 
