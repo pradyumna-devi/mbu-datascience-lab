@@ -67,9 +67,9 @@ import {
 // ==========================================
 const STORAGE_KEYS = {
   EXPERIMENTS: 'mbu_ds_experiments_v3_clean',
-  PROFILE: 'mbu_ds_profile_v5_personal_email',
+  PROFILE: 'mbu_ds_profile_v6_resume_links',
   MODULES: 'mbu_ds_modules_v4_all_modules',
-  PROJECTS: 'mbu_ds_projects_v2',
+  PROJECTS: 'mbu_ds_projects_v3_with_agni_drishti',
   THEME: 'mbu_ds_theme_mode',
   VERSION: 'mbu_ds_data_version_v11_experiments_4_to_10'
 };
@@ -266,6 +266,14 @@ function loadProfile() {
       if (!parsed.designation) parsed.designation = INITIAL_PROFILE.designation;
       if (!parsed.leetcodeUrl) parsed.leetcodeUrl = INITIAL_PROFILE.leetcodeUrl;
       if (!parsed.githubUrl) parsed.githubUrl = INITIAL_PROFILE.githubUrl;
+      parsed.linkedinUrl = INITIAL_PROFILE.linkedinUrl;
+      parsed.instagramUrl = INITIAL_PROFILE.instagramUrl;
+      parsed.facebookUrl = INITIAL_PROFILE.facebookUrl;
+      parsed.cgpa = INITIAL_PROFILE.cgpa;
+      parsed.phone = INITIAL_PROFILE.phone;
+      parsed.location = INITIAL_PROFILE.location;
+      parsed.resumeUrl = INITIAL_PROFILE.resumeUrl;
+      parsed.resumeName = INITIAL_PROFILE.resumeName;
       if (!parsed.branch) parsed.branch = INITIAL_PROFILE.branch;
       if (!parsed.section) parsed.section = INITIAL_PROFILE.section;
 
@@ -501,11 +509,26 @@ function renderProfile() {
   if (portEmailDisplay) portEmailDisplay.textContent = profile.email || "mudimelapradyumnadevi@gmail.com";
   if (portResumeFile) portResumeFile.textContent = profile.resumeName || "Mudimela_Pradyumna_Devi_Resume.pdf";
 
-  // Handles & Links: GitHub & LeetCode
+  // Handles & Links: LinkedIn, GitHub, Instagram / TechEd Telugu, Facebook, LeetCode
+  const inLink = document.getElementById('portfolioLinkedinLink');
+  const inHandle = document.getElementById('portfolioLinkedinHandle');
+  if (inLink) inLink.href = profile.linkedinUrl || "https://www.linkedin.com/in/mudimela-pradyumna-devi-137a18367/";
+  if (inHandle) inHandle.textContent = "in/mudimela-pradyumna-devi-137a18367";
+
   const ghLink = document.getElementById('portfolioGithubLink');
   const ghHandle = document.getElementById('portfolioGithubHandle');
   if (ghLink) ghLink.href = profile.githubUrl || "https://github.com/pradyumna-devi";
   if (ghHandle) ghHandle.textContent = `@${(profile.githubUrl || '').replace(/https?:\/\/(www\.)?github\.com\/?/, '') || 'pradyumna-devi'}`;
+
+  const igLink = document.getElementById('portfolioInstagramLink');
+  const igHandle = document.getElementById('portfolioInstagramHandle');
+  if (igLink) igLink.href = profile.instagramUrl || "https://www.instagram.com/teched_telugu?utm_source=qr&mdxt=MWhhbmljZmxpOHVoMA==";
+  if (igHandle) igHandle.textContent = "@teched_telugu";
+
+  const fbLink = document.getElementById('portfolioFacebookLink');
+  const fbHandle = document.getElementById('portfolioFacebookHandle');
+  if (fbLink) fbLink.href = profile.facebookUrl || "https://www.facebook.com/share/1FDxpk9QBn/";
+  if (fbHandle) fbHandle.textContent = "facebook.com/share/1FDxpk9QBn/";
 
   const leetLink = document.getElementById('portfolioLeetcodeLink');
   const leetHandle = document.getElementById('portfolioLeetcodeHandle');
@@ -516,9 +539,10 @@ function renderProfile() {
   const cvName = document.getElementById('cvNameDisplay');
   const cvEmail = document.getElementById('cvEmailDisplay');
   const cvPhone = document.getElementById('cvPhoneDisplay');
-  const cvYoutube = document.getElementById('cvYoutubeDisplay');
-  const cvGithub = document.getElementById('cvGithubDisplay');
   const cvLinkedin = document.getElementById('cvLinkedinDisplay');
+  const cvGithub = document.getElementById('cvGithubDisplay');
+  const cvInstagram = document.getElementById('cvInstagramDisplay');
+  const cvFacebook = document.getElementById('cvFacebookDisplay');
 
   if (cvName) cvName.textContent = profile.name || "Mudimela Pradyumna Devi";
   if (cvEmail) {
@@ -526,21 +550,20 @@ function renderProfile() {
     cvEmail.href = `mailto:${profile.email || "mudimelapradyumnadevi@gmail.com"}`;
   }
   if (cvPhone) {
-    cvPhone.textContent = profile.phone || "9182361994";
-    cvPhone.href = `tel:${profile.phone || "9182361994"}`;
-  }
-  if (cvYoutube) {
-    cvYoutube.href = profile.youtubeUrl || "https://youtube.com/@mudimelapradyumnadevi";
+    cvPhone.textContent = profile.phone || "+91 9182361994";
+    cvPhone.href = `tel:${(profile.phone || "+91 9182361994").replace(/[^0-9+]/g, '')}`;
   }
   if (cvLinkedin) {
-    const rawIn = (profile.linkedinUrl || "linkedin.com/in/mudimela-pradyumna-devi").replace(/^https?:\/\/(www\.)?/, '');
-    cvLinkedin.textContent = rawIn;
-    cvLinkedin.href = profile.linkedinUrl?.startsWith('http') ? profile.linkedinUrl : `https://${rawIn}`;
+    cvLinkedin.href = profile.linkedinUrl || "https://www.linkedin.com/in/mudimela-pradyumna-devi-137a18367/";
   }
   if (cvGithub) {
-    const rawGh = (profile.githubUrl || "github.com/pradyumna-devi").replace(/^https?:\/\/(www\.)?/, '');
-    cvGithub.textContent = rawGh;
-    cvGithub.href = profile.githubUrl?.startsWith('http') ? profile.githubUrl : `https://${rawGh}`;
+    cvGithub.href = profile.githubUrl || "https://github.com/pradyumna-devi";
+  }
+  if (cvInstagram) {
+    cvInstagram.href = profile.instagramUrl || "https://www.instagram.com/teched_telugu?utm_source=qr&mdxt=MWhhbmljZmxpOHVoMA==";
+  }
+  if (cvFacebook) {
+    cvFacebook.href = profile.facebookUrl || "https://www.facebook.com/share/1FDxpk9QBn/";
   }
 
   // Header count pill
@@ -4525,6 +4548,26 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
+  document.getElementById('copyLinkedinLinkBtn')?.addEventListener('click', () => {
+    navigator.clipboard.writeText(profile.linkedinUrl || 'https://www.linkedin.com/in/mudimela-pradyumna-devi-137a18367/').then(() => {
+      showToast("LinkedIn URL copied to clipboard!");
+    });
+  });
+  document.getElementById('copyGithubLinkBtn')?.addEventListener('click', () => {
+    navigator.clipboard.writeText(profile.githubUrl || 'https://github.com/pradyumna-devi').then(() => {
+      showToast("GitHub URL copied to clipboard!");
+    });
+  });
+  document.getElementById('copyInstagramLinkBtn')?.addEventListener('click', () => {
+    navigator.clipboard.writeText(profile.instagramUrl || 'https://www.instagram.com/teched_telugu?utm_source=qr&mdxt=MWhhbmljZmxpOHVoMA==').then(() => {
+      showToast("Instagram Channel URL copied to clipboard!");
+    });
+  });
+  document.getElementById('copyFacebookLinkBtn')?.addEventListener('click', () => {
+    navigator.clipboard.writeText(profile.facebookUrl || 'https://www.facebook.com/share/1FDxpk9QBn/').then(() => {
+      showToast("Facebook profile URL copied to clipboard!");
+    });
+  });
   document.getElementById('copyLeetcodeLinkBtn')?.addEventListener('click', () => {
     navigator.clipboard.writeText(profile.leetcodeUrl || 'https://leetcode.com/pradyumna_devi').then(() => {
       showToast("LeetCode URL copied to clipboard!");

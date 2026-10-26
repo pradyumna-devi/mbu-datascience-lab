@@ -374,6 +374,77 @@ plt.show()`
 
 export const INITIAL_PROJECTS = [
   {
+    id: "proj-agni-drishti",
+    title: "Agni Drishti – Industrial Fire Intelligence",
+    domain: "Geospatial AI & Remote Sensing",
+    badge: "Hackathon Project",
+    badgeColor: "#ef4444",
+    difficulty: "Advanced",
+    duration: "Hackathon 2026",
+    techStack: [
+      "Python 3.12",
+      "NASA FIRMS API",
+      "OpenStreetMap",
+      "Machine Learning",
+      "Geospatial Analytics",
+      "GIS Dashboard"
+    ],
+    datasetName: "NASA FIRMS Near Real-Time Thermal Anomalies / Modis & VIIRS Stream",
+    summary: "Proposed a geospatial surveillance system to identify and classify potential industrial fires and persistent thermal sources using NASA FIRMS hotspot data and OpenStreetMap context.",
+    description: "Agni Drishti is an advanced geospatial AI surveillance system engineered to identify, verify, and classify potential industrial fires and persistent thermal anomalies. By fusing near-real-time hotspot telemetry from NASA FIRMS with contextual vector layers from OpenStreetMap, it filters out false positives, distinguishes industrial combustion from agricultural and forest wildfires, and feeds situational awareness alerts to an interactive GIS command dashboard.",
+    keyMetrics: [
+      { label: "Data Pipeline", val: "NASA FIRMS Hotspots" },
+      { label: "Spatial Context", val: "OpenStreetMap POIs" },
+      { label: "Source Classification", val: "Industrial vs Wildfire" }
+    ],
+    architecture: [
+      "Data Ingestion: Polls NASA FIRMS near-real-time satellite thermal anomaly coordinates and brightness temperatures",
+      "Spatial Preprocessing: Filters spatial outliers and constructs dynamic spatial bounding clusters around hotspots",
+      "Geographic Enrichment: Intersects coordinates with OpenStreetMap industrial zones, power plants, and agricultural land",
+      "ML Classification: Classifies thermal signatures into industrial, agricultural, forest, or unknown categories",
+      "GIS Telemetry: Streams classified clusters to an interactive mapping dashboard for rapid emergency response"
+    ],
+    code: `import numpy as np
+import pandas as pd
+
+# Agni Drishti - Industrial Fire Intelligence & NASA FIRMS Telemetry Simulation
+print("=== AGNI DRISHTI: GEOSPATIAL INDUSTRIAL FIRE INTELLIGENCE ===")
+print("Hotspot Data Stream: NASA FIRMS (VIIRS & MODIS Sensors)")
+print("Spatial Contextual Engine: OpenStreetMap POI & Land-Use Topology\n")
+
+# 1. Hotspot Telemetry DataFrame
+hotspots_data = {
+    'hotspot_id': ['HS-701', 'HS-702', 'HS-703', 'HS-704', 'HS-705'],
+    'latitude': [14.4673, 14.4710, 14.5201, 14.4680, 14.5892],
+    'longitude': [78.8241, 78.8290, 78.9102, 78.8255, 78.7540],
+    'brightness_kelvin': [348.5, 362.1, 312.4, 355.0, 305.8],
+    'confidence': [92, 98, 65, 95, 45],
+    'distance_to_industrial_km': [0.12, 0.08, 3.45, 0.15, 7.80],
+    'landuse_osm': ['Industrial (Steel Mill)', 'Industrial (Refinery)', 'Agricultural Field', 'Industrial Zone', 'Dense Forest']
+}
+df_hotspots = pd.DataFrame(hotspots_data)
+
+# 2. Heuristic Classification Workflow
+def classify_fire_source(row):
+    if row['distance_to_industrial_km'] < 0.5 and row['confidence'] >= 80:
+        return 'CRITICAL: Persistent Industrial Fire'
+    elif 'Agricultural' in row['landuse_osm']:
+        return 'Seasonal Stubble / Crop Burning'
+    elif 'Forest' in row['landuse_osm']:
+        return 'Wildfire / Forest Thermal Anomaly'
+    else:
+        return 'Low Confidence Hotspot'
+
+df_hotspots['classification'] = df_hotspots.apply(classify_fire_source, axis=1)
+
+print("--- HOTSPOT TELEMETRY & CLASSIFICATION REPORT ---")
+print(df_hotspots[['hotspot_id', 'brightness_kelvin', 'confidence', 'landuse_osm', 'classification']])
+
+critical_count = (df_hotspots['classification'] == 'CRITICAL: Persistent Industrial Fire').sum()
+print(f"\nAlert Status: {critical_count} Industrial Emergencies Triggered for GIS Dashboard Dispatch.")
+`
+  },
+  {
     id: "proj-telegram-bot-n8n",
     title: "Telegram Automation Bot using n8n",
     domain: "Automation & Bots",

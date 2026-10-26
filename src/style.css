@@ -4124,6 +4124,14 @@ body:not(.sidebar-collapsed) .split-ide-grid {
 .mail-icon { background: rgba(244, 63, 94, 0.2); color: #fb7185; }
 .kaggle-icon { background: rgba(32, 190, 255, 0.2); color: #38bdf8; }
 .leetcode-icon { background: rgba(245, 158, 11, 0.2); color: #fbbf24; }
+.instagram-icon { background: linear-gradient(135deg, rgba(225, 48, 108, 0.25), rgba(131, 58, 180, 0.25)); color: #f43f5e; }
+.facebook-icon { background: rgba(24, 119, 242, 0.2); color: #3b82f6; }
+
+.github-card:hover { border-color: rgba(255, 255, 255, 0.4); }
+.linkedin-card:hover { border-color: rgba(14, 118, 168, 0.6); }
+.instagram-card:hover { border-color: rgba(225, 48, 108, 0.6); }
+.facebook-card:hover { border-color: rgba(24, 119, 242, 0.6); }
+.leetcode-card:hover { border-color: rgba(245, 158, 11, 0.6); }
 
 .social-platform {
   font-size: 12px;

@@ -1,3 +1,4 @@
+import { RESUME_PDF_BASE64 } from './assets/resumePdfBase64.js';
 // IndexedDB Storage Layer for MBU Data Science Laboratory Modules & Syllabus PDFs
 import { MODULES_LEARNING_MATERIAL } from './learningMaterialData.js';
 
@@ -540,6 +541,9 @@ export function generateSampleSyllabusPdfDataUrl(moduleCode, moduleTitle, catego
  * matching the official resume layout.
  */
 export function generateCandidateResumePdfDataUrl(profile = {}) {
+  if (RESUME_PDF_BASE64) {
+    return RESUME_PDF_BASE64;
+  }
   const name = profile.name || "Mudimela Pradyumna Devi";
   const location = profile.location || "Nandyal";
   const email = profile.email || "mudimelapradyumnadevi@gmail.com";
